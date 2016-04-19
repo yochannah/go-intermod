@@ -1,3 +1,21 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,700|Roboto+Slab);
+@maintextcolor: rgba(0,0,0,0.87);
 body {
-    color:red;
+  font-family: 'Roboto',sans-serif;
+  color: @maintextcolor;
+  background: #fafafa;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto Slab';
+}
+
+.search {
+  display:flex;
+  form {flex-grow:1; border:solid 1px green; max-width:33%;}
+  .filters{flex-grow:2; border:solid 1px red;}
 }

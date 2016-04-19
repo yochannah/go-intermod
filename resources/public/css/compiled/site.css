@@ -1,0 +1,26 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,700|Roboto+Slab);
+body {
+  font-family: 'Roboto', sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  background: #fafafa;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto Slab';
+}
+.search {
+  display: flex;
+}
+.search form {
+  flex-grow: 1;
+  border: solid 1px green;
+  max-width: 33%;
+}
+.search .filters {
+  flex-grow: 2;
+  border: solid 1px red;
+}
