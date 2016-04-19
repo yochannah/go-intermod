@@ -1,6 +1,7 @@
 (ns go-intermod.subs
     (:require-macros [reagent.ratom :refer [reaction]])
-    (:require [re-frame.core :as re-frame]))
+    (:require [re-frame.core :as re-frame]
+              [go-intermod.search.subs :as search]))
 
 (re-frame/register-sub
  :name
@@ -12,13 +13,3 @@
  :organisms
  (fn [db]
   (reaction (:organisms @db))))
-
-(re-frame/register-sub
- :evidence-codes
- (fn [db]
-   (reaction (:evidence-codes @db))))
-
-   (re-frame/register-sub
-    :expand-evidence-codes?
-    (fn [db]
-      (reaction (:expand-evidence-codes? @db))))
