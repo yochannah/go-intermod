@@ -12,13 +12,48 @@ h5,
 h6 {
   font-family: 'Roboto Slab';
 }
+button {
+  padding: 1em;
+  color: #ffffff;
+  background: #03a9f4;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  font-size: 1em;
+  border: 0;
+  border-radius: 2px;
+}
+button:hover {
+  background: #47c4fd;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s;
+}
+button:active {
+  background: #0275a8;
+  box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.1s;
+}
 .search {
   display: flex;
 }
-.search > form {
+.search .searchform {
   flex-grow: 1;
   max-width: 33%;
   padding: 0 1em;
+}
+.search .searchform select,
+.search .searchform button,
+.search .searchform textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.5em;
+  border-radius: 2px;
+}
+.search .searchform select,
+.search .searchform textarea {
+  background-color: #fff;
+  border: solid 1px #cccccc;
+  padding: 0.25em;
 }
 .search .filters {
   padding: 0 1em;
@@ -29,6 +64,6 @@ h6 {
 .search .filters label {
   display: block;
 }
-.search .filters div {
+.search .filters > div {
   flex: 1;
 }

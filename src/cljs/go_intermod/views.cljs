@@ -19,16 +19,14 @@
     (map (fn [[id details]]
        ^{:key id}
        [:label
-        [:input {:type "checkbox"}
+        [:input {:type "checkbox" :checked "checked"}
         (:abbrev details)]])
-     @organisms)
-    [:button "Search"]
-  ]))
+     @organisms)]))
 
 
 (defn search-form []
   "Visual component for initialising GO search."
-  [:form {:name "searchform"}
+  [:form.searchform {:name "searchform"}
    [:h3 "Search"]
    [:p "Search for gene orthologs across Human, Mouse, Rat, Fly, Zebrafish, Worm, and Yeast, and retrieve Gene Ontology annotations for any or all species."]
    [organism-dropdown]
@@ -36,6 +34,7 @@
    [:button {:type "submit"} "Search"]])
 
 (defn evidence-code-filters []
+  "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
  (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
  [:form
  (map (fn [[name is-checked?]]
@@ -45,7 +44,9 @@
    name]])
    @evidence-codes)
 ]))
+
 (defn search-filters []
+  "search filter component. "
   [:div.filters
     [:div
       [:h4 "Output species"]

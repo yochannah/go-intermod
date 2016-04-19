@@ -33,6 +33,7 @@
       :abbrev "S. cerevisiae"}}
    :evidence-codes
    (array-map
+    ;format: "Code name (CODE)" is-checked?
     "Inferred from Experiment (EXP)" true
     "Inferred from Direct Assay (IDA)" true
     "Inferred from Physical Interaction (IPI)" true
