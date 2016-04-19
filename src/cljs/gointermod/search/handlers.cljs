@@ -1,6 +1,6 @@
-(ns go-intermod.search.handlers
+(ns gointermod.search.handlers
     (:require [re-frame.core :as re-frame]
-              [go-intermod.db :as db]))
+              [gointermod.db :as db]))
 
 (re-frame/register-handler
   :toggle-evidence-codes

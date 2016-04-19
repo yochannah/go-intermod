@@ -1,1 +1,1 @@
-(ns go-intermod.core)
+(ns gointermod.core)

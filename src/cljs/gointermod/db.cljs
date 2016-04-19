@@ -1,4 +1,4 @@
-(ns go-intermod.db)
+(ns gointermod.db)
 
 (def default-db
   {:name "intermod"

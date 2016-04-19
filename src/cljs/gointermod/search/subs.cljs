@@ -1,4 +1,4 @@
-(ns go-intermod.search.subs
+(ns gointermod.search.subs
     (:require-macros [reagent.ratom :refer [reaction]])
     (:require [re-frame.core :as re-frame]))
 

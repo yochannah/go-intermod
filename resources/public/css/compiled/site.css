@@ -34,6 +34,13 @@ button:active {
   box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.1s;
 }
+.icon {
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  fill: currentColor;
+}
 .search {
   display: flex;
 }

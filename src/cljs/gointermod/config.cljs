@@ -1,4 +1,4 @@
-(ns go-intermod.config)
+(ns gointermod.config)
 
 (def debug?
   ^boolean js/goog.DEBUG)

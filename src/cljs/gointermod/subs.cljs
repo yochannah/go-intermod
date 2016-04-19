@@ -1,7 +1,7 @@
-(ns go-intermod.subs
+(ns gointermod.subs
     (:require-macros [reagent.ratom :refer [reaction]])
     (:require [re-frame.core :as re-frame]
-              [go-intermod.search.subs :as search]))
+              [gointermod.search.subs :as search]))
 
 (re-frame/register-sub
  :name

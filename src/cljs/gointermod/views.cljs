@@ -7,5 +7,5 @@
   (fn []
     [:div
       [icons/icons]
-     "HHH" [:svg.icon.icon-cog [:use {:xlinkHref "#icon-cog"}]] "JJJ"
-    [search/search]]))
+      [search/search]
+    ]))

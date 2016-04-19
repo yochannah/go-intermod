@@ -1,18 +1,4 @@
-(ns bluegenes.utils.icons)
-
-;;REGARDING THE USE OF INLINE SVGS, SEE: https://github.com/reagent-project/reagent/issues/121#issuecomment-197805565
-;;Right now our workaround is to include a higher version of react in the
-;;project.clj. This makes SVG [:use] tags work properly but results in some
-;;(seemingly?) harmless console warnings about deprecated methods.
-;;if they DO prove problematic, try this method below as a workaround:
-'(defn img-with-href [[elem-type props :as elem]]
-  (let [image-elem [elem-type (select-keys props #{:href :height :width})]
-        image-elem-html (clojure.string/replace
-                         (reagent/render-to-static-markup image-elem)
-                         "href" "xlink:href")]
-    [:svg
-     (merge props
-            {:dangerouslySetInnerHTML {:__html image-elem-html}})]))
+(ns gointermod.icons)
 
 ;;TO USE AN SVG INLINE, do it like so:
 ;;[:svg.icon.icon-share [:use {:xlinkHref "#icon-share"}]]
@@ -20,6 +6,7 @@
 ;;tag as identifiers.
 
 (defn icons []
+  (.log js/console "HI, icons here")
   [:svg
   {:version "1.1",
    :height "0",

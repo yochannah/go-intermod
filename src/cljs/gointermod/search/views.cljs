@@ -1,4 +1,4 @@
-(ns go-intermod.search.views
+(ns gointermod.search.views
     (:require [re-frame.core :as re-frame]))
 
 (defn organism-dropdown []
