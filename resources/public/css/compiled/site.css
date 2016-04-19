@@ -15,12 +15,20 @@ h6 {
 .search {
   display: flex;
 }
-.search form {
+.search > form {
   flex-grow: 1;
-  border: solid 1px green;
   max-width: 33%;
+  padding: 0 1em;
 }
 .search .filters {
+  padding: 0 1em;
+  display: flex;
   flex-grow: 2;
-  border: solid 1px red;
+  border-left: solid 1px #cccccc;
+}
+.search .filters label {
+  display: block;
+}
+.search .filters div {
+  flex: 1;
 }

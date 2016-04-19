@@ -12,6 +12,20 @@
       @organisms)
    ]))
 
+(defn organism-output-selector []
+ "returns form component with a checkbox beside each org name"
+ (let [organisms (re-frame/subscribe [:organisms])]
+   [:form
+    (map (fn [[id details]]
+       ^{:key id}
+       [:label
+        [:input {:type "checkbox"}
+        (:abbrev details)]])
+     @organisms)
+    [:button "Search"]
+  ]))
+
+
 (defn search-form []
   "Visual component for initialising GO search."
   [:form {:name "searchform"}
@@ -21,13 +35,31 @@
    [:textarea {:placeholder "ADH5"}]
    [:button {:type "submit"} "Search"]])
 
+(defn evidence-code-filters []
+ (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
+ [:form
+ (map (fn [[name is-checked?]]
+   ^{:key name}
+   [:label
+   [:input {:type "checkbox" :checked is-checked?}
+   name]])
+   @evidence-codes)
+]))
 (defn search-filters []
-  [:div.filters "Output species"])
+  [:div.filters
+    [:div
+      [:h4 "Output species"]
+      [organism-output-selector]]
+    [:div
+      [:h4 "Evidence codes"]
+      [evidence-code-filters]]
+    ])
+
 
 (defn main-panel []
   (let [name (re-frame/subscribe [:name])]
     (fn []
-      [:div "Hello from " @name
+      [:div
        [:div.search
         [search-form]
         [search-filters]]])))
