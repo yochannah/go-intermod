@@ -11,6 +11,7 @@ h4,
 h5,
 h6 {
   font-family: 'Roboto Slab';
+  font-weight: normal;
 }
 button {
   padding: 1em;
@@ -64,6 +65,33 @@ button:active {
 .search .filters label {
   display: block;
 }
-.search .filters > div {
-  flex: 1;
+.search .filters .filter {
+  flex-grow: 4;
+}
+.search .filters .evidence-mini {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 10em;
+}
+.search .filters .evidence-mini:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.search .filters .evidence-mini .code {
+  margin: 0.1em 0.2em;
+}
+.search .filters .evidence-mini .code:after {
+  content: ",";
+}
+.search .filters .evidence-mini .code:last-child:after {
+  content: "";
+}
+.search .filters .evidence-mini h5 {
+  width: 100%;
+  margin: 0.1em;
+}
+.search .filters .evidence-mini a {
+  text-decoration: underline;
 }

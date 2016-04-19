@@ -56,4 +56,5 @@
     {:name "No biological Data available (ND) evidence code" :checked false :code "ND"}
     {:name "Inferred from Electronic Annotation (IEA)" :checked false :code "IEA"}
     ]
+   :expand-evidence-codes? false
 })

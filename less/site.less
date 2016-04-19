@@ -2,11 +2,9 @@
 @maintextcolor: rgba(0,0,0,0.87);
 @spacer: 1em;
 @bordercolor: #ccc;
-@border-radius:2px;
-
-@ctatextcolor:#fff;
+@border-radius: 2px;
+@ctatextcolor: #fff;
 @ctabackgroundcolor: #03A9F4;
-
 body {
   font-family: 'Roboto',sans-serif;
   color: @maintextcolor;
@@ -19,31 +17,29 @@ h4,
 h5,
 h6 {
   font-family: 'Roboto Slab';
+  font-weight:normal;
 }
-
 button {
-  padding:@spacer;
-  color:@ctatextcolor;
-  background:@ctabackgroundcolor;
+  padding: @spacer;
+  color: @ctatextcolor;
+  background: @ctabackgroundcolor;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-  font-weight:700;
-  font-size:1em;
-  border:0;
-  border-radius:@border-radius;
+  font-weight: 700;
+  font-size: 1em;
+  border: 0;
+  border-radius: @border-radius;
   &:hover {
-    background:lighten(@ctabackgroundcolor, 15%);
+    background: lighten(@ctabackgroundcolor, 15%);
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
     box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
     transition: all 0.4s;
   }
   &:active {
-    background:darken(@ctabackgroundcolor, 15%);
+    background: darken(@ctabackgroundcolor, 15%);
     box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
     transition: all 0.1s;
   }
 }
-
-
 .search {
   display: flex;
   .searchform {
@@ -54,14 +50,15 @@ button {
     button,
     textarea {
       width: 100%;
-      box-sizing:border-box;
-      margin:@spacer/2;
-      border-radius:@border-radius;
+      box-sizing: border-box;
+      margin: @spacer/2;
+      border-radius: @border-radius;
     }
-    select,textarea {
-      background-color:#fff;
-      border:solid 1px @bordercolor;
-      padding:@spacer/4;
+    select,
+    textarea {
+      background-color: #fff;
+      border: solid 1px @bordercolor;
+      padding: @spacer/4;
     }
   }
   .filters {
@@ -72,8 +69,22 @@ button {
     label {
       display: block;
     }
-    &> div {
-      flex: 1;
+    .filter {
+      flex-grow: 4;
+    }
+    .evidence-mini {
+      flex-grow:1;
+      display:flex;
+      flex-wrap:wrap;
+      max-width:10em;
+      &:after {content:"";display:table;clear:both;}
+      .code {
+        margin: @spacer/10 @spacer/5;
+        &:after {content:","}
+        &:last-child:after {content:""}
+      }
+      h5 {width:100%; margin:@spacer/10}
+      a {text-decoration:underline;}
     }
   }
 }

@@ -17,3 +17,8 @@
  :evidence-codes
  (fn [db]
    (reaction (:evidence-codes @db))))
+
+   (re-frame/register-sub
+    :expand-evidence-codes?
+    (fn [db]
+      (reaction (:expand-evidence-codes? @db))))
