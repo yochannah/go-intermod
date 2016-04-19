@@ -37,11 +37,12 @@
   "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
  (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
  [:form
- (map (fn [[name is-checked?]]
-   ^{:key name}
-   [:label
-   [:input {:type "checkbox" :checked is-checked?}
-   name]])
+ (map (fn [code-info]
+   ^{:key (:code code-info)}
+ [:label
+   [:input {:type "checkbox" :checked (:checked code-info)}
+   (:name code-info)]]
+)
    @evidence-codes)
 ]))
 

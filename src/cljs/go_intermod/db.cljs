@@ -32,28 +32,28 @@
       :common "Yeast"
       :abbrev "S. cerevisiae"}}
    :evidence-codes
-   (array-map
+   [
     ;format: "Code name (CODE)" is-checked?
-    "Inferred from Experiment (EXP)" true
-    "Inferred from Direct Assay (IDA)" true
-    "Inferred from Physical Interaction (IPI)" true
-    "Inferred from Mutant Phenotype (IMP)" true
-    "Inferred from Genetic Interaction (IGI)" true
-    "Inferred from Expression Pattern (IEP)" true
-    "Inferred from Sequence or structural Similarity (ISS)" false
-    "Inferred from Sequence Orthology (ISO)" false
-    "Inferred from Sequence Alignment (ISA)" false
-    "Inferred from Sequence Model (ISM)" false
-    "Inferred from Genomic Context (IGC)" false
-    "Inferred from Biological aspect of Ancestor (IBA)" false
-    "Inferred from Biological aspect of Descendant (IBD)" false
-    "Inferred from Key Residues (IKR)" false
-    "Inferred from Rapid Divergence(IRD)" false
-    "Inferred from Reviewed Computational Analysis (RCA)" false
-    "Traceable Author Statement (TAS)" true
-    "Non-traceable Author Statement (NAS)" false
-    "Inferred by Curator (IC)" true
-    "No biological Data available (ND) evidence code" false
-    "Inferred from Electronic Annotation (IEA)" false
-    )
+    {:name "Inferred from Experiment (EXP)" :code "EXP" :checked true}
+    {:name "Inferred from Direct Assay (IDA)" :code "IDA" :checked true}
+    {:name "Inferred from Physical Interaction (IPI)"  :code "IPI" :checked true}
+    {:name "Inferred from Mutant Phenotype (IMP)"  :code "IMP" :checked true}
+    {:name "Inferred from Genetic Interaction (IGI)"  :code "IGI" :checked true}
+    {:name "Inferred from Expression Pattern (IEP)"  :code "IEP" :checked true}
+    {:name "Inferred from Sequence or structural Similarity (ISS)"  :code "ISS" :checked  false}
+    {:name "Inferred from Sequence Orthology (ISO)"  :code "ISO" :checked false}
+    {:name "Inferred from Sequence Alignment (ISA)"  :code "ISA" :checked false}
+    {:name "Inferred from Sequence Model (ISM)"  :code "ISM" :checked false}
+    {:name "Inferred from Genomic Context (IGC)"  :code "IGC" :checked false}
+    {:name "Inferred from Biological aspect of Ancestor (IBA)" :code "IBA" :checked false}
+    {:name "Inferred from Biological aspect of Descendant (IBD)" :code "IBD" :checked false}
+    {:name "Inferred from Key Residues (IKR)" :code "IKR" :checked false}
+    {:name "Inferred from Rapid Divergence(IRD)" :code "IRD" :checked false}
+    {:name "Inferred from Reviewed Computational Analysis (RCA)" :code "RCA" :checked false}
+    {:name "Traceable Author Statement (TAS)" :code "TAS" :checked true}
+    {:name "Non-traceable Author Statement (NAS)" :code "NAS" :checked false}
+    {:name "Inferred by Curator (IC)" :code "IC" :checked true}
+    {:name "No biological Data available (ND) evidence code" :checked false :code "ND"}
+    {:name "Inferred from Electronic Annotation (IEA)" :checked false :code "IEA"}
+    ]
 })
