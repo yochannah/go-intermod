@@ -23,3 +23,11 @@
   (fn [db [_ organism]]
     (update-in db [:organisms organism :output?] not)
     ))
+
+(re-frame/register-handler
+  ;;There's only one input organism for the search. Set it.
+  :select-input-organism
+  (fn [db [_ organism]]
+    (.log js/console "organism changed:" (clj->js organism))
+    (assoc db :selected-organism (keyword organism))
+    ))

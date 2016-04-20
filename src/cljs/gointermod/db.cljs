@@ -1,7 +1,7 @@
 (ns gointermod.db)
 
 (def default-db
-  {:name "intermod"
+  {:selected-organism :human
    :organisms
    {:human
      {:id     :human

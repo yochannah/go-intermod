@@ -4,10 +4,10 @@
 (defn organism-dropdown []
   "returns a dropdown containing all of the organism names"
   (let [organisms (re-frame/subscribe [:organisms])]
-    [:select
+    [:select {:on-change (fn [e] (re-frame/dispatch [:select-input-organism (aget e "target" "value")]))}
      (map (fn [[id details]]
         ^{:key id}
-        [:option
+        [:option {:value (js->clj id)}
          (:common details) " - " (:abbrev details)])
       @organisms)
    ]))
