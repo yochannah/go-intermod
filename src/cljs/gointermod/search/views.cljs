@@ -26,12 +26,14 @@
 
 (defn search-form []
   "Visual component for initialising GO search."
-  [:form.searchform {:name "searchform"}
-   [:h3 "Search"]
-   [:p "Search for gene orthologs across Human, Mouse, Rat, Fly, Zebrafish, Worm, and Yeast, and retrieve Gene Ontology annotations for any or all species."]
-   [organism-dropdown]
-   [:textarea {:placeholder "Type identifiers here, e.g. 'ADH5'"}]
-   [:button {:type "submit"} "Search"]])
+  [:div.geneinput
+    [:div.intro
+      [:h3 "Search"]
+      [:p "Search for gene orthologs across Human, Mouse, Rat, Fly, Zebrafish, Worm, and Yeast, and retrieve Gene Ontology annotations for any or all species."]]
+    [:form.searchform {:name "searchform"}
+      [organism-dropdown]
+        [:textarea {:placeholder "Type identifiers here, e.g. 'ADH5'"}]
+        [:button {:type "submit"} "Search"]]])
 
    (defn evidence-code-filters-expanded []
      "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
