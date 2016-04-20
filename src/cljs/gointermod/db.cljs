@@ -6,6 +6,7 @@
    {:human
      {:id     :human
        :common "Human"
+       :output? true
        :abbrev "H. sapiens"
        :mine
        {:name "HumanMine"
@@ -14,6 +15,7 @@
     :fly
      {:id     :fly
       :common "Fly"
+      :output? true
       :abbrev "D. melanogaster"
       :mine
        {:name "FlyMine"
@@ -22,6 +24,7 @@
     :mouse
      {:id     :mouse
       :common "Mouse"
+      :output? true
       :abbrev "M. musculus"
       :mine
        {:name "MouseMine"
@@ -30,6 +33,7 @@
     :rat
      {:id     :rat
       :common "Rat"
+      :output? true
       :abbrev "R. norvegicus"
       :mine
        {:name "RatMine"
@@ -38,6 +42,7 @@
     :zebrafish
      {:id     :zebrafish
       :common "Zebrafish"
+      :output? true
       :abbrev "D. rerio":mine
        {:name "ZebraFishMine"
         :url "www.zebrafishmine.org"
@@ -45,6 +50,7 @@
     :worm
      {:id     :worm
       :common "Worm"
+      :output? true
       :abbrev "C. elegans"
       :mine
        {:name "WormMine"
@@ -52,6 +58,7 @@
         :service {:root "intermine.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
+      :output? true
       :common "Yeast"
       :abbrev "S. cerevisiae"
       :mine

@@ -19,8 +19,11 @@
     (map (fn [[id details]]
        ^{:key id}
        [:label
-        [:input {:type "checkbox" :defaultChecked "checked"}
-        (:abbrev details)]])
+        [:input
+         {:type "checkbox"
+          :defaultChecked (:output? details)
+          :on-change (fn [] (re-frame/dispatch [:toggle-output-organism id] id))}]
+        (:abbrev details)])
      @organisms)]))
 
 
