@@ -18,7 +18,7 @@
    ))
 
 (re-frame/register-handler
-  ;;toggle whether or not a given evidence code is checked.
+  ;;toggle whether or not a given organism is checked.
   :toggle-output-organism
   (fn [db [_ organism]]
     (update-in db [:organisms organism :output?] not)
@@ -32,9 +32,16 @@
     ))
 
 (re-frame/register-handler
-  ;;There's only one input organism for the search. Set it.
+  ;;capture search term in app db
   :update-search-term
   (fn [db [_ term]]
-    (.log js/console "search term" term)
     (assoc db :search-term term)
+    ))
+
+(re-frame/register-handler
+  ;;What do we do when a search button is pressed? This.
+  :perform-search
+  (fn [db [_ _]]
+     ;;don't submit the form
+    (.log js/console "Searcharooney!") db
     ))

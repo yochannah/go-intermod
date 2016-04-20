@@ -33,7 +33,12 @@
     [:div.intro
       [:h3 "Search"]
       [:p "Search for gene orthologs across Human, Mouse, Rat, Fly, Zebrafish, Worm, and Yeast, and retrieve Gene Ontology annotations for any or all species."]]
-    [:form.searchform {:name "searchform"}
+    [:form.searchform
+     {:name "searchform"
+      :on-submit
+        (fn [e]
+          (.preventDefault js/e)
+          (re-frame/dispatch [:perform-search ]))}
       [organism-dropdown]
         [:textarea
          {:placeholder "Type identifiers here, e.g. 'ADH5'"
