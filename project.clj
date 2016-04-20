@@ -1,5 +1,6 @@
 (defproject gointermod "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.7.0"]
+                 [json-html "0.3.6"]
                  [org.clojure/clojurescript "1.7.170"]
                  [reagent "0.6.0-alpha"]
                  [re-frame "0.7.0"]]

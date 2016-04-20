@@ -8,6 +8,12 @@
  (fn [db]
    (reaction (:name @db))))
 
+ (re-frame/register-sub
+  :db
+  (fn [db]
+    (reaction @db)))
+
+
 
 (re-frame/register-sub
  :organisms

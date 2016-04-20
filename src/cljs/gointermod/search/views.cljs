@@ -39,10 +39,13 @@
      "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
      (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
        [:form
-         (map (fn [code-info]
+         (map-indexed (fn [index code-info]
            ^{:key (:code code-info)}
             [:label
-              [:input {:type "checkbox" :defaultChecked (:checked code-info)}
+              [:input
+               {:type "checkbox"
+                :defaultChecked (:checked code-info)
+                :on-click (fn [] (re-frame/dispatch [:toggle-evidence-code index]))}
               (:name code-info)]])
          @evidence-codes)]))
 
@@ -50,7 +53,6 @@
    "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
    (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
      [:div.evidence-mini
-        [:h5 "Showing:"]
        (map (fn [code-info]
           (cond (:checked code-info)
             ^{:key (:code code-info)}
@@ -67,16 +69,17 @@
         [organism-output-selector]]
       [:div.filter
         [:h4 "Evidence codes"]
+        [:h5 "Showing: "
+        [:a
+        {:on-click
+          (fn []
+            (re-frame/dispatch [:toggle-evidence-codes]))}
+            (if @expand-codes?
+              "Shrink codes"
+              "(Change codes)")]]
           (if @expand-codes?
             [evidence-code-filters-expanded]
             [evidence-code-filters-mini])
-        [:a
-         {:on-click
-          (fn []
-            (re-frame/dispatch [:toggle-evidence-codes]))}
-         (if @expand-codes?
-           "Shrink codes"
-           "Change codes")]
        ]]))
 
 

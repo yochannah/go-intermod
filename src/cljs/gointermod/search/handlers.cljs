@@ -7,3 +7,9 @@
   (fn [db [_ args]]
     (assoc db :expand-evidence-codes?
            (not (:expand-evidence-codes? db)))))
+
+(re-frame/register-handler
+ :toggle-evidence-code
+ (fn [db [_ index]]
+   (update-in db [:search :evidence-codes index :checked] (fn [val] (not val)))
+   ))

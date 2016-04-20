@@ -135,3 +135,12 @@ button:active {
 .ortholog-results {
   margin: 1em;
 }
+.db tr:nth-child(even) {
+  background-color: rgba(50, 150, 200, 0.1);
+}
+.db td {
+  margin: 0;
+}
+.db .jh-key {
+  text-align: right;
+}
