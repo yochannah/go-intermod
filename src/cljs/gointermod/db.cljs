@@ -6,34 +6,61 @@
    {:human
      {:id     :human
        :common "Human"
-       :abbrev "H. sapiens"}
+       :abbrev "H. sapiens"
+       :mine
+       {:name "HumanMine"
+        :url "beta.humanmine.org/beta"
+        :service {:root "beta.humanmine.org/beta"}}}
     :fly
      {:id     :fly
       :common "Fly"
-      :abbrev "D. melanogaster"}
+      :abbrev "D. melanogaster"
+      :mine
+       {:name "FlyMine"
+        :url "beta.flymine.org/beta"
+        :service {:root "beta.flymine.org/beta"}}}
     :mouse
      {:id     :mouse
       :common "Mouse"
-      :abbrev "M. musculus"}
+      :abbrev "M. musculus"
+      :mine
+       {:name "MouseMine"
+        :url "www.mousemine.org/mousemine"
+        :service {:root "www.mousemine.org/mousemine"}}}
     :rat
      {:id     :rat
       :common "Rat"
-      :abbrev "R. norvegicus"}
+      :abbrev "R. norvegicus"
+      :mine
+       {:name "RatMine"
+        :url "ratmine.mcw.edu/ratmine"
+        :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
     :zebrafish
      {:id     :zebrafish
       :common "Zebrafish"
-      :abbrev "D. rerio"}
+      :abbrev "D. rerio":mine
+       {:name "ZebraFishMine"
+        :url "www.zebrafishmine.org"
+        :service {:root "www.zebrafishmine.org"}}}
     :worm
      {:id     :worm
       :common "Worm"
-      :abbrev "C. elegans"}
+      :abbrev "C. elegans"
+      :mine
+       {:name "WormMine"
+        :url "http://intermine.wormbase.org/tools/wormmine"
+        :service {:root "intermine.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
       :common "Yeast"
-      :abbrev "S. cerevisiae"}}
+      :abbrev "S. cerevisiae"
+      :mine
+       {:name "YeastMine"
+        :url "yeastmine.yeastgenome.org/yeastmine"
+        :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
+    }
    :evidence-codes
    [
-    ;format: "Code name (CODE)" is-checked?
     {:name "Inferred from Experiment (EXP)" :code "EXP" :checked true}
     {:name "Inferred from Direct Assay (IDA)" :code "IDA" :checked true}
     {:name "Inferred from Physical Interaction (IPI)"  :code "IPI" :checked true}
