@@ -14,7 +14,7 @@
  ;;toggle whether or not a given evidence code is checked.
  :toggle-evidence-code
  (fn [db [_ index]]
-   (update-in db [:search :evidence-codes index :checked] not)
+   (update-in db [:evidence-codes index :checked] not)
    ))
 
 (re-frame/register-handler
@@ -28,6 +28,13 @@
   ;;There's only one input organism for the search. Set it.
   :select-input-organism
   (fn [db [_ organism]]
-    (.log js/console "organism changed:" (clj->js organism))
     (assoc db :selected-organism (keyword organism))
+    ))
+
+(re-frame/register-handler
+  ;;There's only one input organism for the search. Set it.
+  :update-search-term
+  (fn [db [_ term]]
+    (.log js/console "search term" term)
+    (assoc db :search-term term)
     ))

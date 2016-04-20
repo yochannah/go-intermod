@@ -35,7 +35,9 @@
       [:p "Search for gene orthologs across Human, Mouse, Rat, Fly, Zebrafish, Worm, and Yeast, and retrieve Gene Ontology annotations for any or all species."]]
     [:form.searchform {:name "searchform"}
       [organism-dropdown]
-        [:textarea {:placeholder "Type identifiers here, e.g. 'ADH5'"}]
+        [:textarea
+         {:placeholder "Type identifiers here, e.g. 'ADH5'"
+          :on-change (fn [e] (re-frame/dispatch [:update-search-term (aget e "target" "value")]))}]
         [:button {:type "submit"} "Search"]]])
 
    (defn evidence-code-filters-expanded []
@@ -48,8 +50,8 @@
               [:input
                {:type "checkbox"
                 :defaultChecked (:checked code-info)
-                :on-click (fn [] (re-frame/dispatch [:toggle-evidence-code index]))}
-              (:name code-info)]])
+                :on-click (fn [] (re-frame/dispatch [:toggle-evidence-code index]))}]
+             (:name code-info)])
          @evidence-codes)]))
 
  (defn evidence-code-filters-mini []

@@ -5,7 +5,7 @@
   (re-frame/register-sub
    :evidence-codes
    (fn [db]
-     (reaction (:evidence-codes (:search @db)))))
+     (reaction (:evidence-codes @db))))
 
 (re-frame/register-sub
   :expand-evidence-codes?

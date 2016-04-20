@@ -66,7 +66,7 @@
         :url "yeastmine.yeastgenome.org/yeastmine"
         :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
     }
-   :search {:evidence-codes
+   :evidence-codes
    [
     {:name "Inferred from Experiment (EXP)" :code "EXP" :checked true}
     {:name "Inferred from Direct Assay (IDA)" :code "IDA" :checked true}
@@ -89,6 +89,6 @@
     {:name "Inferred by Curator (IC)" :code "IC" :checked true}
     {:name "No biological Data available (ND) evidence code" :checked false :code "ND"}
     {:name "Inferred from Electronic Annotation (IEA)" :checked false :code "IEA"}
-    ]}
+    ]
    :expand-evidence-codes? false
 })
