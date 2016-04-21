@@ -23,6 +23,7 @@
        {:with-credentials? false
         :keywordize-keys? true
         :form-params
-        {:query query}}))]
-            (-> response :body)
+        {:query query
+         :format "json"}}))]
+            (js->clj (-> response :body))
 ))))

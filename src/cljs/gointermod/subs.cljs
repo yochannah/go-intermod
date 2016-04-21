@@ -1,7 +1,8 @@
 (ns gointermod.subs
     (:require-macros [reagent.ratom :refer [reaction]])
     (:require [re-frame.core :as re-frame]
-              [gointermod.search.subs :as search]))
+      [gointermod.orthologresults.subs :as orthologs]
+      [gointermod.search.subs :as search]))
 
 (re-frame/register-sub
  :name

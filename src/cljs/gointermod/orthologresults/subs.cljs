@@ -1,8 +1,8 @@
-(ns gointermod.search.subs
+(ns gointermod.orthologresults.subs
     (:require-macros [reagent.ratom :refer [reaction]])
     (:require [re-frame.core :as re-frame]))
 
 (re-frame/register-sub
-  :expand-evidence-codes?
+  :search-results
   (fn [db]
-    (reaction (:expand-evidence-codes? @db))))
+    (reaction (:search-results @db))))

@@ -54,7 +54,7 @@
     ;query humanmine
     (go (let
       [search-results (<! (comms/go-query :human (:search-term db)))]
-        (.log js/console search-results)
+        (.log js/console (clj->js search-results))
         ;add results to the db
         (re-frame/dispatch [:update-search-results search-results])
 )) db))
