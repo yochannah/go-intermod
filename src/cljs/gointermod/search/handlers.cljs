@@ -1,6 +1,9 @@
 (ns gointermod.search.handlers
+    (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [re-frame.core :as re-frame]
-              [gointermod.db :as db]))
+              [gointermod.db :as db]
+              [cljs.core.async :refer [<!]]
+              [gointermod.utils.comms :as comms]))
 
 (re-frame/register-handler
  ;;toggle whether or not to show evidence code selection screen.
@@ -39,9 +42,19 @@
     ))
 
 (re-frame/register-handler
+ :update-search-results
+ (fn [db [_ search-results]]
+   (assoc db :search-results search-results)
+))
+
+(re-frame/register-handler
   ;;What do we do when a search button is pressed? This.
   :perform-search
   (fn [db [_ _]]
-     ;;don't submit the form
-    (.log js/console "Searcharooney!") db
-    ))
+    ;query humanmine
+    (go (let
+      [search-results (<! (comms/go-query :human (:search-term db)))]
+        (.log js/console search-results)
+        ;add results to the db
+        (re-frame/dispatch [:update-search-results search-results])
+)) db))
