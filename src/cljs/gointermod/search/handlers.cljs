@@ -43,6 +43,7 @@
     ))
 
 (re-frame/register-handler
+ ;
  :update-search-results
  (fn [db [_ search-results]]
    (assoc db :search-results search-results)
@@ -68,7 +69,7 @@
   (fn [db [_ _]]
     ;query humanmine
     (go (let
-      [search-results (<! (comms/go-query :human (:search-term db)))]
+      [search-results (<! (comms/go-query (:selected-organism db) (:search-term db)))]
         ;add results to the db
         (re-frame/dispatch [:update-search-results search-results])
         (re-frame/dispatch [:aggregate-search-results (:results search-results)])

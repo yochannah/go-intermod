@@ -3,7 +3,7 @@
       [gointermod.config :as config]
       [gointermod.search.views :as search]
       [gointermod.orthologresults.views :as orthologs]
-      [gointermod.utils.icons :as icons]
+      [gointermod.icons :as icons]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
 
@@ -11,7 +11,7 @@
   [:nav
   [:h2 "Show results in:"]
   [:ul
-    [:li
+    [:li.active
      [:svg.icon [:use {:xlinkHref "#icon-summary"}]]
      "Ortholog\u00A0Summary"]
    [:li

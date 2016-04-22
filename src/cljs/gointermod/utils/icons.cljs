@@ -1,4 +1,4 @@
-(ns gointermod.utils.icons)
+(ns gointermod.icons)
 
 ;;TO USE AN SVG INLINE, do it like so:
 ;;[:svg.icon.icon-share [:use {:xlinkHref "#icon-share"}]]

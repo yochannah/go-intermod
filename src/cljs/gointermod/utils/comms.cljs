@@ -16,7 +16,6 @@
 (defn go-query
   "Get the results of GO term query for specified symbol/identifier"
   [organism identifier]
-  (.log js/console identifier)
   (let [service (get-service organism)
         query (make-base-query identifier)]
     (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
