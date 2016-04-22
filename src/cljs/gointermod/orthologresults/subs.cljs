@@ -6,3 +6,8 @@
   :search-results
   (fn [db]
     (reaction (:search-results @db))))
+
+(re-frame/register-sub
+  :aggregate-results
+  (fn [db]
+    (reaction (:aggregate-results @db))))

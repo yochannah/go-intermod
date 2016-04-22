@@ -2,6 +2,7 @@
     (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]
+              [gointermod.utils.utils :as utils]
               [cljs.core.async :refer [<!]]
               [gointermod.utils.comms :as comms]))
 
@@ -47,6 +48,20 @@
    (assoc db :search-results search-results)
 ))
 
+(defn aggregate-by-species [search-results]
+  "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
+  (reduce (fn [new-map [_ _ _ _ _ primary-id secondary-id symbol organism & args ]]
+    (update-in new-map [(keyword organism ) (keyword (utils/get-id primary-id secondary-id symbol)) (keyword (last args))] inc))
+      {} search-results)
+)
+
+(re-frame/register-handler
+ :aggregate-search-results
+ (fn [db [_ search-results]]
+   (.log js/console "Aggregate: (aggregate-by-species search-results)" (clj->js (aggregate-by-species search-results)))
+   (assoc db :aggregate-results (aggregate-by-species search-results)))
+)
+
 (re-frame/register-handler
   ;;What do we do when a search button is pressed? This.
   :perform-search
@@ -54,7 +69,7 @@
     ;query humanmine
     (go (let
       [search-results (<! (comms/go-query :human (:search-term db)))]
-        (.log js/console (clj->js search-results))
         ;add results to the db
         (re-frame/dispatch [:update-search-results search-results])
+        (re-frame/dispatch [:aggregate-search-results (:results search-results)])
 )) db))

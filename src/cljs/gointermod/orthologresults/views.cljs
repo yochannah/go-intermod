@@ -1,5 +1,7 @@
 (ns gointermod.orthologresults.views
-    (:require [re-frame.core :as re-frame]))
+    (:require [re-frame.core :as re-frame]
+      [gointermod.utils.utils :as utils]
+))
 
 (defn headers []
   [:thead [:tr
@@ -9,28 +11,6 @@
   [:th "Term"]
   [:th "Branch"]
    ]])
-
- (defn aggregate-headers []
-   [:thead [:tr
-   [:th "Species"]
-   [:th "Orthologs"]
-   [:th "Include"]
-   [:th "Biological Process"]
-   [:th "Molecular Function"]
-   [:th "Cellular Component"]
-    ]])
-
-(defn aggregate-result-row [[original-symbol original-secondary-id original-id _ _ homie-id homie-secondary-id homie-symbol homie-organism _ data-set _ _ _ _ go-identifier ontology-term ontology-branch]]
-;  (.log js/console (clj->js result))
-  ^{:key (str original-id go-identifier)}
-  [:tr
-  [:td homie-organism]
-  [:td homie-symbol]
-  [:td [:input {:type "checkbox"}]]
-  [:td homie-organism]
-  [:td homie-organism]
-  [:td homie-organism]
-   ])
 
  (defn result-row [[original-symbol original-secondary-id original-id _ _ _ homie-id homie-secondary-id homie-symbol homie-organism _ data-set  _ pub-id _ go-identifier ontology-term ontology-branch]]
    ^{:key (gensym)}
@@ -42,54 +22,53 @@
    [:td ontology-branch]
     ])
 
+(defn results []
+  "output search results into table rows"
+  (let [search-results (re-frame/subscribe [:search-results])]
+  [:tbody (map result-row (:results @search-results))]))
+
 (defn count-by-ontology-branch [branch]
   (let [search-results (:results @(re-frame/subscribe [:search-results]))]
   (count (filter
    (fn [result] (= (last result) branch)) search-results))
 ))
 
-(defn get-id [primary secondary symbol]
-  "returns first non-null identifier, preferring symbol or primary id"
-  (first (remove nil? [symbol primary secondary]))
-  )
-
-(defn aggregate-by-species []
-  (let [search-results (:results @(re-frame/subscribe [:search-results]))]
-    (reduce (fn [new-map [_ _ _ _ _ primary-id secondary-id symbol organism & args ]]
-      (update-in new-map [(keyword organism ) (keyword (get-id primary-id secondary-id symbol)) (keyword (last args))] inc))
-        {} search-results)
-))
+(defn aggregate-headers []
+  [:thead [:tr
+  [:th "Include"]
+  [:th "Species"]
+  [:th "Orthologs"]
+  [:th.count "Biological Process"]
+  [:th.count "Molecular Function"]
+  [:th.count "Cellular Component"]
+  ]])
 
 (defn aggregate-results []
-  "output search results into table rows"
-  (let [search-results (re-frame/subscribe [:search-results])]
-  [:tbody
-   ;loop through results into tr.[]
-   (map aggregate-result-row (:results @search-results))
-   ]
-  ))
+  "output aggregated search results into table rows"
+  (let [results (re-frame/subscribe [:aggregate-results])]
+    [:tbody
+     (map (fn [[organism organism-details] organisms]
+        (map (fn [[k v] organism-details]
+           ^{:key (gensym)}
+           [:tr
+            [:td [:input {:type "checkbox"}]]
+            [:td (clj->js organism)]
+            [:td (clj->js k)]
+              [:td (:biological_process v)]
+              [:td (:molecular_function v)]
+              [:td (:cellular_component v)]
+            ]) organism-details)
+        ) @results)]))
 
-(defn results []
-  "output search results into table rows"
-  (let [search-results (re-frame/subscribe [:search-results])]
-  [:tbody
-   ;loop through results into tr.[]
-   (map result-row (:results @search-results))
-   ]
-  ))
 
 (defn orthologs []
   (fn []
      [:div.ortholog-results
-      (.log js/console "Aggregate" (clj->js (aggregate-by-species)))
-      [:br]
-     "bio:" (count-by-ontology-branch "biological_process")
-     "molecular_function:" (count-by-ontology-branch "molecular_function")
-     "cellular_component:" (count-by-ontology-branch "cellular_component")
       [:h2 "Orthologous Genes"]
+      [:table.aggregate
+        [aggregate-headers]
+        [aggregate-results]]
       [:table
-      [headers]
-;      [aggregate-headers]
-;      [aggregate-results]
-      [results]
-       ]]))
+        [headers]
+        [results]
+        ]]))

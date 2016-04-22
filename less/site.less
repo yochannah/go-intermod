@@ -5,6 +5,7 @@
 @border-radius: 2px;
 @ctatextcolor: #fff;
 @ctabackgroundcolor: #03A9F4;
+@tablestripecolor: #eaeaea;
 body {
   font-family: 'Roboto',sans-serif;
   color: @maintextcolor;
@@ -140,16 +141,36 @@ button {
 }
 .ortholog-results {
   margin: @spacer;
-}
-////////debug, kiddos:
-.db {
-  tr:nth-child(even) {
-    background-color: rgba(50,150,200,0.1);
+  .count {
+    width: 6em;
   }
-  td {
-    margin: 0;
+  .aggregate {
+    td,
+    th {
+      &:nth-child(odd) {
+        background: @tablestripecolor;
+      }
+      text-align: center;
+    }
+    td {
+      padding: 0.5em 2em;
+    }
+    th {
+      padding: 0.5em;
+    }
+    tr:nth-child(even) {
+      background: darken(@tablestripecolor, 2%);
+    }
+  }}
+  ////////debug, kiddos:
+  .db {
+    tr:nth-child(even) {
+      background-color: rgba(50,150,200,0.1);
+    }
+    td {
+      margin: 0;
+    }
+    .jh-key {
+      text-align: right;
+    }
   }
-  .jh-key {
-    text-align: right;
-  }
-}

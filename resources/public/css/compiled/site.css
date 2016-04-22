@@ -135,6 +135,26 @@ button:active {
 .ortholog-results {
   margin: 1em;
 }
+.ortholog-results .count {
+  width: 6em;
+}
+.ortholog-results .aggregate td,
+.ortholog-results .aggregate th {
+  text-align: center;
+}
+.ortholog-results .aggregate td:nth-child(odd),
+.ortholog-results .aggregate th:nth-child(odd) {
+  background: #eaeaea;
+}
+.ortholog-results .aggregate td {
+  padding: 0.5em 2em;
+}
+.ortholog-results .aggregate th {
+  padding: 0.5em;
+}
+.ortholog-results .aggregate tr:nth-child(even) {
+  background: #e5e5e5;
+}
 .db tr:nth-child(even) {
   background-color: rgba(50, 150, 200, 0.1);
 }
