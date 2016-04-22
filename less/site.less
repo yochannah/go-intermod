@@ -9,6 +9,7 @@
 @searchbackgroundcolor: #EEE;
 @somecolor: #009688;
 @tablestripecolor: #eaeaea;
+@highlightcolor: #FFFDE7;
 body {
   font-family: 'Roboto',sans-serif;
   color: @maintextcolor;
@@ -24,6 +25,17 @@ h6 {
   font-family: 'Roboto Slab';
   font-weight: normal;
 }
+//mixins for general state behaviour
+.hoverstate {
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+  transition: all 0.4s;
+}
+.activestate {
+  box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+  transition: all 0.1s;
+}
+//base stuff
 button {
   padding: @spacer;
   color: @ctatextcolor;
@@ -34,20 +46,21 @@ button {
   border: 0;
   border-radius: @border-radius;
   &:hover {
+    .hoverstate;
     background: lighten(@ctabackgroundcolor, 15%);
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-    transition: all 0.4s;
   }
   &:active {
+    .activestate;
     background: darken(@ctabackgroundcolor, 15%);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
-    transition: all 0.1s;
   }
 }
 main {
   display: flex;
   align-items: flex-start;
+  h2,
+  h4 {
+    margin: 0;
+  }
 }
 nav {
   margin: @spacer;
@@ -56,24 +69,37 @@ nav {
     padding: 0;
   }
   li {
-    background: #eee;
+    background: @searchbackgroundcolor;
+    border-left: solid 3px @searchbackgroundcolor;
     padding: @spacer;
     list-style-type: none;
     min-width: 12em;
+    &:hover {
+      .hoverstate;
+      background: lighten(@searchbackgroundcolor, 5%);
+      border-left: solid 3px @ctabackgroundcolor;
+    }
+    &:active {
+      .activestate;
+      background: darken(@searchbackgroundcolor, 15%);
+      border-left: solid 3px darken(@ctabackgroundcolor,15%);
+    }
     svg {
       margin-right: @spacer;
       color: rgba(0,0,0,0.4);
     }
   }
 }
+//for the inline svg icons
 .icon {
   vertical-align: top;
-  margin-top:1px;
+  margin-top: 1px;
   display: inline-block;
   width: 1em;
   height: 1em;
   fill: currentColor;
 }
+//general styles from here on.
 .search {
   display: flex;
   background: @searchbackgroundcolor;
@@ -182,14 +208,22 @@ nav {
       padding: @spacer/2 2*@spacer;
     }
     th {
-      background:@somecolor;
-      color:@ctatextcolor;
+      background: @somecolor;
+      color: @ctatextcolor;
       text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
       font-weight: 700;
       padding: @spacer/2;
     }
-    tr:nth-child(even) {
-      background: darken(@tablestripecolor, 2%);
+    tr {
+      &:hover {
+        background: @highlightcolor;
+        td {
+          background: @highlightcolor;
+        }
+      }
+      &:nth-child(even) {
+        background: darken(@tablestripecolor, 2%);
+      }
     }
   }
 }

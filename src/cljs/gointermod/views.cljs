@@ -3,13 +3,13 @@
       [gointermod.config :as config]
       [gointermod.search.views :as search]
       [gointermod.orthologresults.views :as orthologs]
-      [gointermod.icons :as icons]
+      [gointermod.utils.icons :as icons]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
 
 (defn nav []
   [:nav
-  [:h4 "Show results in:"]
+  [:h2 "Show results in:"]
   [:ul
     [:li
      [:svg.icon [:use {:xlinkHref "#icon-summary"}]]
@@ -20,7 +20,7 @@
    [:li
      [:svg.icon [:use {:xlinkHref "#icon-tree"}]]
      "Ontology\u00A0Diagram"]]
-   [:h4 "Results filter:"]
+   [:h2 "Results filter:"]
    [:ul
     [:li
      [:svg.icon [:use {:xlinkHref "#icon-biological-process"}]]

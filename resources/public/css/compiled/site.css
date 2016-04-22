@@ -14,6 +14,15 @@ h6 {
   font-family: 'Roboto Slab';
   font-weight: normal;
 }
+.hoverstate {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s;
+}
+.activestate {
+  box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.1s;
+}
 button {
   padding: 1em;
   color: #ffffff;
@@ -25,19 +34,23 @@ button {
   border-radius: 2px;
 }
 button:hover {
-  background: #47c4fd;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.4s;
+  background: #47c4fd;
 }
 button:active {
-  background: #0275a8;
   box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.1s;
+  background: #0275a8;
 }
 main {
   display: flex;
   align-items: flex-start;
+}
+main h2,
+main h4 {
+  margin: 0;
 }
 nav {
   margin: 1em;
@@ -47,10 +60,24 @@ nav ul {
   padding: 0;
 }
 nav li {
-  background: #eee;
+  background: #eeeeee;
+  border-left: solid 3px #eeeeee;
   padding: 1em;
   list-style-type: none;
   min-width: 12em;
+}
+nav li:hover {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s;
+  background: #fbfbfb;
+  border-left: solid 3px #03a9f4;
+}
+nav li:active {
+  box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.1s;
+  background: #c8c8c8;
+  border-left: solid 3px #0275a8;
 }
 nav li svg {
   margin-right: 1em;
@@ -177,6 +204,12 @@ nav li svg {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   font-weight: 700;
   padding: 0.5em;
+}
+.ortholog-results .aggregate tr:hover {
+  background: #fffde7;
+}
+.ortholog-results .aggregate tr:hover td {
+  background: #fffde7;
 }
 .ortholog-results .aggregate tr:nth-child(even) {
   background: #e5e5e5;
