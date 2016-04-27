@@ -18,3 +18,5 @@ Many genes:
 the extra value in the last constraint would be based on which organism they selected. the input organism.
 
 the organism for the 1st constraint would always be human because those are the homologues you are after.
+
+LOOKUP is not case sensitive

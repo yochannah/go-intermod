@@ -14,7 +14,7 @@
   [:th "Branch"]
    ]])
 
- (defn result-row [[original-symbol original-secondary-id original-id _ _ _ homie-id homie-secondary-id homie-symbol homie-organism _ data-set  _ pub-id _ go-identifier ontology-term ontology-branch]]
+ (defn result-row [[original-symbol original-secondary-id original-id _ _  homie-id homie-secondary-id homie-symbol homie-organism _ data-set  _ pub-id _ _ go-identifier ontology-term ontology-branch]]
    ^{:key (gensym)}
    [:tr
    [:td homie-organism]
