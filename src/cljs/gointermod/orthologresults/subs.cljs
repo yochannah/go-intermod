@@ -10,4 +10,4 @@
 (re-frame/register-sub
   :aggregate-results
   (fn [db]
-    (reaction (:aggregate-results @db))))
+    (reaction (:multi-mine-aggregate @db))))

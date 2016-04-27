@@ -43,5 +43,5 @@
       [nav]
       [orthologs/orthologs]]
       (when config/debug?
-        [:div.db  (edn->hiccup @(re-frame/subscribe [:db]))])
+        [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results))])
     ]))

@@ -56,6 +56,13 @@
       {} search-results)
 )
 
+(defn aggregate-by-orthologue [search-results]
+  "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
+  (reduce (fn [new-map [_ _ _ _ _ primary-id secondary-id symbol organism & args ]]
+    (update-in new-map [(keyword (utils/get-id primary-id secondary-id symbol)) (keyword (last args))] inc))
+      {} search-results)
+)
+
 (re-frame/register-handler
  :aggregate-search-results
  (fn [db [_ search-results]]
@@ -67,8 +74,9 @@
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
-   (.log js/console (clj->js source) "Concat: " (clj->js (:results search-results)))
-   (assoc-in db [:multi-mine-results source] search-results))
+;   (.log js/console (clj->js source) "Concat: " (clj->js (:results search-results)))
+   (assoc-in db [:multi-mine-results source] search-results)
+   (assoc-in db [:multi-mine-aggregate source] (aggregate-by-orthologue (:results search-results))))
 )
 
 (re-frame/register-handler
@@ -79,7 +87,7 @@
     (go (let
       [search-results (<! (comms/go-query (:selected-organism db) (:search-term db) :mouse))]
         ;add results to the db
-        (re-frame/dispatch [:update-search-results search-results])
+      ;  (re-frame/dispatch [:update-search-results search-results])
         (re-frame/dispatch [:aggregate-search-results (:results search-results)])
 
           (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
