@@ -63,4 +63,4 @@
     ;asynchronously query all dem mines and add the results to the db
     (go
       (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
-) db))
+) (dissoc db :multi-mine-results :multi-mine-aggregate)))
