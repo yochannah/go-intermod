@@ -193,13 +193,37 @@ nav li svg {
   text-align: center;
 }
 .ortholog-results .aggregate td {
-  padding: 0.5em 2em;
+  padding: 0.2em 2em;
 }
 .ortholog-results .aggregate td:nth-child(odd) {
   background: #eaeaea;
 }
+.ortholog-results .aggregate td:first-child {
+  border-left: solid 3px;
+}
+.ortholog-results .aggregate .zebra td {
+  border-color: #ff5722;
+}
+.ortholog-results .aggregate .yeast td {
+  border-color: #ffc107;
+}
+.ortholog-results .aggregate .human td {
+  border-color: #8bc34a;
+}
+.ortholog-results .aggregate .worm td {
+  border-color: #3f51b5;
+}
+.ortholog-results .aggregate .mouse td {
+  border-color: #00bcd4;
+}
+.ortholog-results .aggregate .rat td {
+  border-color: #e91e63;
+}
+.ortholog-results .aggregate .fly td {
+  border-color: #9c27b0;
+}
 .ortholog-results .aggregate th {
-  background: #009688;
+  background: #607d8b;
   color: #ffffff;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   font-weight: 700;

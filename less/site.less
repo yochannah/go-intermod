@@ -7,9 +7,17 @@
 @ctabackgroundcolor: #03A9F4;
 @searchtextcolor: @maintextcolor;
 @searchbackgroundcolor: #EEE;
-@somecolor: #009688;
+@somecolor: #607D8B;
 @tablestripecolor: #eaeaea;
 @highlightcolor: #FFFDE7;
+//Colours for the types:
+@zebracolor: #FF5722;
+@yeastcolor: #FFC107;
+@humancolor: #8BC34A;
+@wormcolor: #3F51B5;
+@mousecolor: #00BCD4;
+@ratcolor: #E91E63;
+@flycolor: #9C27B0;
 body {
   font-family: 'Roboto',sans-serif;
   color: @maintextcolor;
@@ -202,10 +210,34 @@ nav {
       text-align: center;
     }
     td {
+      padding: @spacer/5 2*@spacer;
       &:nth-child(odd) {
         background: @tablestripecolor;
       }
-      padding: @spacer/2 2*@spacer;
+      &:first-child {
+        border-left: solid 3px;
+      }
+    }
+    .zebra td {
+      border-color: @zebracolor;
+    }
+    .yeast td {
+      border-color: @yeastcolor;
+    }
+    .human td {
+      border-color: @humancolor;
+    }
+    .worm td {
+      border-color: @wormcolor;
+    }
+    .mouse td {
+      border-color: @mousecolor;
+    }
+    .rat td {
+      border-color: @ratcolor;
+    }
+    .fly td {
+      border-color: @flycolor;
     }
     th {
       background: @somecolor;

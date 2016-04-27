@@ -49,18 +49,18 @@
   "output aggregated search results into table rows"
   (let [results (re-frame/subscribe [:aggregate-results])]
     [:tbody
-     (map (fn [[organism organism-details] organisms]
-        (map (fn [[k v] organism-details]
+    (doall (map (fn [[organism organism-details] organisms]
+      (doall  (map (fn [[ortholog counts] organism-details]
            ^{:key (gensym)}
-           [:tr
+           [:tr {:class (clj->js organism)}
             [:td [:input {:type "checkbox"}]]
-            [:td (clj->js organism)]
-            [:td (clj->js k)]
-              [:td (:biological_process v)]
-              [:td (:molecular_function v)]
-              [:td (:cellular_component v)]
-            ]) organism-details)
-        ) @results)]))
+            [:td  (comms/get-abbrev organism)]
+            [:td (clj->js ortholog)]
+              [:td (:biological_process counts)]
+              [:td (:molecular_function counts)]
+              [:td (:cellular_component counts)]
+            ]) organism-details))
+        ) @results))]))
 
 (defn resolve-ids []
   (go
@@ -74,7 +74,6 @@
 (defn orthologs []
   (fn []
      [:div.ortholog-results
-;      [:button {:on-click (fn [] (resolve-ids))} "RESOLVE"]
       [:h2 "Orthologous Genes"]
       [:table.aggregate
         [aggregate-headers]
