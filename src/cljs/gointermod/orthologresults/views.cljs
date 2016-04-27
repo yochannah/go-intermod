@@ -37,7 +37,7 @@
 
 (defn aggregate-headers []
   [:thead [:tr
-  [:th "Include"]
+  [:th [:input {:type "checkbox"}]]
   [:th "Species"]
   [:th "Orthologs"]
   [:th.count "Biological Process"]

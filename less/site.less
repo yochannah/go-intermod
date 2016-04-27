@@ -201,22 +201,21 @@ nav {
 }
 .ortholog-results {
   margin: @spacer;
+  width:100%;
   .count {
     width: 6em;
   }
   .aggregate {
-    flex-grow:1;
+    width:100%;
     td,
     th {
       text-align: center;
     }
     td {
       padding: @spacer/5 2*@spacer;
-      &:nth-child(odd) {
-        background: @tablestripecolor;
-      }
       &:first-child {
         border-left: solid 3px;
+        padding:@spacer/5;
       }
     }
     .zebrafish td {

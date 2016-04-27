@@ -39,14 +39,16 @@
 ))))
 
 (defn query-all-selected-organisms [input-organism identifiers]
+  "query all organisms that are selected as an output species in the search bar"
   (let [output-organisms (re-frame/subscribe [:organisms])]
     (doall (map (fn [[output-organism vals] stuff]
-;      (.log js/console "===" (clj->js k) (clj->js v))
+      (cond
+        ;;if the result is checked
+        (:output? vals)
+        ;;query for it
         (go (let [res(<! (go-query input-organism identifiers output-organism))]
-              (re-frame/dispatch [:concat-results res output-organism])
-        ))
-    ) @output-organisms))
-  ))
+          (re-frame/dispatch [:concat-results res output-organism])
+)))) @output-organisms))))
 
 (defn resolve-ids
   "Completes the steps required to resolve identifiers.

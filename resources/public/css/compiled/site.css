@@ -184,12 +184,13 @@ nav li svg {
 }
 .ortholog-results {
   margin: 1em;
+  width: 100%;
 }
 .ortholog-results .count {
   width: 6em;
 }
 .ortholog-results .aggregate {
-  flex-grow: 1;
+  width: 100%;
 }
 .ortholog-results .aggregate td,
 .ortholog-results .aggregate th {
@@ -198,11 +199,9 @@ nav li svg {
 .ortholog-results .aggregate td {
   padding: 0.2em 2em;
 }
-.ortholog-results .aggregate td:nth-child(odd) {
-  background: #eaeaea;
-}
 .ortholog-results .aggregate td:first-child {
   border-left: solid 3px;
+  padding: 0.2em;
 }
 .ortholog-results .aggregate .zebrafish td {
   border-color: #ff5722;
