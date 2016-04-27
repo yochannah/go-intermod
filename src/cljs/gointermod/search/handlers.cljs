@@ -59,8 +59,16 @@
 (re-frame/register-handler
  :aggregate-search-results
  (fn [db [_ search-results]]
-   (.log js/console "Aggregate: (aggregate-by-species search-results)" (clj->js (aggregate-by-species search-results)))
+   ;(.log js/console "Aggregate: (aggregate-by-species search-results)" (clj->js (aggregate-by-species search-results)))
    (assoc db :aggregate-results (aggregate-by-species search-results)))
+)
+
+
+(re-frame/register-handler
+ :concat-results
+ (fn [db [_ search-results source]]
+   (.log js/console (clj->js source) "Concat: " (clj->js (:results search-results)))
+   (assoc-in db [:multi-mine-results source] search-results))
 )
 
 (re-frame/register-handler
@@ -69,8 +77,16 @@
   (fn [db [_ _]]
     ;query humanmine
     (go (let
-      [search-results (<! (comms/go-query (:selected-organism db) (:search-term db)))]
+      [search-results (<! (comms/go-query (:selected-organism db) (:search-term db) :mouse))]
         ;add results to the db
         (re-frame/dispatch [:update-search-results search-results])
         (re-frame/dispatch [:aggregate-search-results (:results search-results)])
-)) db))
+
+          (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
+))
+    ;experimental multiples query
+;  (go (let [search-results (<! (comms/query-all-selected-organisms (:selected-organism db) (:search-term db)))]
+;        (.log js/console "Booya")
+;  ))
+
+    db))
