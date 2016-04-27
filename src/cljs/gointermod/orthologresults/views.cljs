@@ -14,27 +14,6 @@
   [:th "Branch"]
    ]])
 
- (defn result-row [[original-symbol original-secondary-id original-id _ _  homie-id homie-secondary-id homie-symbol homie-organism _ data-set  _ pub-id _ _ go-identifier ontology-term ontology-branch]]
-   ^{:key (gensym)}
-   [:tr
-   [:td homie-organism]
-   [:td homie-symbol]
-   [:td go-identifier]
-   [:td ontology-term]
-   [:td ontology-branch]
-    ])
-
-(defn results []
-  "output search results into table rows"
-  (let [search-results (re-frame/subscribe [:search-results])]
-  [:tbody (map result-row (:results @search-results))]))
-
-(defn count-by-ontology-branch [branch]
-  (let [search-results (:results @(re-frame/subscribe [:search-results]))]
-  (count (filter
-   (fn [result] (= (last result) branch)) search-results))
-))
-
 (defn aggregate-headers []
   [:thead [:tr
   [:th [:input {:type "checkbox"}]]
@@ -78,7 +57,4 @@
       [:table.aggregate
         [aggregate-headers]
         [aggregate-results]]
-      [:table
-        [headers]
-        [results]
-        ]]))
+        ]))
