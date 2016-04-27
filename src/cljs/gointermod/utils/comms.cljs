@@ -9,6 +9,12 @@
         service (:service (:mine (source @mines)))]
 (clj->js service)))
 
+(defn get-abbrev [source]
+(let [mines (re-frame/subscribe [:organisms])
+        organism (:abbrev (source @mines))]
+(clj->js organism)))
+
+
 (defn make-base-query [identifier]
   (str "<query model=\"genomic\" view=\"Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.name Gene.organism.taxonId Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.name Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.evidence.publications.pubMedId Gene.goAnnotation.evidence.publications.title Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and A\" name=\"intermod_go\" > <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />  <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
 <constraint path=\"Gene.homologues.homologue.symbol\" op=\"=\" value=\"" identifier "\" code=\"A\" /></query>"))
@@ -26,3 +32,42 @@
          :format "json"}}))]
             (js->clj (-> response :body))
 ))))
+
+(defn resolve-ids
+  "Completes the steps required to resolve identifiers.
+  1. Start an ID Resolution job.
+  2. Poll the server for the job status (every 1s)
+  3. Delete the job (side effect).
+  4. Return results"
+  [source input]
+  (.log js/console (clj->js source) (clj->js input))
+  (go (let [root (.-root (get-service source))
+            response (<! (http/post (str "http://" root "/service/ids")
+                                    {:with-credentials? false
+                                     :json-params (clj->js input)}))]
+        (if-let [uid (-> response :body :uid)]
+          (loop []
+            (let [status-response (<! (http/get (str "http://" root "/service/ids/" uid "/status")
+                                                {:with-credentials? false}))]
+              (if (= "SUCCESS" (:status (:body status-response)))
+                (let [final-response (<! (http/get (str "http://" root "/service/ids/" uid "/results")
+                                                   {:with-credentials? false}))]
+                  (http/delete (str "http://" root "/service/ids/" uid)
+                               {:with-credentials? false})
+                  final-response)
+                (do
+                  (<! (timeout 1000))
+                  (recur)))))))))
+
+
+  (defn resolve-id
+    "Resolves an ID or set of IDs from Intermine."
+    [source input]
+      (go (let [res (<! (resolve-ids
+         source
+         {:identifiers (if (string? input) [input] input)
+          :type "Gene"
+          :caseSensitive false
+          :wildCards true
+          :extra (get-abbrev source)}))]
+    (-> res :body :results))))

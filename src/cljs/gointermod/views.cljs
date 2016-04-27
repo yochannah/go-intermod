@@ -30,7 +30,8 @@
      "Molecular\u00A0Function"]
    [:li
      [:svg.icon [:use {:xlinkHref "#icon-cellular-component"}]]
-     "Cellular\u00A0Component"]]])
+     "Cellular\u00A0Component"]]
+   ])
 
 
 (defn main-panel []
