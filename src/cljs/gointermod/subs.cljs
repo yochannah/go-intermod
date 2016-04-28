@@ -14,9 +14,12 @@
   (fn [db]
     (reaction @db)))
 
-
-
 (re-frame/register-sub
  :organisms
  (fn [db]
   (reaction (:organisms @db))))
+
+(re-frame/register-sub
+ :active-view
+ (fn [db]
+   (reaction (:active-view @db))))

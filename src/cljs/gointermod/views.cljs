@@ -3,35 +3,48 @@
       [gointermod.config :as config]
       [gointermod.search.views :as search]
       [gointermod.orthologresults.views :as orthologs]
+      [gointermod.heatmap.views :as heatmap]
+      [gointermod.ontology.views :as ontology]
       [gointermod.icons :as icons]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
 
 (defn nav []
-  [:nav
-  [:h2 "Show results in:"]
-  [:ul
-    [:li.active
-     [:svg.icon [:use {:xlinkHref "#icon-summary"}]]
-     "Ortholog\u00A0Summary"]
-   [:li
-    [:svg.icon [:use {:xlinkHref "#icon-heatmap"}]]
-    "Interactive\u00A0Heatmap"]
-   [:li
-     [:svg.icon [:use {:xlinkHref "#icon-tree"}]]
-     "Ontology\u00A0Diagram"]]
-   [:h2 "Results filter:"]
-   [:ul
-    [:li
-     [:svg.icon [:use {:xlinkHref "#icon-biological-process"}]]
-     "Biological\u00A0Process"]
-   [:li
-     [:svg.icon [:use {:xlinkHref "#icon-molecular-function"}]]
-     "Molecular\u00A0Function"]
-   [:li
-     [:svg.icon [:use {:xlinkHref "#icon-cellular-component"}]]
-     "Cellular\u00A0Component"]]
-   ])
+  (let [active-view (re-frame/subscribe [:active-view])]
+    [:nav
+      [:h2 "Show results in:"]
+      [:ul
+        [:li
+          [:a {:href "#/"
+               :class (cond (= @active-view :ortholog-summary) "active")}
+                [:svg.icon [:use {:xlinkHref "#icon-summary"}]]
+                "Ortholog\u00A0Summary"]]
+        [:li
+          [:a {:href "#/heatmap"
+               :class (cond (= @active-view :heatmap) "active")}
+                [:svg.icon [:use {:xlinkHref "#icon-heatmap"}]]
+                "Interactive\u00A0Heatmap"]]
+        [:li
+          [:a {:href "#/ontology"
+             :class (cond (= @active-view :ontology) "active")}
+              [:svg.icon [:use {:xlinkHref "#icon-tree"}]]
+              "Ontology\u00A0Diagram"]]]
+
+      [:h2 "Results filter:"]
+      [:ul
+        [:li
+          [:a
+            [:svg.icon [:use {:xlinkHref "#icon-biological-process"}]]
+              "Biological\u00A0Process"]]
+        [:li
+          [:a
+            [:svg.icon [:use {:xlinkHref "#icon-molecular-function"}]]
+              "Molecular\u00A0Function"]]
+        [:li
+          [:a
+            [:svg.icon [:use {:xlinkHref "#icon-cellular-component"}]]
+              "Cellular\u00A0Component"]]]
+   ]))
 
 
 (defn main-panel []
@@ -39,9 +52,18 @@
     [:div
       [icons/icons]
       [search/search]
-     [:main
+    [:main
       [nav]
-      [orthologs/orthologs]]
+      (let [active-view (re-frame/subscribe [:active-view])]
+        (cond
+          (= @active-view :ortholog-summary)
+            [orthologs/orthologs]
+          (= @active-view :heatmap)
+            [heatmap/heatmap]
+          (= @active-view :ontology)
+            [ontology/ontology]
+        )
+    )]
       (when config/debug?
         [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results))])
     ]))

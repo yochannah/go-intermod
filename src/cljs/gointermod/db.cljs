@@ -2,6 +2,7 @@
 
 (def default-db
   {:selected-organism :human
+   :active-view :ortholog-summary
    :organisms
    {:human
      {:id     :human

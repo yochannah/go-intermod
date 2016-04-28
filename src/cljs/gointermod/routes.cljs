@@ -22,9 +22,11 @@
       (re-frame/dispatch [:set-view :ortholog-summary])
     )
 
-  (defroute "/bob" []
-    (.log js/console "hi")
-      (re-frame/dispatch [:set-view :ortholog-summary])
+  (defroute "/heatmap" []
+      (re-frame/dispatch [:set-view :heatmap])
+    )
+  (defroute "/ontology" []
+      (re-frame/dispatch [:set-view :ontology])
     )
 
   ;; --------------------
