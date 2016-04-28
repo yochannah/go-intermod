@@ -1,6 +1,7 @@
 (ns gointermod.handlers
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]
+              [gointermod.orthologresults.handlers]
               [gointermod.search.handlers :as search]))
 
 (re-frame/register-handler

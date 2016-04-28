@@ -29,15 +29,18 @@
   (let [results (re-frame/subscribe [:aggregate-results])]
     [:tbody
     (doall (map (fn [[organism organism-details] organisms]
-      (doall  (map (fn [[ortholog counts] organism-details]
+      (doall  (map (fn [[ortholog ortholog-details] organism-details]
            ^{:key (gensym)}
            [:tr {:class (clj->js organism)}
-            [:td [:input {:type "checkbox"}]]
+            [:td [:input
+                  {:type "checkbox"
+                   :checked (:is-selected? ortholog-details)
+                   :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
             [:td  (comms/get-abbrev organism)]
             [:td (clj->js ortholog)]
-              [:td (:biological_process counts)]
-              [:td (:molecular_function counts)]
-              [:td (:cellular_component counts)]
+              [:td (:biological_process ortholog-details)]
+              [:td (:molecular_function ortholog-details)]
+              [:td (:cellular_component ortholog-details)]
             ]) organism-details))
         ) @results))]))
 
