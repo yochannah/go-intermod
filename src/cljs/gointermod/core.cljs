@@ -3,6 +3,7 @@
               [re-frame.core :as re-frame]
               [gointermod.handlers]
               [gointermod.subs]
+              [gointermod.routes :as routes]
               [gointermod.views :as views]
               [gointermod.config :as config]))
 
@@ -13,6 +14,7 @@
   (reagent/render [views/main-panel]
                   (.getElementById js/document "app")))
 
-(defn ^:export init [] 
+(defn ^:export init []
+  (routes/app-routes)
   (re-frame/dispatch-sync [:initialize-db])
   (mount-root))

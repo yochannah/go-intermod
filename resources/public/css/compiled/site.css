@@ -79,6 +79,19 @@ nav li:active {
   background: #c8c8c8;
   border-left: solid 3px #0275a8;
 }
+nav li.active {
+  transition: all 1s;
+  background-color: #607d8b;
+  color: #fff;
+  border-left: solid 3px #41545e;
+}
+nav li.active:hover {
+  background-color: #607d8b;
+  color: #fff;
+}
+nav li.active svg {
+  fill: #ffffff;
+}
 nav li svg {
   margin-right: 1em;
   color: rgba(0, 0, 0, 0.4);

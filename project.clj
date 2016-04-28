@@ -5,6 +5,7 @@
                  [reagent "0.6.0-alpha"]
                  [org.clojure/core.async "0.2.374"]
                  [cljs-http "0.1.39"]
+                 [secretary "1.2.3"]
                  [re-frame "0.7.0"]]
 
   :min-lein-version "2.5.3"

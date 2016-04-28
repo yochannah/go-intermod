@@ -16,7 +16,7 @@
 
 (defn aggregate-headers []
   [:thead [:tr
-  [:th [:input {:type "checkbox"}]]
+  [:th [:input {:type "checkbox" :on-click #(re-frame/dispatch [:toggle-select-all])}]]
   [:th "Species"]
   [:th "Orthologs"]
   [:th.count "Biological Process"]

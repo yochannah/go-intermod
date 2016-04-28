@@ -7,3 +7,9 @@
  :initialize-db
  (fn  [_ _]
    db/default-db))
+
+(re-frame/register-handler
+ :set-view
+ (fn [db [_ active-view]]
+   (.log js/console "setting view" (clj->js active-view))
+   (assoc db :active-view active-view)))

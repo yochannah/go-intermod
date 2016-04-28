@@ -92,6 +92,13 @@ nav {
       background: darken(@searchbackgroundcolor, 15%);
       border-left: solid 3px darken(@ctabackgroundcolor,15%);
     }
+    &.active {
+      transition: all 1s;
+      background-color:@somecolor;color:#fff;
+      &:hover {background-color:@somecolor; color:#fff;}
+      border-left: solid 3px darken(@somecolor,15%);
+      svg {fill:#fff}
+    }
     svg {
       margin-right: @spacer;
       color: rgba(0,0,0,0.4);
