@@ -22,6 +22,7 @@
       :checked @(re-frame/subscribe [:are-all-orthologs-selected?])
       :on-change #(re-frame/dispatch [:toggle-select-all])}]]
   [:th "Species"]
+  [:th "Input Gene"]
   [:th "Orthologs"]
   [:th.count "Biological Process"]
   [:th.count "Molecular Function"]
@@ -41,8 +42,9 @@
                {:type "checkbox"
                 :checked (:is-selected? ortholog-details)
                 :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
-            [:td (comms/get-abbrev organism)]
-            [:td (clj->js ortholog)]
+              [:td (comms/get-abbrev organism)]
+              [:td (:original-id ortholog-details)]
+              [:td (clj->js ortholog)]
               [:td (:biological_process ortholog-details)]
               [:td (:molecular_function ortholog-details)]
               [:td (:cellular_component ortholog-details)]
