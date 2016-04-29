@@ -5,6 +5,7 @@
       [gointermod.orthologresults.views :as orthologs]
       [gointermod.heatmap.views :as heatmap]
       [gointermod.ontology.views :as ontology]
+      [gointermod.enrichment.views :as enrichment]
       [gointermod.icons :as icons]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
@@ -28,7 +29,13 @@
           [:a {:href "#/ontology"
              :class (cond (= @active-view :ontology) "active")}
               [:svg.icon [:use {:xlinkHref "#icon-tree"}]]
-              "Ontology\u00A0Diagram"]]]
+              "Ontology\u00A0Diagram"]]
+        [:li
+          [:a {:href "#/enrichment"
+             :class (cond (= @active-view :enrichment) "active")}
+              [:svg.icon [:use {:xlinkHref "#icon-enrichment"}]]
+              "Enrichment"]]]
+
 
       [:h2 "Results filter:"]
       [:ul
@@ -62,6 +69,8 @@
             [heatmap/heatmap]
           (= @active-view :ontology)
             [ontology/ontology]
+          (= @active-view :enrichment)
+            [enrichment/enrichment]
         )
     )]
       (when config/debug?

@@ -15,6 +15,7 @@
 
 (defn are-all-selected? [results]
   "helper method to determine whether or nor all the results in a multi result set are selected. Returns a single boolean value"
+  ;;I bet this can be refactored to be simpler.
   (let [all-selected? (atom [])]
     (doall (map (fn [[organism org-details] x]
       (doall (map (fn [[ortholog orth-details] y]
@@ -26,17 +27,16 @@
 
 (re-frame/register-handler
   :toggle-select-all
+;  "Selects all if any are deselected, or deselects if all are selected"
   (fn [db [_ _]]
-    (.log js/console "Yeah, you clicked meh.")
     (if (are-all-selected? (:multi-mine-aggregate db))
-      ;;else, select all
-      (set-all-aggregate-results-to true db))
-      ;;if there are any selected, deselect.
       (set-all-aggregate-results-to false db)
+      (set-all-aggregate-results-to true db))
     ))
 
 (re-frame/register-handler
   :select-ortholog-result
   (fn [db [_ organism ortholog]]
+;    "Selects or deselects a single result in the db"
     (update-in db [:multi-mine-aggregate organism ortholog :is-selected?] not)
     ))

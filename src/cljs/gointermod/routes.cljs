@@ -29,5 +29,9 @@
       (re-frame/dispatch [:set-view :ontology])
     )
 
+  (defroute "/enrichment" []
+      (re-frame/dispatch [:set-view :enrichment])
+    )
+
   ;; --------------------
   (hook-browser-navigation!))
