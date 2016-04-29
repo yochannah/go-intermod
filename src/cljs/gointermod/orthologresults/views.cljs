@@ -16,7 +16,11 @@
 
 (defn aggregate-headers []
   [:thead [:tr
-  [:th [:input {:type "checkbox" :on-click #(re-frame/dispatch [:toggle-select-all])}]]
+  [:th
+    [:input
+     {:type "checkbox"
+      :checked @(re-frame/subscribe [:are-all-orthologs-selected?])
+      :on-change #(re-frame/dispatch [:toggle-select-all])}]]
   [:th "Species"]
   [:th "Orthologs"]
   [:th.count "Biological Process"]
@@ -32,11 +36,12 @@
       (doall  (map (fn [[ortholog ortholog-details] organism-details]
            ^{:key (gensym)}
            [:tr {:class (clj->js organism)}
-            [:td [:input
-                  {:type "checkbox"
-                   :checked (:is-selected? ortholog-details)
-                   :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
-            [:td  (comms/get-abbrev organism)]
+            [:td
+              [:input
+               {:type "checkbox"
+                :checked (:is-selected? ortholog-details)
+                :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
+            [:td (comms/get-abbrev organism)]
             [:td (clj->js ortholog)]
               [:td (:biological_process ortholog-details)]
               [:td (:molecular_function ortholog-details)]

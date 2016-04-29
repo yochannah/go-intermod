@@ -7,7 +7,12 @@
   (fn [db]
     (reaction (:search-results @db))))
 
-(re-frame/register-sub
-  :aggregate-results
-  (fn [db]
-    (reaction (:multi-mine-aggregate @db))))
+  (re-frame/register-sub
+    :aggregate-results
+    (fn [db]
+      (reaction (:multi-mine-aggregate @db))))
+
+  (re-frame/register-sub
+    :are-all-orthologs-selected?
+    (fn [db]
+      (reaction (:are-all-orthologs-selected? @db))))
