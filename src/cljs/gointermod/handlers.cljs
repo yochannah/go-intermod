@@ -2,6 +2,7 @@
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]
               [gointermod.orthologresults.handlers :as orthologs]
+              [gointermod.heatmap.handlers]
               [gointermod.search.handlers :as search]))
 
 (re-frame/register-handler

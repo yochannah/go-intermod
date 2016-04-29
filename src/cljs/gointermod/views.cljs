@@ -74,5 +74,5 @@
         )
     )]
       (when config/debug?
-        [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results))])
+        [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))])
     ]))

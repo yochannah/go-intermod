@@ -59,9 +59,10 @@
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
-   (assoc-in db [:multi-mine-results source] search-results)
-   (assoc-in db [:multi-mine-aggregate source] (aggregate-by-orthologue (:results search-results))))
-)
+   (->
+    (assoc-in db [:multi-mine-results source] search-results)
+    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue (:results search-results))))
+))
 
 (re-frame/register-handler
   ;;What do we do when a search button is pressed? This.

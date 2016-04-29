@@ -23,10 +23,11 @@ LOOKUP is not case sensitive
 
 ===========
 TODOS:
- - hide that debuggy thing
+ - hide the debugger db table
  - search / orthologue results:
     - act correctly upon non-human gene input
     - do anything with the evidence codes in searches
     - Click behaviour for rows
     - Sort columns
     - export
+    - Handling failed mines / no homologues / no annotations
