@@ -230,7 +230,12 @@ nav {
       text-align: center;
     }
     td {
-      padding: @spacer/5 2*@spacer;
+
+      padding: @spacer/5 @spacer;
+      &.dataset {
+        min-width:10em;
+      }
+      &.organism {min-width:6em;}
       &:first-child {
         border-left: solid 3px;
         padding: @spacer/5;

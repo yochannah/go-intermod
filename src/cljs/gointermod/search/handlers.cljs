@@ -44,12 +44,13 @@
 
 (defn aggregate-by-orthologue [search-results]
   "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
-  (reduce (fn [new-map [original-symbol original-secondary-id original-primary-id original-organism _ primary-id secondary-id symbol organism & args ]]
+  (reduce (fn [new-map [original-symbol original-secondary-id original-primary-id original-organism _ primary-id secondary-id symbol organism _ dataset & args ]]
     (let [id (keyword (utils/get-id primary-id secondary-id symbol organism))
           original-id (utils/get-id original-primary-id original-secondary-id original-symbol original-organism)]
       (->
         (update-in new-map [id (keyword (last args))] inc)
         (assoc-in [id :is-selected?] true)
+        (assoc-in [id :dataset] dataset)
         (assoc-in [id :original-id] original-id)
       )))
       {} search-results)

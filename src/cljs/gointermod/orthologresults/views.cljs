@@ -27,6 +27,7 @@
   [:th.count "Biological Process"]
   [:th.count "Molecular Function"]
   [:th.count "Cellular Component"]
+  [:th "Source"]
   ]])
 
 (defn aggregate-results []
@@ -42,12 +43,13 @@
                {:type "checkbox"
                 :checked (:is-selected? ortholog-details)
                 :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
-              [:td (comms/get-abbrev organism)]
+              [:td.organism (comms/get-abbrev organism)]
               [:td (:original-id ortholog-details)]
               [:td (clj->js ortholog)]
               [:td (:biological_process ortholog-details)]
               [:td (:molecular_function ortholog-details)]
               [:td (:cellular_component ortholog-details)]
+              [:td.dataset (:dataset ortholog-details)]
             ]) organism-details))
         ) @results))]))
 

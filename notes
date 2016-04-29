@@ -23,6 +23,10 @@ LOOKUP is not case sensitive
 
 ===========
 TODOS:
- - act correctly upon non-human gene input
- - do anything with the evidence codes in searches
  - hide that debuggy thing
+ - search / orthologue results:
+    - act correctly upon non-human gene input
+    - do anything with the evidence codes in searches
+    - Click behaviour for rows
+    - Sort columns
+    - export

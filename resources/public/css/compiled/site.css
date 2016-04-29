@@ -222,7 +222,13 @@ nav li a:visited svg {
   text-align: center;
 }
 .ortholog-results .aggregate td {
-  padding: 0.2em 2em;
+  padding: 0.2em 1em;
+}
+.ortholog-results .aggregate td.dataset {
+  min-width: 10em;
+}
+.ortholog-results .aggregate td.organism {
+  min-width: 6em;
 }
 .ortholog-results .aggregate td:first-child {
   border-left: solid 3px;
