@@ -10,9 +10,9 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
     (distinct
       (into []
-        (doall (map (fn [[row _]result]
+         (map (fn [[row _]result]
            (:go-term row)
-         ) @heatmap))))))
+         ) @heatmap)))))
 
 (defn headers []
   ;;subscribe to aggregate results for a given branch
@@ -33,16 +33,18 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
   ;;output tds of counts
   [:tbody
-    (map (fn [[result]]
-           ^{:key (gensym)}
-      [:tr
-      (.log js/console "x" (clj->js result) )
-        [:td (comms/get-abbrev (:organism result))]
-        [:td (:ortholog result)]
-        [:td ]
-        [:td ]
-        [:td ]
-  ]) @heatmap)]))
+   (.log js/console "HEATMAP" (clj->js @heatmap))
+  ;   (map (fn [[result]]
+  ;          ^{:key (gensym)}
+  ;     [:tr
+  ;     (.log js/console "x" (clj->js result) )
+  ;       [:td (comms/get-abbrev (:organism result))]
+  ;       [:td (:ortholog result)]
+  ;       [:td ]
+  ;       [:td ]
+  ;       [:td ]
+  ; ]) @heatmap)
+   ]))
 
 (defn heatmap []
   (fn []
@@ -50,7 +52,7 @@
       [:h2 "Annotation count by species"]
       [:button {:on-click #( (re-frame/dispatch [:aggregate-heatmap-results]))} "aggregate me, baby"]
       [:table
-       [headers]
+  ;     [headers]
        [counts]
        ]
 ]))
