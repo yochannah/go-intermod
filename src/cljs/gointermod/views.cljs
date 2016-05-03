@@ -36,7 +36,6 @@
               [:svg.icon [:use {:xlinkHref "#icon-enrichment"}]]
               "Enrichment"]]]
 
-
       [:h2 "Results filter:"]
       [:ul
         [:li

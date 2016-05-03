@@ -9,12 +9,13 @@
 (defn headers []
   ;;subscribe to aggregate results for a given branch
   ;;each term is in a th
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
   [:thead
    [:tr
     [:th "Species"]
     [:th "Orthologue"]
     [:th "All the terms go next"]
-   ]]
+   ]])
   )
 
 (defn counts []
