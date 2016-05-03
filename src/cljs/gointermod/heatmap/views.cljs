@@ -6,27 +6,43 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+(defn get-headers []
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
+    (distinct
+      (into []
+        (doall (map (fn [[row _]result]
+           (:go-term row)
+         ) @heatmap))))))
+
 (defn headers []
   ;;subscribe to aggregate results for a given branch
   ;;each term is in a th
-  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
+  (let [headers (get-headers)]
   [:thead
    [:tr
     [:th "Species"]
     [:th "Orthologue"]
-    [:th "All the terms go next"]
-   ]])
-  )
+    (map (fn [header]
+      ^{:key header}
+      [:th.goterm [:div [:span header]]]) headers)
+   ]]
+  ))
 
 (defn counts []
   ;;subscribe to a branch
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
   ;;output tds of counts
   [:tbody
-   [:tr
-    [:td "Human"]
-    [:td "Orthologue"]
-    [:td "Counts here"]
-]])
+    (map (fn [[result]]
+           ^{:key (gensym)}
+      [:tr
+      (.log js/console "x" (clj->js result) )
+        [:td (comms/get-abbrev (:organism result))]
+        [:td (:ortholog result)]
+        [:td ]
+        [:td ]
+        [:td ]
+  ]) @heatmap)]))
 
 (defn heatmap []
   (fn []
