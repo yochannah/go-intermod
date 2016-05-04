@@ -4,30 +4,37 @@
 
 
 (defn make-key [organism result]
-  ;(.log js/console "making key" (str organism "-" (get result 0) "-" (get result 15)))
+;  (.log js/console "making key" (str organism "-" (get result 0) "-" (get result 15)))
   (keyword (str organism "-" (get result 0) "-" (get result 15)))
   )
 
-(defn aggregate-row [details organism result]
+(defn aggregate-row [organism result]
   ; (.log js/console "new mappy result"  (clj->js {:results result
   ;    :organism organism
   ;    :go-term (get result 16)
   ;    :ortholog (get result 0)}))
   {:results result
    :organism organism
-   :go-term (get result 16)
+   :go-id (get result 16)
+   :go-term (get result 15)
    :ortholog (get result 0)})
 
-(defn extract-results [search-results]
-  (.log js/console "EXTRACT RESULTS" (clj->js search-results))
-  (into (sorted-map) (map (fn [[organism details] x]
-    (.log js/console "organis" (clj->js organism))
+(defn merge-results [results]
+  (apply concat (map (fn [[_ organism]]
+    (:results organism)
+  ) results)))
 
-    (map (fn [ result]
-       {(make-key organism result)
-        (aggregate-row details organism result)}
-         ) (:results details))
-            ) search-results)))
+(defn extract-results [search-results]
+  (let [merged-results (merge-results search-results)]
+  (.log js/console "Merged RESULTS" (clj->js merged-results)(clj->js (count merged-results)))
+  (into (sorted-map)
+      (map (fn [result]
+          ;   (.log js/console "RES" (clj->js result))
+        (let [organism (get result 3)
+              k (make-key organism result)
+              row (aggregate-row organism result)]
+              {k row})
+      )) merged-results)))
 
 
 

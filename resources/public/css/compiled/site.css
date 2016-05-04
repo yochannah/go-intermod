@@ -271,6 +271,21 @@ nav li a:visited svg {
 .ortholog-results .aggregate tr:nth-child(even) {
   background: #e5e5e5;
 }
+.heatmap th.goterm {
+  white-space: nowrap;
+  height: 7em;
+}
+.heatmap th.goterm div {
+  transform: translate(25px, 25px) rotate(315deg);
+  width: 3em;
+}
+.heatmap th.goterm div span {
+  display: block;
+  min-width: 12em;
+  white-space: nowrap;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
 .db tr:nth-child(even) {
   background-color: rgba(50, 150, 200, 0.1);
 }
