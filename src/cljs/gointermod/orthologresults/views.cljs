@@ -43,7 +43,7 @@
                {:type "checkbox"
                 :checked (:is-selected? ortholog-details)
                 :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
-              [:td.organism (comms/get-abbrev organism)]
+              [:td.organism (utils/get-abbrev organism)]
               [:td (:original-id ortholog-details)]
               [:td (clj->js ortholog)]
               [:td (:biological_process ortholog-details)]

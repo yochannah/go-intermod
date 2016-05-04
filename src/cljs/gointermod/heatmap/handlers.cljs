@@ -2,11 +2,6 @@
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]))
 
-
-(defn make-key [organism result]
-  (keyword (str organism "-" (get result 7)))
-  )
-
 (defn merge-results [results go-branch]
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
   (filter

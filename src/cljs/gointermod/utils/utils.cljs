@@ -18,6 +18,11 @@
   ) @organisms)
 ))
 
+(defn get-abbrev [source]
+(let [mines (re-frame/subscribe [:organisms])
+        organism (:abbrev (source @mines))]
+(clj->js organism)))
+
 (defn organism-name-to-id [organism-name]
   (let [[[organism details] x] (get-organism-details-by-name organism-name)]
     (:id details)
