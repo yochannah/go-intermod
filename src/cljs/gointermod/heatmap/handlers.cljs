@@ -16,6 +16,7 @@
   {:results result
    :organism organism
    :go-id (get result 16)
+   :count 1
    :go-term (get result 15)
    :ortholog (get result 0)})
 
@@ -26,10 +27,9 @@
 
 (defn extract-results [search-results]
   (let [merged-results (merge-results search-results)]
-  (.log js/console "Merged RESULTS" (clj->js merged-results)(clj->js (count merged-results)))
+;  (.log js/console "Merged RESULTS" (clj->js merged-results)(clj->js (count merged-results)))
   (into (sorted-map)
       (map (fn [result]
-          ;   (.log js/console "RES" (clj->js result))
         (let [organism (get result 3)
               k (make-key organism result)
               row (aggregate-row organism result)]
