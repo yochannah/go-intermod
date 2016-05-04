@@ -25,16 +25,15 @@
   ))
 
 (defn counts []
-  ;;subscribe to a branch
+  ;;subscribe to the heatmap data
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
-  ;;output tds of counts
+  ;;output tr, one per organism,ortholog combo
   [:tbody
-   (.log js/console "HEATMAP" (clj->js (:rows @heatmap)))
     (map (fn [result]
         ^{:key (str (first result) (second result))}
        [:tr
-        (map
-         (fn [val]
+        (map (fn [val]
+           ;;one td per go term
            ^{:key (gensym)}
            [:td val]) result)
         ]) (:rows @heatmap))
@@ -42,11 +41,11 @@
 
 (defn heatmap []
   (fn []
+    (re-frame/dispatch [:aggregate-heatmap-results])
      [:div.heatmap
       [:h2 "Annotation count by species"]
-      [:button {:on-click #( (re-frame/dispatch [:aggregate-heatmap-results]))} "aggregate me, baby"]
-      [:table
-       [headers]
-       [counts]
+        [:table
+        [headers]
+        [counts]
        ]
 ]))

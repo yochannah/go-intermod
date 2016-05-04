@@ -59,6 +59,7 @@
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
+   (re-frame/dispatch [:aggregate-heatmap-results])
    (->
     (assoc-in db [:multi-mine-results source] search-results)
     (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue (:results search-results))))
