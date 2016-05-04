@@ -37,7 +37,7 @@
     (map (fn [[thingy result]]
         ^{:key (gensym)}
        [:tr
-       (.log js/console "x" (clj->js result) )
+    ;   (.log js/console "x" (clj->js result) )
          [:td (:organism result)]
          [:td (:ortholog result)]
          [:td (:count result)]
