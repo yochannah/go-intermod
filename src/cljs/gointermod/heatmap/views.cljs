@@ -16,8 +16,8 @@
   (let [headers (get-headers)]
   [:thead
    [:tr
-    [:th "Species"]
-    [:th "Orthologue"]
+    [:th.species "Species"]
+    [:th.ortholog "Orthologue"]
     (map (fn [header]
       ^{:key header}
       [:th.goterm [:div [:span header]]]) headers)
@@ -29,14 +29,14 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
   ;;output tr, one per organism,ortholog combo
   [:tbody
-    (map (fn [result]
+  (doall  (map (fn [result]
         ^{:key (str (first result) (second result))}
-       [:tr
-        (map (fn [val]
+       [:tr {:class (utils/organism-name-to-id (first result))}
+      (map (fn [val]
            ;;one td per go term
            ^{:key (gensym)}
            [:td val]) result)
-        ]) (:rows @heatmap))
+        ]) (:rows @heatmap)))
    ]))
 
 (defn heatmap []

@@ -74,7 +74,6 @@
 (re-frame/register-handler
   :aggregate-heatmap-results
   (fn [db [_ _]]
-    (.clear js/console)
-    ;(.log js/console  (clj->js (extract-results (:multi-mine-results db)) ))
+    ;(.clear js/console)
     (assoc db :heatmap (extract-results (:multi-mine-results db)))
   ))

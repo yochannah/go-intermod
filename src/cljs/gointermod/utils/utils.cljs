@@ -1,4 +1,5 @@
-(ns gointermod.utils.utils)
+(ns gointermod.utils.utils
+(:require [re-frame.core :as re-frame]))
 
 (defn get-id [primary secondary symbol organism]
   "returns first non-null identifier, preferring symbol or primary id"
@@ -8,3 +9,17 @@
     ;;else we want the symbol
     (first (remove nil? [symbol secondary primary]))
   ))
+
+(defn get-organism-details-by-name [organism-name]
+  (let [organisms (re-frame/subscribe [:organisms])]
+  (filter (fn [[organism vals]]
+    (=  organism-name
+        (:abbrev vals))
+  ) @organisms)
+))
+
+(defn organism-name-to-id [organism-name]
+  (let [[[organism details] x] (get-organism-details-by-name organism-name)]
+    (:id details)
+    )
+  )

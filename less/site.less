@@ -43,6 +43,65 @@ h6 {
   box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
   transition: all 0.1s;
 }
+//oppan table style!
+.table-style {
+  td,
+  th {
+    text-align: center;
+  }
+  td {
+    padding: @spacer/5 @spacer;
+    &.dataset {
+      min-width: 10em;
+    }
+    &.organism {
+      min-width: 6em;
+    }
+    &:first-child {
+      border-left: solid 3px;
+      padding: @spacer/5;
+    }
+  }
+  .zebrafish td:first-child {
+    border-color: @zebracolor;
+  }
+  .yeast td:first-child {
+    border-color: @yeastcolor;
+  }
+  .human td:first-child {
+    border-color: @humancolor;
+  }
+  .worm td:first-child {
+    border-color: @wormcolor;
+  }
+  .mouse td:first-child {
+    border-color: @mousecolor;
+  }
+  .rat td:first-child {
+    border-color: @ratcolor;
+  }
+  .fly td:first-child {
+    border-color: @flycolor;
+  }
+  th {
+    background: @somecolor;
+    color: @ctatextcolor;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    font-weight: 700;
+    padding: @spacer/2;
+  }
+  tr {
+    &:hover {
+      background: @highlightcolor;
+      td {
+        background: @highlightcolor;
+      }
+    }
+    &:nth-child(even) {
+      background: darken(@tablestripecolor, 2%);
+    }
+  }
+}
 //base stuff
 button {
   padding: @spacer;
@@ -226,91 +285,74 @@ nav {
   }
   .aggregate {
     width: 100%;
-    td,
-    th {
-      text-align: center;
-    }
-    td {
-      padding: @spacer/5 @spacer;
-      &.dataset {
-        min-width: 10em;
-      }
-      &.organism {
-        min-width: 6em;
-      }
-      &:first-child {
-        border-left: solid 3px;
-        padding: @spacer/5;
-      }
-    }
-    .zebrafish td {
-      border-color: @zebracolor;
-    }
-    .yeast td {
-      border-color: @yeastcolor;
-    }
-    .human td {
-      border-color: @humancolor;
-    }
-    .worm td {
-      border-color: @wormcolor;
-    }
-    .mouse td {
-      border-color: @mousecolor;
-    }
-    .rat td {
-      border-color: @ratcolor;
-    }
-    .fly td {
-      border-color: @flycolor;
-    }
-    th {
-      background: @somecolor;
-      color: @ctatextcolor;
-      text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-      font-weight: 700;
-      padding: @spacer/2;
-    }
-    tr {
-      &:hover {
-        background: @highlightcolor;
-        td {
-          background: @highlightcolor;
-        }
-      }
-      &:nth-child(even) {
-        background: darken(@tablestripecolor, 2%);
-      }
-    }
+    .table-style;
   }
 }
 .heatmap {
-  tbody {
-    border-collapse:collapse; border-spacing:0;
+  .table-style;
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  thead tr:hover {
+    background: inherit;
+  }
+  .ortholog,
+  .species {
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);  }
+  th.goterm,
+  th {
+    background: transparent;
+    color: @maintextcolor;
+    text-shadow: none;
+    vertical-align: bottom;
+    font-weight: 300;
   }
   th.goterm {
     white-space: nowrap;
-    height: 7em;
-    text-align:left;
-    &:first-of-type div span {
-      border-top: 1px solid #ccc;
-    }
+    height: 10em;
+    text-align: left;
     div {
-      transform: translate(31px, 30px) rotate(315deg);
-      width: 3em;
+      //these are magic numbers.
+      transform: translate(1.8em, 0em) rotate(315deg);
+      width: 2.2em;
       span {
+        height: 100%;
         display: block;
         min-width: 12em;
+        overflow: hidden;
         white-space: nowrap;
+        text-overflow: ellipsis;
         border-bottom: 1px solid #ccc;
         padding: 5px 10px;
+        &:hover {
+          overflow: visible;
+          width: 100%;
+          border-bottom: solid 3px @somecolor;
+          background:#fff;
+        }
       }
     }
   }
   td {
-    border:0;
-    border-right:solid 1px #ccc;
-    border-bottom:solid 1px #ccc}
+    border: 0;
+    border-right: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+  }
+  //override default table style:
+  .rat,
+  .worm,
+  .human,
+  .zebrafish,
+  .mouse,
+  .yeast,
+  .fly {
+    td:first-child {
+      white-space:nowrap;
+      border-bottom: solid 1px #ccc;
+      border-right: 0;
+    }
+  }
 }
 ////////debug, kiddos:
 .db {
