@@ -43,6 +43,7 @@
          [:td (:count result)]
          [:td ]
          [:td ]
+         [:td ]
   ]) @heatmap)
    ]))
 

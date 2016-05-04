@@ -271,12 +271,20 @@ nav li a:visited svg {
 .ortholog-results .aggregate tr:nth-child(even) {
   background: #e5e5e5;
 }
+.heatmap tbody {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
 .heatmap th.goterm {
   white-space: nowrap;
   height: 7em;
+  text-align: left;
+}
+.heatmap th.goterm:first-of-type div span {
+  border-top: 1px solid #ccc;
 }
 .heatmap th.goterm div {
-  transform: translate(25px, 25px) rotate(315deg);
+  transform: translate(31px, 30px) rotate(315deg);
   width: 3em;
 }
 .heatmap th.goterm div span {
@@ -285,6 +293,11 @@ nav li a:visited svg {
   white-space: nowrap;
   border-bottom: 1px solid #ccc;
   padding: 5px 10px;
+}
+.heatmap td {
+  border: 0;
+  border-right: solid 1px #ccc;
+  border-bottom: solid 1px #cccccc;
 }
 .db tr:nth-child(even) {
   background-color: rgba(50, 150, 200, 0.1);

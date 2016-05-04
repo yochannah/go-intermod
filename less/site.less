@@ -78,10 +78,11 @@ nav {
   }
   li {
     list-style-type: none;
-    a, a:visited {
-      display:block;
-      color:@maintextcolor;
-      text-decoration:none;
+    a,
+    a:visited {
+      display: block;
+      color: @maintextcolor;
+      text-decoration: none;
       min-width: 12em;
       background: @searchbackgroundcolor;
       padding: @spacer;
@@ -230,12 +231,13 @@ nav {
       text-align: center;
     }
     td {
-
       padding: @spacer/5 @spacer;
       &.dataset {
-        min-width:10em;
+        min-width: 10em;
       }
-      &.organism {min-width:6em;}
+      &.organism {
+        min-width: 6em;
+      }
       &:first-child {
         border-left: solid 3px;
         padding: @spacer/5;
@@ -282,28 +284,34 @@ nav {
     }
   }
 }
-
 .heatmap {
-  th.goterm{
-    white-space:nowrap;
-    height:7em;
-      div {
-        transform:
-          translate(25px, 25px)
-          rotate(315deg);
-        width: 3em;
-        span {
-          display:block;min-width:12em;
-          white-space:nowrap;
-          border-bottom: 1px solid #ccc;
-          padding: 5px 10px;
-          }
-        }
+  tbody {
+    border-collapse:collapse; border-spacing:0;
+  }
+  th.goterm {
+    white-space: nowrap;
+    height: 7em;
+    text-align:left;
+    &:first-of-type div span {
+      border-top: 1px solid #ccc;
+    }
+    div {
+      transform: translate(31px, 30px) rotate(315deg);
+      width: 3em;
+      span {
+        display: block;
+        min-width: 12em;
+        white-space: nowrap;
+        border-bottom: 1px solid #ccc;
+        padding: 5px 10px;
       }
+    }
+  }
+  td {
+    border:0;
+    border-right:solid 1px #ccc;
+    border-bottom:solid 1px #ccc}
 }
-
-
-
 ////////debug, kiddos:
 .db {
   tr:nth-child(even) {

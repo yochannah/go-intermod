@@ -5,7 +5,7 @@
 
 (defn make-key [organism result]
 ;  (.log js/console "making key" (str organism "-" (get result 0) "-" (get result 15)))
-  (keyword (str organism "-" (get result 0)))
+  (keyword (str organism "-" (get result 7)))
   )
 
 (defn aggregate-row [organism result]
@@ -18,7 +18,7 @@
    :go-id (get result 16)
    :count 1
    :go-term (get result 15)
-   :ortholog (get result 0)})
+   :ortholog (get result 7)})
 
 (defn merge-results [results go-branch]
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
@@ -29,8 +29,9 @@
   ) results))))
 
 (defn extract-results [search-results]
+  "TOD: FIX THAT BIG FAT HARDCODED BIOLOGICAL PROCESS"
   (let [merged-results (merge-results search-results "biological_process")]
-;  (.log js/console "Merged RESULTS" (clj->js merged-results)(clj->js (count merged-results)))
+  (.log js/console "Merged RESULTS" (clj->js merged-results)(clj->js (count merged-results)))
   (into (sorted-map)
       (map (fn [result]
         (let [organism (get result 3)
