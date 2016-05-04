@@ -45,7 +45,7 @@
 (defn map-terms [term-list organism-ortholog-terms]
   "for each term in term list, output the count, or 0 if there is no count.
     return a nice vector."
-  (.log js/console (clj->js organism-ortholog-terms))
+;  (.log js/console (clj->js organism-ortholog-terms))
   (map (fn [term]
     (get organism-ortholog-terms term 0)
     ) term-list))
@@ -65,7 +65,7 @@
         go-terms (extract-go-terms map-results)
         counts (aggregate-orthologs map-results)
         final-heatmap-matrix (build-result-matrix go-terms counts)]
-    (.log js/console "matrix" (clj->js final-heatmap-matrix))
+  ;  (.log js/console "matrix" (clj->js final-heatmap-matrix))
     {:rows final-heatmap-matrix :headers go-terms}
     ))
 

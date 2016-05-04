@@ -8,11 +8,7 @@
 
 (defn get-headers []
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
-    (distinct
-      (into []
-         (map (fn [[_ result]]
-           (:go-id result)
-         ) @heatmap)))))
+    (:headers @heatmap)))
 
 (defn headers []
   ;;subscribe to aggregate results for a given branch
@@ -33,18 +29,15 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
   ;;output tds of counts
   [:tbody
-   (.log js/console "HEATMAP" (clj->js @heatmap))
-    (map (fn [[thingy result]]
-        ^{:key (gensym)}
+   (.log js/console "HEATMAP" (clj->js (:rows @heatmap)))
+    (map (fn [result]
+        ^{:key (str (first result) (second result))}
        [:tr
-    ;   (.log js/console "x" (clj->js result) )
-         [:td (:organism result)]
-         [:td (:ortholog result)]
-         [:td (:count result)]
-         [:td ]
-         [:td ]
-         [:td ]
-  ]) @heatmap)
+        (map
+         (fn [val]
+           ^{:key (gensym)}
+           [:td val]) result)
+        ]) (:rows @heatmap))
    ]))
 
 (defn heatmap []
