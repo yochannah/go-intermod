@@ -74,6 +74,15 @@
     ) orthologs)
   ) aggregate-ortholog-counts)))
 
+(defn find-missing-organisms [counts]
+  (let [organism-details (re-frame/subscribe [:organisms])
+        all-organism-names (reduce
+          (fn [new-set [name organism]]
+            (conj new-set (:abbrev organism))) #{} @organism-details)
+        shown-organism-names (set (keys counts))]
+        (clojure.set/difference all-organism-names shown-organism-names)
+  ))
+
 (defn extract-results [search-results]
   "TODO: FIX THAT BIG FAT HARDCODED BIOLOGICAL PROCESS"
   (let [merged-results (merge-results search-results "biological_process")
@@ -81,9 +90,12 @@
         go-terms (extract-go-terms map-results)
         counts (aggregate-orthologs map-results)
         final-heatmap-matrix (build-result-matrix go-terms counts)
-        max-count (get-ortholog-count-max counts)]
-;      (.clear js/console)
-    {:rows final-heatmap-matrix :headers go-terms :max-count max-count}
+        max-count (get-ortholog-count-max counts)
+        organisms-present (keys counts)
+        missing-organisms (find-missing-organisms counts)]
+      ;(.clear js/console)
+    (.log js/console (clj->js missing-organisms))
+    {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms}
     ))
 
 

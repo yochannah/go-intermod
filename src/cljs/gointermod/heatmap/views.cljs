@@ -50,6 +50,23 @@
         ]) (:rows @heatmap)))
    ]))
 
+(defn empty-rows []
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
+        empties (:missing-organisms @heatmap)
+        cols (count (:headers @heatmap))]
+    [:tbody
+     (.log js/console "cols"
+           cols)
+     (doall (map (fn [organism]
+        ^{:key organism}
+        [:tr {:class (utils/organism-name-to-id organism)}
+         [:td organism]
+         [:td.no-orthologs {:col-span 3} "No orthologues available"]
+         [:td.no-go-terms {:col-span (- cols 3)} "N/A"]
+        ]) empties))
+     ]
+))
+
 (defn heatmap []
   (fn []
     (re-frame/dispatch [:aggregate-heatmap-results])
@@ -58,5 +75,6 @@
         [:table
         [headers]
         [counts]
+        [empty-rows]
        ]
 ]))
