@@ -55,13 +55,11 @@
         empties (:missing-organisms @heatmap)
         cols (count (:headers @heatmap))]
     [:tbody
-     (.log js/console "cols"
-           cols)
      (doall (map (fn [organism]
         ^{:key organism}
         [:tr {:class (utils/organism-name-to-id organism)}
          [:td organism]
-         [:td.no-orthologs {:col-span 3} "No orthologues available"]
+         [:td.no-orthologs {:col-span 3} "No orthologs available"]
          [:td.no-go-terms {:col-span (- cols 3)} "N/A"]
         ]) empties))
      ]
