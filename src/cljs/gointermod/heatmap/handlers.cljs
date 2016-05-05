@@ -3,6 +3,25 @@
               [gointermod.utils.utils :as utils]
               [gointermod.db :as db]))
 
+(defn max-key-orthologs [organism orthologs]
+  "Helper for get-ortholog-count-max. It's abstruse enough that splitting it into two was the only way. Given an ortholog with a set of go term counts, we'll figure out which has the highest cont and return it.
+  Returns: we're returning a vector consisting of the keys as the first value and the max-count as the second value."
+  (map (fn [[orthk terms]]
+    (let [termk (apply max-key val terms)]
+      [[organism orthk (key termk)] (val termk)])
+) orthologs))
+
+(defn get-ortholog-count-max [results]
+  "Given a map in the shape {:organism {:ortholog {:some-go-term count-of-that-go term}}}, return a set of keys which represent the highest nested count."
+  (apply max-key
+    ;;use orthologue as the key for this level
+    (fn [[organism orthologs]] orthologs)
+    ;;map over the orthologues and return the max key for the go terms inside
+    (map (fn [[organism orthologs]]
+      (apply max-key last (max-key-orthologs organism orthologs))
+) results)))
+
+
 (defn merge-results [results go-branch]
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
   (filter
@@ -61,9 +80,10 @@
         map-results (map-results merged-results)
         go-terms (extract-go-terms map-results)
         counts (aggregate-orthologs map-results)
-        final-heatmap-matrix (build-result-matrix go-terms counts)]
-  ;  (.log js/console "matrix" (clj->js final-heatmap-matrix))
-    {:rows final-heatmap-matrix :headers go-terms}
+        final-heatmap-matrix (build-result-matrix go-terms counts)
+        max-count (get-ortholog-count-max counts)]
+;      (.clear js/console)
+    {:rows final-heatmap-matrix :headers go-terms :max-count max-count}
     ))
 
 
