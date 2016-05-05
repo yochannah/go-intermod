@@ -1,5 +1,6 @@
 (ns gointermod.heatmap.handlers
     (:require [re-frame.core :as re-frame]
+              [gointermod.utils.utils :as utils]
               [gointermod.db :as db]))
 
 (defn merge-results [results go-branch]
@@ -18,7 +19,8 @@
      :organism (get result 3)
      :go-id (get result 15)
      :go-term (get result 16)
-     :ortholog (get result 7)}
+     :ortholog (utils/get-id result)
+     }
   ) results))
 
 (defn extract-go-terms [results]

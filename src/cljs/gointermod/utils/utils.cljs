@@ -1,14 +1,22 @@
 (ns gointermod.utils.utils
 (:require [re-frame.core :as re-frame]))
 
-(defn get-id [primary secondary symbol organism]
+(defn get-id
+  ;;this one saves time if we have a result row handy
+  ([resultvec]
+   (get-id (get resultvec 5) (get resultvec 6) (get resultvec 7)  (get resultvec 3))
+  )
+  ([primary secondary symbol organism]
   "returns first non-null identifier, preferring symbol or primary id"
   (if (= organism "S. cerevisiae")
     ;;if it's yeast, we want secondary identifier first
-    (first (remove nil? [secondary symbol primary]))
+    ;(do
+      ;(.log js/console "yeast")
+      (first (remove nil? [secondary symbol primary]))
+      ;)
     ;;else we want the symbol
     (first (remove nil? [symbol secondary primary]))
-  ))
+  )))
 
 (defn get-organism-details-by-name [organism-name]
   (let [organisms (re-frame/subscribe [:organisms])]
