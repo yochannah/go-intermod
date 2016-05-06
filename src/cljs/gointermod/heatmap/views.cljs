@@ -39,13 +39,15 @@
 (defn calc-color [color-val]
   "Given a count value, this function returns an rgb value weighted to make higher counts darker, with the darkest colours being the maximum value found in the table.
   Results are weighted proportionally - so values of 1 will be quite dark if the highest value in the table is two, or quite light if the highest value is 30."
+  (if (= 0 color-val)
+    {:background "rgb(255,255,255)"}
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
         max-val (last (:max-count @heatmap))
         calculated-color (int (/ (* color-val 255) max-val))
         bg-color (- 255 calculated-color)
         mid-color (int (/ (+ 255 bg-color) 2))]
   {:background (str "rgb(" bg-color "," mid-color "," "255)")}
-))
+)))
 
 (defn counts []
   ;;subscribe to the heatmap data
