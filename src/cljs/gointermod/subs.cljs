@@ -24,3 +24,8 @@
  :active-view
  (fn [db]
    (reaction (:active-view @db))))
+
+(re-frame/register-sub
+ :active-filter
+ (fn [db]
+  (reaction (:active-filter @db))))

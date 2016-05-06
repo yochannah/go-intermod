@@ -13,5 +13,10 @@
 (re-frame/register-handler
  :set-view
  (fn [db [_ active-view]]
-   (.log js/console "setting view" (clj->js active-view))
    (assoc db :active-view active-view)))
+
+ (re-frame/register-handler
+  :active-filter
+  (fn [db [_ active-filter]]
+    (re-frame/dispatch [:aggregate-heatmap-results])
+    (assoc db :active-filter active-filter)))

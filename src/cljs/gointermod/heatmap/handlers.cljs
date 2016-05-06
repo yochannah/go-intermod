@@ -84,8 +84,8 @@
   ))
 
 (defn extract-results [search-results]
-  "TODO: FIX THAT BIG FAT HARDCODED BIOLOGICAL PROCESS"
-  (let [merged-results (merge-results search-results "biological_process")
+  (let [active-filter (re-frame/subscribe [:active-filter])
+        merged-results (merge-results search-results @active-filter)
         map-results (map-results merged-results)
         go-terms (extract-go-terms map-results)
         counts (aggregate-orthologs map-results)

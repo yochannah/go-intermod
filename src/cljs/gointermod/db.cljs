@@ -4,6 +4,7 @@
   {:selected-organism :human
    :are-all-orthologs-selected? true
    :active-view :ortholog-summary
+   :active-filter "biological_process"
    :organisms
    {:human
      {:id     :human
