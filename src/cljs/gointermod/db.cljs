@@ -64,7 +64,7 @@
     :worm
      {:id     :worm
       :common "Worm"
-      :output? true
+      :output? false
       :abbrev "C. elegans"
       :mine
        {:name "WormMine"
