@@ -29,3 +29,8 @@
  :active-filter
  (fn [db]
   (reaction (:active-filter @db))))
+
+  (re-frame/register-sub
+   :filters
+   (fn [db]
+    (reaction (:filters @db))))

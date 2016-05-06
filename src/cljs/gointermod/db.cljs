@@ -5,6 +5,17 @@
    :are-all-orthologs-selected? true
    :active-view :ortholog-summary
    :active-filter "biological_process"
+   :filters
+     {"biological_process"
+       {:pretty-name "Biological Process"
+        :icon "#icon-biological-process"}
+      "molecular_function"
+       {:pretty-name "Molecular Function"
+        :icon "#icon-molecular-function"}
+      "cellular_component"
+       {:pretty-name "Cellular Component"
+        :icon "#icon-cellular-component"}
+    }
    :organisms
    {:human
      {:id     :human

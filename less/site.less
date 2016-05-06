@@ -32,6 +32,9 @@ h5,
 h6 {
   font-family: 'Roboto Slab';
   font-weight: normal;
+  .icon {
+    opacity: 0.4;
+  }
 }
 //mixins for general state behaviour
 .hoverstate {
@@ -185,18 +188,19 @@ nav {
   height: 1em;
   fill: currentColor;
 }
-
 .contentbody {
-    margin: @spacer;
-    h2 {margin-bottom:(@spacer/2 + 0.1em);}
+  margin: @spacer;
+  h2 {
+    margin-bottom: (@spacer/2 + 0.1em);
+  }
 }
-
 //general styles from here on.
 .search {
   display: flex;
   background: @searchbackgroundcolor;
   color: @searchtextcolor;
   padding: @spacer;
+  transition: all 0.2s ease-out;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
   h1,
   h2,
@@ -205,6 +209,32 @@ nav {
   h5,
   h6 {
     margin-top: 0;
+  }
+  &.shrunk {
+    min-height: 1em;
+    max-height: 15em;
+  }
+  &.expanded {
+    min-height: 40em;
+    max-height: 50em;
+    flex-grow: 2;
+    .geneinput {
+      max-width: 30%;
+      flex-direction: column;
+      transition: all 0.2s ease-out;
+      .searchform,
+      .intro {
+        max-width: 100%;
+      }
+    }
+    .filter.output {
+      flex-grow: 1;
+      max-width: 30%;
+      form {
+        flex-grow: 1;
+        flex-direction: column;
+      }
+    }
   }
   .geneinput {
     display: flex;
@@ -247,11 +277,12 @@ nav {
       flex-grow: 4;
       max-width: 50%;
       transition-timing-function: ease-out;
-      transition: all 2s;
       form {
         display: flex;
         flex-wrap: wrap;
-        flex-flow: space-around;
+        &.evidence {
+          flex-direction: column;
+        }
       }
     }
     .evidence-mini {
@@ -294,6 +325,10 @@ nav {
   }
 }
 .heatmap {
+  h3 {
+    line-height: 1.2em;
+    vertical-align: middle;
+  }
   .table-style;
   table {
     border-collapse: collapse;
@@ -302,9 +337,9 @@ nav {
   thead tr:hover {
     background: inherit;
   }
-  .ortholog,
-  .species {
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);  }
+  .axis {
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);
+  }
   th.goterm,
   th {
     background: transparent;
@@ -334,18 +369,33 @@ nav {
           overflow: visible;
           width: 100%;
           border-bottom: solid 1px @somecolor;
-          background:#fff;
+          background: #fff;
         }
       }
     }
+  }
+  .species,
+  .ortholog {
+    min-width: 7.5em;
+    float: left;
+  }
+  .ortholog {
+    text-align: right;
+    float: right;
+    margin-right: 8px;
+  }
+  td:nth-child(2) {
+    text-align: right;
   }
   td {
     border: 0;
     border-right: solid 1px #ccc;
     border-bottom: solid 1px #ccc;
-    text-shadow: 0px 0px 1px #fff; //make sure there's good contrast even on dark cells
+    text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
   }
-  .no-orthologs {border-right:0;}
+  .no-orthologs {
+    border-right: 0;
+  }
   //override default table style:
   .rat,
   .worm,
@@ -355,12 +405,15 @@ nav {
   .yeast,
   .fly {
     td:first-child {
-      white-space:nowrap;
+      min-width: 7.5em;
+      white-space: nowrap;
       border-bottom: solid 1px #ccc;
       border-right: 0;
     }
   }
-  tr:nth-child(even) {background:transparent;}
+  tr:nth-child(even) {
+    background: transparent;
+  }
 }
 ////////debug, kiddos:
 .db {

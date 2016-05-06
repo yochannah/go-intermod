@@ -48,7 +48,7 @@
    (defn evidence-code-filters-expanded []
      "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
      (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
-       [:form
+       [:form.evidence.evidence-large {:style {:min-height "30em"}}
          (map-indexed (fn [index code-info]
            ^{:key (:code code-info)}
             [:label
@@ -62,7 +62,7 @@
  (defn evidence-code-filters-mini []
    "Visually outputs list of evidence codes and checks the components which are marked as true in the db"
    (let [evidence-codes (re-frame/subscribe [:evidence-codes])]
-     [:div.evidence-mini
+     [:div.evidence-mini.evidence
        (map (fn [code-info]
           (cond (:checked code-info)
             ^{:key (:code code-info)}
@@ -73,19 +73,21 @@
 (defn search-filters []
   "Search filter component. "
   (let [expand-codes? (re-frame/subscribe [:expand-evidence-codes?])]
-    [:div.filters
-      [:div.filter
+    [:div.filters ;{:class (if @expand-codes? "expanded" "shrunk")}
+      [:div.filter.output
         [:h4 "Output species"]
         [organism-output-selector]]
       [:div.filter
         [:h4 "Evidence codes"]
         [:h5 "Showing: "
         [:a
-        {:on-click
-          (fn []
+        {:href "#"
+         :on-click
+          (fn [e]
+            (.preventDefault js/e)
             (re-frame/dispatch [:toggle-evidence-codes]))}
             (if @expand-codes?
-              "Shrink codes"
+              "(Shrink codes)"
               "(Change codes)")]]
           (if @expand-codes?
             [evidence-code-filters-expanded]
@@ -95,6 +97,7 @@
 
 (defn search []
   (fn []
-     [:div.search
+    (let [expand-codes? (re-frame/subscribe [:expand-evidence-codes?])]
+     [:div.search {:class (if @expand-codes? "expanded" "shrunk")}
       [search-form]
-      [search-filters]]))
+      [search-filters]])))

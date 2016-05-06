@@ -10,14 +10,26 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
     (:headers @heatmap)))
 
+
 (defn headers []
   ;;subscribe to aggregate results for a given branch
   ;;each term is in a th
-  (let [headers (get-headers)]
+  (let [headers (get-headers)
+        active-filter (re-frame/subscribe [:active-filter])
+        filters (re-frame/subscribe [:filters])
+        filter-info (get @filters @active-filter)
+        ]
   [:thead
    [:tr
-    [:th.species "Species"]
-    [:th.ortholog "Orthologue"]
+    [:th.axis {:col-span 2}
+      [:div
+        [:h3
+          [:svg.icon [:use {:xlinkHref (:icon filter-info)}]] " "
+          (:pretty-name filter-info) ":"]]
+     [:div
+      [:div.faux-th.species "Species"]
+      [:div.faux-th.ortholog "Ortholog"]
+     ]]
     (map (fn [header]
       ^{:key header}
       [:th.goterm [:div [:span header]]]) headers)
