@@ -95,7 +95,7 @@
         missing-organisms (find-missing-organisms counts)]
       ;(.clear js/console)
     (.log js/console (clj->js missing-organisms))
-    {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms}
+    {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms }
     ))
 
 

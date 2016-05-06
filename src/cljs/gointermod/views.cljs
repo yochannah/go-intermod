@@ -61,6 +61,7 @@
     [:main
       [nav]
       (let [active-view (re-frame/subscribe [:active-view])]
+        [:section.contentbody
         (cond
           (= @active-view :ortholog-summary)
             [orthologs/orthologs]
@@ -70,8 +71,8 @@
             [ontology/ontology]
           (= @active-view :enrichment)
             [enrichment/enrichment]
-        )
+        )]
     )]
-      (when config/debug?
-        [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))])
+      ; (when config/debug?
+      ;   [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))])
     ]))

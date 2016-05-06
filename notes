@@ -23,7 +23,6 @@ LOOKUP is not case sensitive
 
 ===========
 TODOS:
- - hide the debugger db table
  - search / orthologue results:
     - act correctly upon non-human gene input
     - do anything with the evidence codes in searches
@@ -31,3 +30,4 @@ TODOS:
     - Sort columns
     - export
     - Handling failed mines / no homologues / no annotations
+- heatmap: we don't load orthologues with no go terms. we'll have to do another query for all go terms that have no annotations if that's what we really want.
