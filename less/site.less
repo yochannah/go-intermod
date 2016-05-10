@@ -179,6 +179,19 @@ nav {
     }
   }
 }
+select,
+button,
+textarea {
+  box-sizing: border-box;
+  margin: @spacer/2;
+  border-radius: @border-radius;
+}
+select,
+textarea {
+  background-color: #fff;
+  border: solid 1px @bordercolor;
+  padding: @spacer/4;
+}
 //for the inline svg icons
 .icon {
   vertical-align: top;
@@ -189,6 +202,7 @@ nav {
   fill: currentColor;
 }
 .contentbody {
+  width:100%;
   margin: @spacer;
   h2 {
     margin-bottom: (@spacer/2 + 0.1em);
@@ -242,7 +256,7 @@ nav {
   }
   .intro {
     max-width: 50%;
-    text-align:justify;
+    text-align: justify;
   }
   .searchform {
     flex-grow: 1;
@@ -252,15 +266,6 @@ nav {
     button,
     textarea {
       width: 100%;
-      box-sizing: border-box;
-      margin: @spacer/2;
-      border-radius: @border-radius;
-    }
-    select,
-    textarea {
-      background-color: #fff;
-      border: solid 1px @bordercolor;
-      padding: @spacer/4;
     }
   }
   .filters {
@@ -415,6 +420,23 @@ nav {
   tr:nth-child(even) {
     background: transparent;
   }
+}
+.enrichment {
+  .settings {
+    display: flex;
+    justify-content:space-between;
+    background-color:rgba(0,0,0,0.05);
+    &> div {
+      margin: 0 @spacer*2 0 @spacer*2;
+      line-height:2.5em;
+    }
+    select {
+      margin-left: @spacer/2;
+    }
+  }
+  .organisms {display:flex;
+  flex-wrap:wrap;}
+  .organism {min-width:400px;flex-grow:1;}
 }
 ////////debug, kiddos:
 .db {

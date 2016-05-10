@@ -5,13 +5,37 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+(defn organism-enrichment []
+  (let [organisms (re-frame/subscribe [:organisms])]
+  [:div.organisms
+   (map (fn [[_ organism]]
+          ^{:key (:id organism)}
+          [:div.organism [:h4 (:abbrev organism)]
+           ]) @organisms)
+   ]))
 
 (defn enrichment []
   (fn []
+    (re-frame/dispatch [:enrich-results])
    [:div.enrichment
     [:h2 "Enrichment"]
-    [:div "Not done - but you can enrich your life by admiring this kitten"
-      [:br]
-        [:img {:src (str "https://placekitten.com/g/" (rand-nth [200 300 400 500 600]) "/" (rand-nth [200 300 400 500 600]))}]
-        ]]
+    [:div.settings
+      [:div [:label "Test correction"
+        [:select
+          [:option "Holm-Bonferroni"]]]]
+          [:div [:label "Max p-value"
+        [:select
+          [:option "0.05"]]]]
+      ; [:label "Ontology"
+      ;   [:select
+      ;    (let [filters (re-frame/subscribe [:filters])]
+      ;     (map (fn [[k v]]
+      ;       [:option {:value k}  (:pretty-name v)])
+      ;      @filters))
+      ;   ]]
+        [:div
+          [:span "Ontology branch: " @(re-frame/subscribe [:active-filter-pretty])]]
+     ]
+    [organism-enrichment]
+    ]
 ))

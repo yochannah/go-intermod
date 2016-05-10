@@ -11,11 +11,10 @@
 (clj->js service)))
 
 (defn make-base-query [identifier organism evidence-codes]
-  (str "<query model=\"genomic\" view=\"Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.evidence.publications.pubMedId Gene.goAnnotation.evidence.publications.title Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and A and E\" name=\"intermod_go\" >
+  (str "<query model=\"genomic\" view=\"Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.evidence.publications.pubMedId Gene.goAnnotation.evidence.publications.title Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and A and E\" name=\"intermod_go\" >
     <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
     <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
-    <constraint path=\"Gene.homologues.homologue.organism.shortName\" code=\"D\" op=\"=\" value=\"H. sapiens\"/>
-    <constraint path=\"Gene\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"" (utils/get-abbrev organism) "\"/>
+    <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"" (utils/get-abbrev organism) "\"/>
     <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
 </query>"))
 
@@ -92,3 +91,21 @@
           :wildCards true
           :extra (utils/get-abbrev source)}))]
     (-> res :body :results))))
+
+    (defn enrichment
+      "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
+      [ {{:keys [root token]} :service} {:keys [ids widget maxp correction]}]
+      (println "ids" ids)
+      (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
+       {:with-credentials? false
+        :keywordize-keys? true
+        :form-params (merge
+                       {:widget widget
+                        :maxp maxp
+                        :format "json"
+                        :correction correction}
+                        {:ids (clojure.string/join "," ids)}
+
+
+            )}))]
+            (-> response :body))))

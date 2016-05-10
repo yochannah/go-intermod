@@ -34,3 +34,13 @@
    :filters
    (fn [db]
     (reaction (:filters @db))))
+
+(defn get-pretty-active-filter [db]
+  (let [active-filter (:active-filter db)
+        filters (:filters db)]
+    (get-in filters [active-filter :pretty-name])))
+
+(re-frame/register-sub
+ :active-filter-pretty
+ (fn [db]
+  (reaction (get-pretty-active-filter @db))))

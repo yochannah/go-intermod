@@ -7,7 +7,7 @@
       [gointermod.heatmap.views :as heatmap]
       [gointermod.ontology.views :as ontology]
       [gointermod.enrichment.views :as enrichment]
-      [gointermod.icons :as icons]
+      [gointermod.utils.icons :as icons]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
 
