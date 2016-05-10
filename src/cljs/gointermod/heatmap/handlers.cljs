@@ -25,22 +25,13 @@
 (defn merge-results [results go-branch]
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
   (filter
-    (fn [result]  (= (last result) go-branch))
-    (apply concat (map (fn [[_ organism]]
-      (:results organism)
-  ) results))))
-
-(defn map-results [results]
-  "translate that silly vector of results into a map with meaninful keys"
-  ;;TODO: ortholog needs to be get-id with yeast conditionals. Boo.
-  (map (fn [result]
-    {:results result
-     :organism (get result 3)
-     :go-id (get result 15)
-     :go-term (get result 16)
-     :ortholog (utils/get-id result :ortholog)
-     }
-  ) results))
+    (fn [result]
+      (.log js/console "XXX" (clj->js result))
+      (= (:ontology-branch result) go-branch))
+     (apply concat (map (fn [[_ organism]]
+       organism
+   ) results)))
+  )
 
 (defn extract-go-terms [results]
   "just an ordered array of terms, thanks"
@@ -52,8 +43,8 @@
   "create map with keys organism>orthologue>go term, with counts as values for the heatmap."
   (reduce (fn [new-map result]
       (update-in new-map
-        [(:organism result)
-         (:ortholog result)
+        [(:ortho-organism result)
+         (:display-ortholog-d result)
          (:go-term result)] inc)
     ) {} results)
   )
@@ -86,14 +77,14 @@
 (defn extract-results [search-results]
   (let [active-filter (re-frame/subscribe [:active-filter])
         merged-results (merge-results search-results @active-filter)
-        map-results (map-results merged-results)
-        go-terms (extract-go-terms map-results)
-        counts (aggregate-orthologs map-results)
+        go-terms (extract-go-terms merged-results)
+        counts (aggregate-orthologs merged-results)
         final-heatmap-matrix (build-result-matrix go-terms counts)
         max-count (get-ortholog-count-max counts)
         organisms-present (keys counts)
         missing-organisms (find-missing-organisms counts)]
-      ;(.clear js/console)
+    ;  (.clear js/console)
+      (.log js/console "C"(clj->js merged-results))
     {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms }
     ))
 

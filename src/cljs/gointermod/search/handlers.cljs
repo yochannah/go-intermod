@@ -78,17 +78,14 @@
      }
   ) results))
 
-(defn multi-mine-results-to-map [multi-mine-results]
-  (.log js/console (clj->js multi-mine-results))
-  )
-
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
    (re-frame/dispatch [:aggregate-heatmap-results])
+   (let [mapped-results (resultset-to-map (:results search-results))]
    (->
-    (assoc-in db [:multi-mine-results source] search-results)
-    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue (resultset-to-map (:results search-results)))))
+    (assoc-in db [:multi-mine-results source] mapped-results)
+    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue mapped-results))))
 ))
 
 (re-frame/register-handler
