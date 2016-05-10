@@ -38,7 +38,7 @@
      :organism (get result 3)
      :go-id (get result 15)
      :go-term (get result 16)
-     :ortholog (utils/get-id result)
+     :ortholog (utils/get-id result :ortholog)
      }
   ) results))
 

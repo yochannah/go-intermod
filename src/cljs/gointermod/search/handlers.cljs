@@ -44,17 +44,43 @@
 
 (defn aggregate-by-orthologue [search-results]
   "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
-  (reduce (fn [new-map [original-symbol original-secondary-id original-primary-id original-organism _ primary-id secondary-id symbol organism _ dataset & args ]]
-    (let [id (keyword (utils/get-id primary-id secondary-id symbol organism))
-          original-id (utils/get-id original-primary-id original-secondary-id original-symbol original-organism)]
-      (->
-        (update-in new-map [id (keyword (last args))] inc)
-        (assoc-in [id :is-selected?] true)
-        (assoc-in [id :dataset] dataset)
-        (assoc-in [id :original-id] original-id)
-      )))
+  (reduce (fn [new-map result]
+     (->
+         (update-in new-map [(:display-ortholog-id result) (:ontology-branch result)] inc)
+         (assoc-in [(:display-ortholog-id result) :is-selected?] true)
+         (assoc-in [(:display-ortholog-id result) :dataset] (:data-set-name result))
+         (assoc-in [(:display-ortholog-id result) :original-id] (:display-original-id result))
+       ))
       {} search-results)
 )
+
+(defn resultset-to-map [results]
+  "translate that silly vector of results into a map with meaninful keys"
+  (map (fn [result]
+    {:results result
+      :ortho-db-id (get result 0)
+      :ortho-symbol (get result 1)
+      :ortho-secondary-id (get result 2)
+      :ortho-primary-id (get result 3)
+      :ortho-organism (get result 4)
+      :original-db-id (get result 6)
+      :original-symbol (get result 9)
+      :original-secondary-id (get result 8)
+      :original-primary-id (get result 7)
+      :original-organism (get result 10)
+      :go-id (get result 17)
+      :go-term (get result 18)
+      :ontology-branch (get result 19)
+      :data-set-name (get result 12)
+      :data-set-url (get result 13)
+      :display-ortholog-id (utils/get-id result :ortholog)
+      :display-original-id (utils/get-id result :original)
+     }
+  ) results))
+
+(defn multi-mine-results-to-map [multi-mine-results]
+  (.log js/console (clj->js multi-mine-results))
+  )
 
 (re-frame/register-handler
  :concat-results
@@ -62,7 +88,7 @@
    (re-frame/dispatch [:aggregate-heatmap-results])
    (->
     (assoc-in db [:multi-mine-results source] search-results)
-    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue (:results search-results))))
+    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue (resultset-to-map (:results search-results)))))
 ))
 
 (re-frame/register-handler

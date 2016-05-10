@@ -46,9 +46,9 @@
               [:td.organism (utils/get-abbrev organism)]
               [:td (:original-id ortholog-details)]
               [:td (clj->js ortholog)]
-              [:td (get ortholog-details :biological_process 0)]
-              [:td (get ortholog-details :molecular_function 0)]
-              [:td (get ortholog-details :cellular_component 0)]
+              [:td (get ortholog-details "biological_process" 0)]
+              [:td (get ortholog-details "molecular_function" 0)]
+              [:td (get ortholog-details "cellular_component" 0)]
               [:td.dataset (:dataset ortholog-details)]
             ]) organism-details))
         ) @results))]))

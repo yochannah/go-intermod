@@ -3,8 +3,12 @@
 
 (defn get-id
   ;;this one saves time if we have a result row handy
-  ([resultvec]
-   (get-id (get resultvec 5) (get resultvec 6) (get resultvec 7)  (get resultvec 3))
+  ([resultvec original-or-ortholog]
+   (cond
+     (= :ortholog original-or-ortholog)
+      (get-id (get resultvec 3) (get resultvec 2) (get resultvec 1)  (get resultvec 4))
+     (= :original original-or-ortholog)
+      (get-id (get resultvec 7) (get resultvec 8) (get resultvec 9)  (get resultvec 10)))
   )
   ([primary secondary symbol organism]
   "returns first non-null identifier, preferring symbol or primary id"
