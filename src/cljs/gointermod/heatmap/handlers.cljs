@@ -26,7 +26,6 @@
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
   (filter
     (fn [result]
-      (.log js/console "XXX" (clj->js result))
       (= (:ontology-branch result) go-branch))
      (apply concat (map (fn [[_ organism]]
        organism
@@ -44,7 +43,7 @@
   (reduce (fn [new-map result]
       (update-in new-map
         [(:ortho-organism result)
-         (:display-ortholog-d result)
+         (:display-ortholog-id result)
          (:go-term result)] inc)
     ) {} results)
   )
@@ -60,7 +59,8 @@
 (defn build-result-matrix [go-terms aggregate-ortholog-counts]
   "This is basically a matrix representation of the table we'll output. We can't just use maps because the order is important, and maps can't be trusted."
   (apply concat (map (fn [[organism orthologs]]
-    (map (fn [[ortholog terms]]
+    (.log js/console "XXX" (clj->js organism) (clj->js orthologs))
+  (map (fn [[ortholog terms]]
       (concat [organism ortholog] (map-terms go-terms terms))
     ) orthologs)
   ) aggregate-ortholog-counts)))
@@ -84,7 +84,7 @@
         organisms-present (keys counts)
         missing-organisms (find-missing-organisms counts)]
     ;  (.clear js/console)
-      (.log js/console "C"(clj->js merged-results))
+    ;  (.log js/console (clj->js merged-results))
     {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms }
     ))
 
