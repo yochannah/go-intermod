@@ -59,7 +59,6 @@
 (defn build-result-matrix [go-terms aggregate-ortholog-counts]
   "This is basically a matrix representation of the table we'll output. We can't just use maps because the order is important, and maps can't be trusted."
   (apply concat (map (fn [[organism orthologs]]
-    (.log js/console "XXX" (clj->js organism) (clj->js orthologs))
   (map (fn [[ortholog terms]]
       (concat [organism ortholog] (map-terms go-terms terms))
     ) orthologs)

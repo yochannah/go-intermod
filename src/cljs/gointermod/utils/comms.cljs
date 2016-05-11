@@ -31,7 +31,6 @@
         evidence-codes (re-frame/subscribe [:active-evidence-codes])
         evidence-code-constraint-values (create-constraint-values @evidence-codes)
         query (make-base-query identifiers output-organism evidence-code-constraint-values)]
-    (.log js/console "Evidence" (clj->js @evidence-codes))
     (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
