@@ -78,13 +78,42 @@
      }
   ) results))
 
+(defn result-status [search-results]
+  (if (:error search-results)
+    ;;return the error details if there are some
+    {:status :error
+     :details (:error search-results)}
+    ;;else, return the count of results
+    {:status :success
+     :details (count (:results search-results))}
+    )
+   )
+
+(re-frame/register-handler
+ ;;I think I've done this the long way around but my brain is being slippery.
+ :set-status-loading (fn [db [_ _]]
+  (assoc db :organisms
+    (reduce (fn [new-map [id organism]]
+      (if (:output? organism)
+        ;;if we're searching this organism, output a loading status
+        (assoc new-map id
+          (merge organism {:status {:status :loading}}))
+        ;;else, the status is n/a: we're not searching at all.
+        (assoc new-map id
+          (merge organism {:status {:status :na}})))
+    ) {} (:organisms db))
+)))
+
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
    (re-frame/dispatch [:aggregate-heatmap-results])
-   (let [mapped-results (resultset-to-map (:results search-results))]
+   (let [mapped-results (resultset-to-map (:results search-results))
+         status (result-status search-results)]
+     (.log js/console (clj->js status))
    (->
     (assoc-in db [:multi-mine-results source] mapped-results)
+    (assoc-in [:organisms source :status] status)
     (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue mapped-results))))
 ))
 

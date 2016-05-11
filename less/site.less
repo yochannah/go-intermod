@@ -105,6 +105,45 @@ h6 {
     }
   }
 }
+//mixin to make a cute little bar beside mine coloured things.
+.mine-color-pseudo-elements {
+  &:before {
+    content: "";
+    opacity: 0.2;
+    display: block;
+    width: 3px;
+    height: 10px;
+    background: #ddd;
+    margin-top: 4px;
+    margin-right: 0;
+    float: left;
+    border-radius: 5px;
+  }
+  &:hover:before {
+    opacity: 1;
+  }
+  &.zebrafish:before {
+    background-color: @zebracolor;
+  }
+  &.yeast:before {
+    background-color: @yeastcolor;
+  }
+  &.human:before {
+    background-color: @humancolor;
+  }
+  &.worm:before {
+    background-color: @wormcolor;
+  }
+  &.mouse:before {
+    background-color: @mousecolor;
+  }
+  &.rat:before {
+    background-color: @ratcolor;
+  }
+  &.fly:before {
+    background-color: @flycolor;
+  }
+}
 //base stuff
 button {
   padding: @spacer;
@@ -202,7 +241,7 @@ textarea {
   fill: currentColor;
 }
 .contentbody {
-  width:100%;
+  width: 100%;
   margin: @spacer;
   h2 {
     margin-bottom: (@spacer/2 + 0.1em);
@@ -276,6 +315,11 @@ textarea {
       display: block;
       min-width: 9em;
       flex-grow: 1;
+    }
+    .output {
+      label {
+        .mine-color-pseudo-elements;
+      }
     }
     .filter {
       padding: 0 @spacer;
@@ -424,21 +468,50 @@ textarea {
 .enrichment {
   .settings {
     display: flex;
-    justify-content:space-between;
-    background-color:rgba(0,0,0,0.05);
+    justify-content: space-between;
+    background-color: rgba(0,0,0,0.05);
     &> div {
-      margin: 0 @spacer*2 0 @spacer*2;
-      line-height:2.5em;
+      margin: 0 @spacer*2;
+      line-height: 2.5em;
     }
     select {
       margin-left: @spacer/2;
     }
   }
-  .organisms {display:flex;
-  flex-wrap:wrap;}
-  .organism {min-width:400px;flex-grow:1;}
+  .organisms {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .organism {
+    min-width: 400px;
+    flex-grow: 1;
+  }
 }
 ////////debug, kiddos:
+.status {
+  .organism {
+    .mine-color-pseudo-elements;
+    &:before {height:1.8em;
+    margin-right:2px;}
+  }
+  h5 {
+    margin: 1em 0 0;
+  }
+  .results {
+    div:first-child h5 {
+      margin-top: 0;
+    }
+    background-color: #eee;
+    padding: @spacer;
+  }
+  .icon {
+    float: right;
+    color: rgba(0,0,0,0.2);
+  }
+  .info {
+    max-width: 12em;
+  }
+}
 .db {
   tr:nth-child(even) {
     background-color: rgba(50,150,200,0.1);

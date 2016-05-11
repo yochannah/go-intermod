@@ -22,6 +22,7 @@
        :common "Human"
        :output? true
        :abbrev "H. sapiens"
+       :status {:status :na}
        :mine
        {:name "HumanMine"
         :url "beta.humanmine.org/beta"
@@ -29,6 +30,7 @@
     :fly
      {:id     :fly
       :common "Fly"
+      :status {:status :na}
       :output? true
       :abbrev "D. melanogaster"
       :mine
@@ -40,6 +42,7 @@
       :common "Mouse"
       :output? true
       :abbrev "M. musculus"
+      :status {:status :na}
       :mine
        {:name "MouseMine"
         :url "www.mousemine.org/mousemine"
@@ -49,6 +52,7 @@
       :common "Rat"
       :output? true
       :abbrev "R. norvegicus"
+      :status {:status :na}
       :mine
        {:name "RatMine"
         :url "ratmine.mcw.edu/ratmine"
@@ -57,7 +61,9 @@
      {:id     :zebrafish
       :common "Zebrafish"
       :output? true
-      :abbrev "D. rerio":mine
+      :status {:status :na}
+      :abbrev "D. rerio"
+      :mine
        {:name "ZebraFishMine"
         :url "www.zebrafishmine.org"
         :service {:root "www.zebrafishmine.org"}}}
@@ -66,6 +72,7 @@
       :common "Worm"
       :output? false
       :abbrev "C. elegans"
+      :status {:status :na}
       :mine
        {:name "WormMine"
         :url "http://intermine.wormbase.org/tools/wormmine"
@@ -75,6 +82,7 @@
       :output? true
       :common "Yeast"
       :abbrev "S. cerevisiae"
+      :status {:status :na}
       :mine
        {:name "YeastMine"
         :url "yeastmine.yeastgenome.org/yeastmine"

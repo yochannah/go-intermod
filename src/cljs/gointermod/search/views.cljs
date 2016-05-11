@@ -18,7 +18,7 @@
    [:form
     (map (fn [[id details]]
        ^{:key id}
-       [:label
+       [:label {:class (clj->js id)}
         [:input
          {:type "checkbox"
           :defaultChecked (:output? details)
@@ -38,6 +38,7 @@
       :on-submit
         (fn [e]
           (.preventDefault js/e)
+          (re-frame/dispatch [:set-status-loading])
           (re-frame/dispatch [:perform-search ]))}
       [organism-dropdown]
         [:textarea
