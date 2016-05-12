@@ -14,40 +14,45 @@
       (fn [e]
         (.stopPropagation js/e)
         (re-frame/dispatch [:active-modal nil]))}
-   [:div.modal {:class (:id organism) :on-click (fn [e]
-     (.stopPropagation js/e))}
+   [:div.modal {:class (:id organism)
+      :on-click (fn [e]
+        (.stopPropagation js/e))}
     [:h4 "Query for " (:abbrev organism)]
-    [:a.close {:aria-label "close" :on-click (fn [e]
-      (.stopPropagation js/e)
-      (re-frame/dispatch [:active-modal nil]))} "×"]
-    [:pre (:query organism)]
+    [:a.close {:aria-label "close"
+        :on-click (fn [e]
+          (.stopPropagation js/e)
+          (re-frame/dispatch [:active-modal nil]))} "×"]
+    (if (:query organism)
+      ;;show the query if there is one
+      [:pre (:query organism)]
+      ;;Else tell them it wasn't searched
+      [:p "This organism wasn't selected as an output species so no query was performed."]
+    )
    [:a
     {:href (build-url organism)
      :target "_blank"}
     [:svg.icon [:use {:xlinkHref "#icon-external"}]]
     "View this query in " (:name (:mine organism))
-    ]
-    (.log js/console (build-url organism))
-   ]]
+    ]]]
   )
 
 (defn prep-status-details [organism]
   [:div
+  (cond
+    (= (:status (:status organism)) :loading)
+    [:span.loading "Loading . . ."]
+    (= (:status (:status organism)) :error)
+    [:span.error "Error loading results"]
+    (= (:status (:status organism)) :na)
+    [:span.na "No search performed"]
+    (= (:status (:status organism)) :success)
+    [:span.success (:details (:status organism)) " results"]
+    )
    (let [status (:status organism)
          active-modal (re-frame/subscribe [:active-modal])
          active (= @active-modal (:id organism))]
-    (cond
-      (= (:status status) :loading)
-        [:span.loading "Loading . . ."]
-      (= (:status status) :error)
-        [:span.error "Error loading results"]
-      (= (:status status) :na)
-        [:span.na (.log js/console "F") "No search performed"]
-      (= (:status status) :success)
-        [:span.success (:details status) " results"]
-      )
       [:div.query {:class (cond active "active")}
-       (cond active [modal organism])
+        (cond active [modal organism])
         [:svg.icon [:use {:xlinkHref "#icon-code"}]]]
 )])
 
@@ -114,5 +119,7 @@
            :on-click #(re-frame/dispatch [:active-filter "cellular_component"] )}
           [:svg.icon [:use {:xlinkHref "#icon-cellular-component"}]]
             "Cellular\u00A0Component"]]]])
-   [status]
+   (let [are-there-results? (re-frame/subscribe [:aggregate-results])]
+    (cond @are-there-results?
+      [status]))
  ]))
