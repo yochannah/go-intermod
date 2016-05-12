@@ -22,19 +22,27 @@
     [:div.settings
       [:div [:label "Test correction"
         [:select
-          [:option "Holm-Bonferroni"]]]]
-          [:div [:label "Max p-value"
+          [:option "Holms-Bonferroni"]
+          [:option "Benjamini Hochberg"]
+          [:option "Bonferroni"]
+          [:option "None"]]]]
+      [:div [:label "Max p-value"
         [:select
-          [:option "0.05"]]]]
-      ; [:label "Ontology"
-      ;   [:select
-      ;    (let [filters (re-frame/subscribe [:filters])]
-      ;     (map (fn [[k v]]
-      ;       [:option {:value k}  (:pretty-name v)])
-      ;      @filters))
-      ;   ]]
-        [:div
-          [:span "Ontology branch: " @(re-frame/subscribe [:active-filter-pretty])]]
+          [:option 0.05]
+          [:option 0.10]
+          [:option 1.00]]]]
+      [:div [:label "Ontology"
+      (let [filters (re-frame/subscribe [:filters])
+      active-filter (re-frame/subscribe [:active-filter])]
+         [:select
+          {:on-change (fn [e] (re-frame/dispatch [:active-filter (aget e "target" "value")]))
+           :value @active-filter}
+           (map (fn [[k v]]
+              ^{:key (str "filter" k)}
+              [:option
+               {:value k} (:pretty-name v) ])
+            @filters)
+         ])]]
      ]
     [organism-enrichment]
     ]
