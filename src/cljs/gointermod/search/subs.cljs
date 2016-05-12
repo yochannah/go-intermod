@@ -29,6 +29,11 @@
   (fn [db]
     (reaction (:expand-evidence-codes? @db))))
 
+(re-frame/register-sub
+  :active-modal
+  (fn [db]
+    (reaction (:active-modal @db))))
+
   (re-frame/register-sub
    :input-organism
    (fn [db]

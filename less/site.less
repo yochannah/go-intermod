@@ -389,6 +389,7 @@ textarea {
   }
   .axis {
     background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);
+    min-width: 16em;
   }
   th.goterm,
   th {
@@ -490,26 +491,103 @@ textarea {
 ////////debug, kiddos:
 .status {
   .organism {
-    .mine-color-pseudo-elements;
-    &:before {height:1.8em;
-    margin-right:2px;}
+    background:@searchbackgroundcolor;
+    border-left: solid 3px #ccc;
+    padding:@spacer/2;
+    padding-left: @spacer;
+    &:hover {
+      .hoverstate;
+      background: lighten(@searchbackgroundcolor, 5%);
+      border-left: solid 3px @ctabackgroundcolor;
+    }
+    &:active {
+      .activestate;
+      background: darken(@searchbackgroundcolor, 15%);
+      border-left: solid 3px darken(@ctabackgroundcolor,15%);
+    }
+    @fadeby: 60%;
+    margin: 0;
+    &.zebrafish {
+      border-color: fadeout(@zebracolor, @fadeby);
+    }
+    &.yeast {
+      border-color: fadeout(@yeastcolor, @fadeby);
+    }
+    &.human {
+      border-color: fadeout(@humancolor, @fadeby);
+    }
+    &.worm {
+      border-color: fadeout(@wormcolor, @fadeby);
+    }
+    &.mouse {
+      border-color: fadeout(@mousecolor, @fadeby);
+    }
+    &.rat {
+      border-color: fadeout(@ratcolor, @fadeby);
+    }
+    &.fly {
+      border-color: fadeout(@flycolor, @fadeby);
+    }
   }
   h5 {
-    margin: 1em 0 0;
-  }
-  .results {
-    div:first-child h5 {
-      margin-top: 0;
-    }
-    background-color: #eee;
-    padding: @spacer;
+    margin: 0em 0 0;
   }
   .icon {
     float: right;
+    margin-top:-20px;
     color: rgba(0,0,0,0.2);
   }
   .info {
     max-width: 12em;
+  }
+  //for modal
+  .modal {
+    opacity: 1;
+    display: block;
+    position: fixed;
+    text-shadow:none;
+    background: #fff;
+    border-radius: 2px;
+    left: 10%;
+    top: 10%;
+    right: 10%;
+    bottom: 60%;
+    overflow: auto;
+    padding: 1em;
+    border-left:solid 3px;
+    .icon {float:none; display:inline;margin:0 @spacer/2 0 0;}
+    @fadeby: 0;
+    &.zebrafish {
+      border-color: fadeout(@zebracolor, @fadeby);
+    }
+    &.yeast {
+      border-color: fadeout(@yeastcolor, @fadeby);
+    }
+    &.human {
+      border-color: fadeout(@humancolor, @fadeby);
+    }
+    &.worm {
+      border-color: fadeout(@wormcolor, @fadeby);
+    }
+    &.mouse {
+      border-color: fadeout(@mousecolor, @fadeby);
+    }
+    &.rat {
+      border-color: fadeout(@ratcolor, @fadeby);
+    }
+    &.fly {
+      border-color: fadeout(@flycolor, @fadeby);
+    }
+  }
+  //also for the modal
+  .fade {
+    display: block;
+    position: fixed;
+    background: rgba(0,0,0,0.6);
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
   }
 }
 .db {

@@ -1,32 +1,66 @@
 (ns gointermod.nav
     (:require [re-frame.core :as re-frame]))
 
+(defn build-url [organism]
+  (str "http://"
+      (:url (:mine organism))
+      "/loadQuery.do?skipBuilder=true&query="
+      (.encodeURIComponent js/window (:query organism))
+      "&trail=|query&method=xml"
+))
 
-(defn prep-status-details [status]
-  (cond
-    (= (:status status) :loading)
-      [:span.loading "Loading . . ."]
-    (= (:status status) :error)
-      [:span.error "Unable to load results"]
-    (= (:status status) :na)
-      [:span.na "No search performed"]
-    (= (:status status) :success)
-      [:span.na (:details status) " results"]
-    )
-)
+(defn modal [organism]
+  [:div.fade {:on-click #(re-frame/dispatch [:active-modal nil])}
+   [:div.modal {:class (:id organism)}
+    [:h4 "Query for " (:abbrev organism)]
+    [:pre {:on-click (fn [e]
+      (.stopPropagation js/e))}
+     (:query organism)]
+   [:a
+    {:href (build-url organism)
+     :target "_blank"}
+    [:svg.icon [:use {:xlinkHref "#icon-external"}]]
+    "View this query in " (:name (:mine organism))
+    ]
+    (.log js/console (build-url organism))
+   ]]
+  )
+
+(defn prep-status-details [organism]
+  [:div
+   (let [status (:status organism)
+         active-modal (re-frame/subscribe [:active-modal])
+         active (= @active-modal (:id organism))]
+    (cond
+      (= (:status status) :loading)
+        [:span.loading "Loading . . ."]
+      (= (:status status) :error)
+        [:span.error "Error loading results"]
+      (= (:status status) :na)
+        [:span.na (.log js/console "F") "No search performed"]
+      (= (:status status) :success)
+        [:span.success (:details status) " results"]
+      )
+      [:div.query {:class (cond active "active")}
+       (cond active [modal organism])
+        [:svg.icon [:use {:xlinkHref "#icon-code"}]]]
+)])
 
 (defn status []
   (let [organisms (re-frame/subscribe [:organisms])]
     [:div.status
     [:h4 "Search status: "]
      [:div.results
-    (map (fn [[_ organism]]
+    (doall (map (fn [[_ organism]]
       ^{:key (:id organism)}
-      [:div.organism {:class (clj->js (:id organism))} [:h5 (:abbrev organism)]
-       [:div (prep-status-details (:status organism))
-       ;[:svg.icon [:use {:xlinkHref "#icon-bug"}]]
+      [:div.organism
+        {:on-click
+          #(re-frame/dispatch [:active-modal (:id organism)])
+          :class (clj->js (:id organism))}
+          [:h5 (:abbrev organism)]
+          [:div (prep-status-details organism)
         ]]
-           ) @organisms)
+           ) @organisms))
     [:p.info "'Result' in this context means a single organism + ortholog + GO Term combination. Results in the main pane are aggregated, so will not match the numbers shown here."] ]]))
 
 (defn nav []

@@ -68,9 +68,9 @@
       :original-secondary-id (get result 8)
       :original-primary-id (get result 7)
       :original-organism (get result 10)
-      :go-id (get result 17)
-      :go-term (get result 18)
-      :ontology-branch (get result 19)
+      :go-id (get result 15)
+      :go-term (get result 16)
+      :ontology-branch (get result 17)
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :display-ortholog-id (utils/get-id result :ortholog)
@@ -125,3 +125,17 @@
     (go
       (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
 ) (dissoc db :multi-mine-results :multi-mine-aggregate)))
+
+(re-frame/register-handler
+ ;;saves the most recent query xml to be associated with a given organism
+ :save-query
+ (fn [db [_ query organism]]
+  (assoc-in db [:organisms organism :query] query)
+  ))
+
+  (re-frame/register-handler
+    ;;There's only one input organism for the search. Set it.
+    :active-modal
+    (fn [db [_ organism]]
+      (assoc-in db [:active-modal] organism)
+      ))
