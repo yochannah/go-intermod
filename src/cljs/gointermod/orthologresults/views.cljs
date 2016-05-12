@@ -65,8 +65,13 @@
 (defn orthologs []
   (fn []
      [:div.ortholog-results
-      [:h2 "Orthologous Genes"]
-      [:table.aggregate
-        [aggregate-headers]
-        [aggregate-results]]
-        ]))
+     (let [are-there-results? (re-frame/subscribe [:aggregate-results])]
+      (if @are-there-results?
+        ;;if there are results:
+        (do [:h2 "Orthologous Genes"]
+        [:table.aggregate
+          [aggregate-headers]
+          [aggregate-results]])
+        ;;Placeholder for non-results
+        [:div "type something into the searchbar up the top and press search"]
+))]))

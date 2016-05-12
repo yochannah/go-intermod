@@ -36,6 +36,7 @@ h6 {
     opacity: 0.4;
   }
 }
+a {  cursor: pointer; color:@somecolor; font-weight:bold; &:visited {color:#673AB7} &:hover {color:@ctabackgroundcolor;}}
 .close {
   cursor: pointer;
   float: right;
@@ -197,6 +198,7 @@ nav {
     list-style-type: none;
     a,
     a:visited {
+      font-weight:300;
       display: block;
       color: @maintextcolor;
       text-decoration: none;
@@ -418,6 +420,7 @@ textarea {
   th.goterm {
     white-space: nowrap;
     height: 10em;
+    z-index:4;
     text-align: left;
     div {
       //these are magic numbers.
@@ -559,6 +562,7 @@ textarea {
   .modal {
     opacity: 1;
     display: block;
+    z-index:100;
     position: fixed;
     text-shadow: none;
     background: #fff;
