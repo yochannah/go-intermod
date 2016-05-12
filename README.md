@@ -1,5 +1,7 @@
 # gointermod
 
+**Demo:** http://gointermod.apps.intermine.org/#/
+
 A [re-frame](https://github.com/Day8/re-frame) application designed to search GO terms across multile InterMine Instances.
 
 ## Development Mode
