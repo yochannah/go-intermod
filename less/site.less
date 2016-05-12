@@ -36,6 +36,22 @@ h6 {
     opacity: 0.4;
   }
 }
+.close {
+  cursor: pointer;
+  float: right;
+  background-color: @ctabackgroundcolor;
+  color: @ctatextcolor;
+  width: 1.5*@spacer;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  height: 1.5*@spacer;
+  text-align: center;
+  line-height: 1.5*@spacer;
+  position: relative;
+  top: -25px;
+  border-radius: 1.5*@spacer;
+  font-weight: bold;
+  font-size:1.5em
+}
 //mixins for general state behaviour
 .hoverstate {
   text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
@@ -491,10 +507,9 @@ textarea {
 ////////debug, kiddos:
 .status {
   .organism {
-    background:@searchbackgroundcolor;
+    background: @searchbackgroundcolor;
     border-left: solid 3px #ccc;
-    padding:@spacer/2;
-    padding-left: @spacer;
+    padding: @spacer/2 @spacer/2 @spacer/2 @spacer;
     &:hover {
       .hoverstate;
       background: lighten(@searchbackgroundcolor, 5%);
@@ -530,11 +545,11 @@ textarea {
     }
   }
   h5 {
-    margin: 0em 0 0;
+    margin: 0;
   }
   .icon {
     float: right;
-    margin-top:-20px;
+    margin-top: -20px;
     color: rgba(0,0,0,0.2);
   }
   .info {
@@ -545,7 +560,7 @@ textarea {
     opacity: 1;
     display: block;
     position: fixed;
-    text-shadow:none;
+    text-shadow: none;
     background: #fff;
     border-radius: 2px;
     left: 10%;
@@ -554,8 +569,12 @@ textarea {
     bottom: 60%;
     overflow: auto;
     padding: 1em;
-    border-left:solid 3px;
-    .icon {float:none; display:inline;margin:0 @spacer/2 0 0;}
+    border-left: solid 3px;
+    .icon {
+      float: none;
+      display: inline;
+      margin: 0 @spacer/2 0 0;
+    }
     @fadeby: 0;
     &.zebrafish {
       border-color: fadeout(@zebracolor, @fadeby);

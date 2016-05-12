@@ -10,12 +10,17 @@
 ))
 
 (defn modal [organism]
-  [:div.fade {:on-click #(re-frame/dispatch [:active-modal nil])}
-   [:div.modal {:class (:id organism)}
+  [:div.fade {:on-click
+      (fn [e]
+        (.stopPropagation js/e)
+        (re-frame/dispatch [:active-modal nil]))}
+   [:div.modal {:class (:id organism) :on-click (fn [e]
+     (.stopPropagation js/e))}
     [:h4 "Query for " (:abbrev organism)]
-    [:pre {:on-click (fn [e]
-      (.stopPropagation js/e))}
-     (:query organism)]
+    [:a.close {:aria-label "close" :on-click (fn [e]
+      (.stopPropagation js/e)
+      (re-frame/dispatch [:active-modal nil]))} "×"]
+    [:pre (:query organism)]
    [:a
     {:href (build-url organism)
      :target "_blank"}
