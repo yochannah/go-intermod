@@ -24,13 +24,11 @@
 
 (defn merge-results [results go-branch]
   "merges results from all organisms into one big fat map, and filters out the other two go branches"
-  (filter
-    (fn [result]
+  (sort-by :go-term      ;;sort by GO term 
+    (filter (fn [result] ;;only return branches we care about
       (= (:ontology-branch result) go-branch))
-     (apply concat (map (fn [[_ organism]]
-       organism
-   ) results)))
-  )
+    (apply concat (map (fn [[_ organism]] ;;merge it all
+organism) results)))))
 
 (defn extract-go-terms [results]
   "just an ordered array of terms, thanks"
@@ -83,7 +81,7 @@
         organisms-present (keys counts)
         missing-organisms (find-missing-organisms counts)]
     ;  (.clear js/console)
-    ;  (.log js/console (clj->js merged-results))
+      (.log js/console (clj->js merged-results))
     {:rows final-heatmap-matrix :headers go-terms :max-count max-count :missing-organisms missing-organisms }
     ))
 
