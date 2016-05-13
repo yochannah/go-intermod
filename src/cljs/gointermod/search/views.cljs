@@ -43,6 +43,7 @@
       [organism-dropdown]
         [:textarea
          {:placeholder "Type identifiers here, e.g. 'ADH5'"
+          :auto-focus "autofocus"
           :on-change (fn [e] (re-frame/dispatch [:update-search-term (aget e "target" "value")]))}]
         [:button {:type "submit"} "Search"]]])
 

@@ -310,6 +310,37 @@ textarea {
     display: flex;
     transition: all 0.35s ease-out;
     max-width: 40%;
+    textarea {
+  animation-duration: 3s;
+  animation-name: pulse;
+  border: solid 1px @ctabackgroundcolor;
+  border-left:solid 5px @ctabackgroundcolor;;
+}
+
+@keyframes pulse {
+  @fadeby:0;
+  0% {
+    border-color: fadeout(@wormcolor, @fadeby);
+  }
+  15% {
+    border-color: fadeout(@flycolor, @fadeby);
+  }
+  30% {
+    border-color: fadeout(@ratcolor, @fadeby);
+  }
+  45% {
+    border-color: fadeout(@zebracolor, @fadeby);
+  }
+  60% {
+    border-color: fadeout(@yeastcolor, @fadeby);
+  }
+  75% {
+    border-color: fadeout(@humancolor, @fadeby);
+  }
+  90% {
+    border-color: fadeout(@mousecolor, @fadeby);
+  }
+}
   }
   .intro {
     max-width: 50%;
