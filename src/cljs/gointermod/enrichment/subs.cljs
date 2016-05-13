@@ -12,3 +12,8 @@
  :test-correction
  (fn [db]
   (reaction (:test-correction @db))))
+
+(re-frame/register-sub
+ :enrichment-results
+ (fn [db]
+  (reaction (:enrichment @db))))

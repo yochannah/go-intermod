@@ -5,14 +5,34 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+(defn output-success [result]
+    [:div
+     (:matches result) " " (:description result) ]
+   )
+
+(defn output-error [result]
+ [:div
+  [:div ":( " (:error result) ]
+  ])
+
 (defn organism-enrichment []
-  (let [organisms (re-frame/subscribe [:organisms])]
+  (let [organisms (re-frame/subscribe [:organisms])
+        enrichment (re-frame/subscribe [:enrichment-results])]
   [:div.organisms
-   (map (fn [[_ organism]]
-          ^{:key (:id organism)}
-          [:div.organism [:h4 (:abbrev organism)]
-           ]) @organisms)
-   ]))
+  (doall (map (fn [[_ organism]]
+    ^{:key (:id organism)}
+    [:div.organism [:h4 (:abbrev organism)]
+      (let [this-response ((:id organism) @enrichment)]
+        (cond
+          (:error this-response)
+            [output-error this-response]
+          (:wasSuccessful this-response)
+            (map (fn [result]
+              ^{:key (str (:p-value result) (:identifier result))}
+              [output-success result]) (:results this-response))
+           )
+     )]) @organisms)
+   )]))
 
 (defn test-correction-filter []
   (let [correction (re-frame/subscribe [:test-correction])]
@@ -55,8 +75,16 @@
         [:option {:value 1.00} "1.00"]]]]
   ))
 
+(defn debugbutton []
+  [:button
+   {:on-click
+    (fn []
+      (re-frame/dispatch [:enrich-results])
+                        )} "I would like some enrichment, pls!"])
+
 (defn enrichment []
   (let [max-p (re-frame/subscribe [:max-p])]
+    (re-frame/dispatch [:enrich-results])
    [:div.enrichment
     [:h2 "Enrichment"]
     [:div.settings
@@ -64,6 +92,8 @@
       [max-p-filter]
       [ontology-filter]
      ]
+
+;      [debugbutton]
     [organism-enrichment]
     ])
 )

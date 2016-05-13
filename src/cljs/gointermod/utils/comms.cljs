@@ -61,7 +61,7 @@
   3. Delete the job (side effect).
   4. Return results"
   [source input]
-  (.log js/console (clj->js source) (clj->js input))
+  ;(.log js/console (clj->js source) (clj->js input))
   (go (let [root (.-root (get-service source))
             response (<! (http/post (str "http://" root "/service/ids")
                                     {:with-credentials? false
@@ -96,7 +96,6 @@
     (defn enrichment
       "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
       [ {{:keys [root token]} :service} {:keys [ids widget maxp correction]}]
-      (println "ids" ids)
       (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
        {:with-credentials? false
         :keywordize-keys? true

@@ -110,7 +110,6 @@
    (re-frame/dispatch [:aggregate-heatmap-results])
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results)]
-     (.log js/console (clj->js status))
    (->
     (assoc-in db [:multi-mine-results source] mapped-results)
     (assoc-in [:organisms source :status] status)
@@ -124,7 +123,7 @@
     ;asynchronously query all dem mines and add the results to the db
     (go
       (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
-) (dissoc db :multi-mine-results :multi-mine-aggregate)))
+) (dissoc db :multi-mine-results :multi-mine-aggregate :enrichment)))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism
