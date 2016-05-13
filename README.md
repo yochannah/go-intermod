@@ -4,6 +4,9 @@
 
 A [re-frame](https://github.com/Day8/re-frame) application designed to search GO terms across multile InterMine Instances.
 
+## Licence
+This tool is open source, licenced under LGPL 2.1.
+
 ## Development Mode
 
 ### Compile css:
