@@ -8,17 +8,19 @@
 
 
 (defn enrich [db]
-  (.log js/console (clj->js db))
-  (let [organisms (re-frame/subscribe [:organisms])])
-  ;  (go (let [res (<! (im/enrichment
-  ;    (select-keys upstream-data [:service])
-  ;     {:widget "go_enrichment_for_gene"
-  ;      :maxp (:maxp @persistent-state)
-  ;      :format "json"
-  ;      :correction (:correction "")}
-  ;      :ids (:payload (:data upstream-data))))]
-  ;   ))
-  )
+  (let [organisms (re-frame/subscribe [:organisms])
+        max-p (re-frame/subscribe [:max-p])
+        test-correction (re-frame/subscribe [:test-correction])]
+        (.log js/console "correction" (clj->js @test-correction) "Maxp:" (clj->js @max-p))
+    ; (go (let [res (<! (im/enrichment
+    ;   (select-keys upstream-data [:service])
+    ;    {:widget "go_enrichment_for_gene"
+    ;     :maxp maxp
+    ;     :format "json"
+    ;     :correction test-correction}
+    ;     :ids (:payload (:data upstream-data))))]
+    ;  ))
+  ))
 
 (re-frame/register-handler
  :enrich-results

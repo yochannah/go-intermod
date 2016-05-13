@@ -3,6 +3,7 @@
     (:require [re-frame.core :as re-frame]
       [gointermod.orthologresults.subs :as orthologs]
       [gointermod.heatmap.subs]
+      [gointermod.enrichment.subs]
       [gointermod.search.subs :as search]))
 
 (re-frame/register-sub
