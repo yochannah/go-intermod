@@ -219,7 +219,7 @@ nav {
       &:hover {
         .hoverstate;
         background: lighten(@searchbackgroundcolor, 5%);
-        color:@maintextcolor;
+        color: @maintextcolor;
         border-left: solid 3px @ctabackgroundcolor;
       }
       &:active {
@@ -546,6 +546,37 @@ textarea {
   .organism {
     min-width: 400px;
     flex-grow: 1;
+    max-height: 300px;
+    overflow: auto;
+    padding:  @spacer;
+    margin-right: @spacer;
+    margin-top:  @spacer;
+    background:rgba(255, 255, 255, 0.8) &:nth-child(even) {
+      margin-right: 0;
+    }
+    border-left:solid 3px;
+    @fadeby: 0%;
+    &.zebrafish {
+      border-color: fadeout(@zebracolor, @fadeby);
+    }
+    &.yeast {
+      border-color: fadeout(@yeastcolor, @fadeby);
+    }
+    &.human {
+      border-color: fadeout(@humancolor, @fadeby);
+    }
+    &.worm {
+      border-color: fadeout(@wormcolor, @fadeby);
+    }
+    &.mouse {
+      border-color: fadeout(@mousecolor, @fadeby);
+    }
+    &.rat {
+      border-color: fadeout(@ratcolor, @fadeby);
+    }
+    &.fly {
+      border-color: fadeout(@flycolor, @fadeby);
+    }
   }
 }
 ////////debug, kiddos:

@@ -21,7 +21,7 @@
   [:div.organisms
   (doall (map (fn [[_ organism]]
     ^{:key (:id organism)}
-    [:div.organism [:h4 (:abbrev organism)]
+    [:div.organism {:class (:id organism)} [:h4 (:abbrev organism)]
       (let [this-response ((:id organism) @enrichment)]
         (cond
           (:error this-response)
