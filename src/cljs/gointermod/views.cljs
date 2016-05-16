@@ -49,7 +49,7 @@
            ;;Placeholder for non-results
            [:div
             [:h2 "InterMod GO Tool"]
-            [:p "Type a Gene identifier or symbol into the searchbar up the top and press search. To get started, check out the results for "
+            [:p "Type a Gene identifier or symbol into the searchbar up the top and press search."] [:p "To get started, check out the results for "
               [sample-query "SOX18"] " or " [sample-query "ADH5"]]]
           ))
     ]]
