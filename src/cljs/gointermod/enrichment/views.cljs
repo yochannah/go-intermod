@@ -6,8 +6,10 @@
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
 (defn output-success [result]
-    [:div
-     (:matches result) " " (:description result) ]
+    [:tr
+     [:td.matches (:matches result)]
+     [:td.description (:description result)]
+     [:td.pval (:p-value result)]]
    )
 
 (defn output-error [result]
@@ -16,6 +18,7 @@
   ])
 
 (defn organism-enrichment []
+  "One enrichment results box per organism, outputting the error or the enrichment results"
   (let [organisms (re-frame/subscribe [:organisms])
         enrichment (re-frame/subscribe [:enrichment-results])]
   [:div.organisms
@@ -27,9 +30,17 @@
           (:error this-response)
             [output-error this-response]
           (:wasSuccessful this-response)
+            [:table
+             [:thead [:tr
+              [:th.matches "Matches"]
+              [:th.description "GO Term"]
+              [:th.pval "P-value"]
+              ]]
+             [:tbody
             (map (fn [result]
               ^{:key (str (:p-value result) (:identifier result))}
-              [output-success result]) (:results this-response))
+              [output-success result]) (:results this-response))]
+              ]
            )
      )]) @organisms)
    )]))
@@ -42,7 +53,7 @@
             (re-frame/dispatch [:test-correction (aget e "target" "value")])
             (re-frame/dispatch [:enrich-results]))
           :value @correction}
-          [:option {:value "Holms-Bonferroni"} "Holms-Bonferroni"]
+          [:option {:value "Holm-Bonferroni"} "Holm-Bonferroni"]
           [:option {:value "Benjamini Hochberg"} "Benjamini Hochberg"]
           [:option {:value "Bonferroni"} "Bonferroni"]
           [:option {:value "None"} "None"]]]

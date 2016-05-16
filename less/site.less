@@ -260,6 +260,7 @@ textarea {
   border: solid 1px @bordercolor;
   padding: @spacer/4;
 }
+.default-shadow {  box-shadow: 2px 2px 2px rgba(0,0,0,0.1);}
 //for the inline svg icons
 .icon {
   vertical-align: top;
@@ -278,12 +279,12 @@ textarea {
 }
 //general styles from here on.
 .search {
+  .default-shadow;
   display: flex;
   background: @searchbackgroundcolor;
   color: @searchtextcolor;
   padding: @spacer;
   transition: all 0.35s ease-out;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
   h1,
   h2,
   h3,
@@ -544,18 +545,29 @@ textarea {
     flex-wrap: wrap;
   }
   .organism {
+    .default-shadow;
     min-width: 400px;
     flex-grow: 1;
     max-height: 300px;
     overflow: auto;
-    padding:  @spacer;
+    padding: @spacer;
     margin-right: @spacer;
-    margin-top:  @spacer;
+    margin-top: @spacer;
     background:rgba(255, 255, 255, 0.8) &:nth-child(even) {
       margin-right: 0;
     }
-    border-left:solid 3px;
-    @fadeby: 0%;
+    border-left: solid 3px;
+    @fadeby: 0;
+    .matches {
+      min-width: 3em;
+      text-align: right;
+      display: block;
+      float: left;
+      clear: both;
+    }
+    .description {
+      text-align: left;
+    }
     &.zebrafish {
       border-color: fadeout(@zebracolor, @fadeby);
     }

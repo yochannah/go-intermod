@@ -6,7 +6,7 @@
    :active-view :ortholog-summary
    :active-filter "biological_process"
    :max-p 0.05
-   :test-correction "Holms-Bonferroni"
+   :test-correction "Holm-Bonferroni"
    :filters
      {"biological_process"
        {:pretty-name "Biological Process"

@@ -15,9 +15,13 @@
         active-filter (re-frame/subscribe [:active-filter])
         this-resultset (organism @results)
         filtered (filter-by-branch this-resultset @active-filter)]
-    (reduce (fn [new-vec result]
-      (conj new-vec (:ortho-db-id result) (:original-db-id result))
-) [] filtered)))
+    (distinct (reduce (fn [new-vec result]
+      (conj new-vec (:ortho-db-id result) )
+) [] filtered))))
+
+(defn sort-by-pval [server-response]
+  (let [results (:results server-response)]
+    (assoc server-response :results (sort-by :p-value results))))
 
 (defn enrich [db]
   (let [organisms (re-frame/subscribe [:organisms])
@@ -26,17 +30,21 @@
         ;(.clear js/console)
     (doall (map (fn [[id organism]]
       (let [ids (get-ids (:id organism))]
-        (cond (and (:output? organism) (seq ids))
-         (go (let [res (<! (comms/enrichment
-            (select-keys (:mine organism) [:service])
-            {:widget "go_enrichment_for_gene"
-             :maxp @max-p
-             :format "json"
-             :correction @test-correction
-             :ids ids}))]
-               (re-frame/dispatch [:concat-enrichment-results res id])
-        ))))
-    ) @organisms))
+        (cond
+          (and (:output? organism) (> (count ids) 1))
+            (go (let [res (<! (comms/enrichment
+              (select-keys (:mine organism) [:service])
+              {:widget "go_enrichment_for_gene"
+               :maxp @max-p
+               :format "json"
+               :correction @test-correction
+               :ids ids}))]
+                 (re-frame/dispatch [:concat-enrichment-results (sort-by-pval res) id])))
+          (= (count ids) 0)
+            #(re-frame/dispatch [:concat-enrichment-results {:error "There were no orthologues for this organism"} id])
+          (= (count ids) 1)
+            #(re-frame/dispatch [:concat-enrichment-results {:error "More than one orthologue per organism is required in order to enrich a list"} id])
+          ))) @organisms))
   ))
 
 (re-frame/register-handler
