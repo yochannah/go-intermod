@@ -53,6 +53,6 @@
               [sample-query "SOX18"] " or " [sample-query "ADH5"]]]
           ))
     ]]
-      ; (when config/debug?
-        ;   [:div.db  (edn->hiccup (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))])
+       (when config/debug?
+           [:div.db  (edn->hiccup (:enrichment (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
     ]))

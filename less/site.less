@@ -530,6 +530,7 @@ textarea {
   }
 }
 .enrichment {
+  .notsearched {margin:1em 0em; border-left:solid 3px #ccc; padding:1em;}
   .settings {
     display: flex;
     justify-content: space-between;
@@ -552,6 +553,7 @@ textarea {
     flex-wrap: wrap;
   }
   .organism {
+    transition: 2s all;
     @bg : rgba(255, 255, 255, 1);
     background: @bg;
     .default-shadow;
@@ -560,11 +562,13 @@ textarea {
     max-height: 300px;
     overflow: auto;
     padding: @spacer;
-    margin-right: @spacer;
-    margin-top: @spacer;
+    margin: @spacer/2;
+    &.success {max-width:100%;}
+    &.loading {max-width:500px; background:darken(@bg,4%)}
     &.error {
-      background-color: darken(@bg,6%);
-
+      max-width:500px;
+      background-color: darken(@bg,8%);
+      pre {display:inline;white-space:pre-wrap;}
       flex-grow: 1;
       order:7;
       .icon {

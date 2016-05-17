@@ -22,14 +22,28 @@
 
 (defn output-error [result]
   "Error. Error. Does not compute."
- [:div.error [:svg.icon [:use {:xlinkHref "#icon-sad"}]] (:error result) ])
+ [:div.error [:svg.icon [:use {:xlinkHref "#icon-sad"}]] "Error loading results. The server says: \""[:pre (:error result)]"\"" ])
+
+(defn output-loading [result]
+  [:div "Loading results...."])
+
+(defn build-class [organism this-response]
+  (str (clj->js (:id organism)) " "
+    (cond
+      (:loading this-response) "loading"
+      (:wasSuccessful this-response) "success"
+      (:error this-response) "error")
+       ))
 
 (defn process-response [organism this-response]
   "When there's been a response, we need to either tell the user there was an error or just output the data"
   ^{:key (:id organism)}
   [:div.organism
-    {:class (str (clj->js (:id organism)) " " (cond (:error this-response) "error"))} [:h3 (:abbrev organism)]
+    {:class (build-class organism this-response)}
+    [:h3 (:abbrev organism)]
       (cond
+        (:loading this-response)
+          [output-loading this-response]
         (:error this-response)
           [output-error this-response]
         (:wasSuccessful this-response)
@@ -44,7 +58,7 @@
         enrichment (re-frame/subscribe [:enrichment-results])]
     [:div.organisms
       (doall (map (fn [[id organism]]
-          ^{:key (str "enrich" organism)}
+          ^{:key (str "enrich" id)}
           [process-response (id @organisms) (id @enrichment)]
       ) @enrichment)
    )]))
@@ -93,12 +107,28 @@
         [:option {:value 1.00} "1.00"]]]]
   ))
 
-(defn debugbutton []
-  [:button
-   {:on-click
-    (fn []
-      (re-frame/dispatch [:enrich-results])
-                        )} "I would like some enrichment, pls!"])
+(defn non-searched-organisms []
+  "This is where it's the user's fault - it's not showing because it's not selected. Dude. "
+  [:div.notsearched "The following organisms were not selected as an output species: "
+   (map
+    (fn [[id organism]]
+      ;            (.log js/console (clj->js organism))
+      (cond (not (:output? organism))
+        (:abbrev organism))
+) @(re-frame/subscribe [:organisms]))])
+
+(defn organisms-without-enough-orthologues []
+  [:div.notsearched "The following organisms were not selected as an output species: "
+   (map
+    (fn [[id organism]]
+;                  (.log js/console (clj->js organism))
+      (cond (not (:output? organism))
+        (:abbrev organism))
+) @(re-frame/subscribe [:organisms]))])
+
+(defn not-enriched []
+  "This organism's results can't be enriched because there's only one orthologue."
+  )
 
 (defn enrichment []
   (let [max-p (re-frame/subscribe [:max-p])]
@@ -110,5 +140,6 @@
       [max-p-filter]
       [ontology-filter] ]
     [organism-enrichment]
+    [non-searched-organisms]
     ])
 )

@@ -24,9 +24,9 @@
     (assoc server-response :results (sort-by :p-value results))))
 
 (defn enrich [db]
-  (let [organisms (re-frame/subscribe [:organisms])
-        max-p (re-frame/subscribe [:max-p])
-        test-correction (re-frame/subscribe [:test-correction])]
+  (let [organisms (:organisms db)
+        max-p (:max-p db)
+        test-correction (:test-correction db)]
         ;(.clear js/console)
     (doall (map (fn [[id organism]]
       (let [ids (get-ids (:id organism))]
@@ -35,27 +35,37 @@
             (go (let [res (<! (comms/enrichment
               (select-keys (:mine organism) [:service])
               {:widget "go_enrichment_for_gene"
-               :maxp @max-p
+               :maxp max-p
                :format "json"
-               :correction @test-correction
+               :correction test-correction
                :ids ids}))]
                  (re-frame/dispatch [:concat-enrichment-results (sort-by-pval res) id])))
           (= (count ids) 0)
-            #(re-frame/dispatch [:concat-enrichment-results {:error "There were no orthologues for this organism"} id])
+            (re-frame/dispatch [:concat-enrichment-results {:error "There were no orthologues for this organism"} id])
           (= (count ids) 1)
-            #(re-frame/dispatch [:concat-enrichment-results {:error "More than one orthologue per organism is required in order to enrich a list"} id])
-          ))) @organisms))
+            (re-frame/dispatch [:concat-enrichment-results {:error "More than one orthologue per organism is required in order to enrich a list"} id])
+          ))) organisms))
   ))
+
+(defn refresh-enrichment-statuses [db]
+  "sets all enrichments to either loading or blank. use when a new search is initiated"
+  (reduce (fn [new-map [id organism]]
+;            (.log js/console (clj->js new-map) (clj->js id) (clj->js organism))
+    (cond (:output? organism)
+      (assoc-in new-map [id :loading] true))
+) {}(:organisms db)))
 
 (re-frame/register-handler
  :enrich-results
  (fn [db [_ _]]
+;   (.log js/console (clj->js ))
    (enrich db)
- db))
+   (assoc db :enrichment (refresh-enrichment-statuses db))))
 
  (re-frame/register-handler
   :concat-enrichment-results
   (fn [db [_ results organism]]
+;    (.log js/console (clj->js results) (clj->js organism))
     (assoc-in db [:enrichment organism] results)))
 
  (re-frame/register-handler
