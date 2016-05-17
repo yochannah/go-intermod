@@ -43,7 +43,7 @@
           (= (count ids) 0)
             (re-frame/dispatch [:concat-enrichment-results {:error "There were no orthologues for this organism"} id])
           (= (count ids) 1)
-            (re-frame/dispatch [:concat-enrichment-results {:error "More than one orthologue per organism is required in order to enrich a list"} id])
+            (re-frame/dispatch [:concat-enrichment-results {:error "More than one orthologue per organism is required in order to enrich a list. Try searching for multiple genes. "} id])
           ))) organisms))
   ))
 

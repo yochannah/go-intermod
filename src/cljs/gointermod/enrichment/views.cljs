@@ -107,28 +107,23 @@
         [:option {:value 1.00} "1.00"]]]]
   ))
 
+(defn checked-organism-list []
+  "returns a list of output organisms, filtered for ones that are actually checked"
+  (remove nil? (into [] (map
+    (fn [[id organism]]
+      (cond (not (:output? organism))
+      (:abbrev organism))
+      ) @(re-frame/subscribe [:organisms])))))
+
 (defn non-searched-organisms []
   "This is where it's the user's fault - it's not showing because it's not selected. Dude. "
-  [:div.notsearched "The following organisms were not selected as an output species: "
-   (map
-    (fn [[id organism]]
-      ;            (.log js/console (clj->js organism))
-      (cond (not (:output? organism))
-        (:abbrev organism))
-) @(re-frame/subscribe [:organisms]))])
+  (let [organisms (checked-organism-list)]
+    (if (empty? organisms)
+      nil
+      [:div.notsearched "The following organisms were not selected as an output species: " (clojure.string/join " " organisms)]
+    )
+    ))
 
-(defn organisms-without-enough-orthologues []
-  [:div.notsearched "The following organisms were not selected as an output species: "
-   (map
-    (fn [[id organism]]
-;                  (.log js/console (clj->js organism))
-      (cond (not (:output? organism))
-        (:abbrev organism))
-) @(re-frame/subscribe [:organisms]))])
-
-(defn not-enriched []
-  "This organism's results can't be enriched because there's only one orthologue."
-  )
 
 (defn enrichment []
   (let [max-p (re-frame/subscribe [:max-p])]
