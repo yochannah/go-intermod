@@ -101,8 +101,9 @@
       [:select
        {:value @max-p
         :on-change (fn [e]
-          (re-frame/dispatch [:max-p (aget e "target" "value")]))}
-        [:option {:value 0.05}"0.05"]
+          (re-frame/dispatch [:max-p (aget e "target" "value")])
+          (re-frame/dispatch [:enrich-results]))}
+        [:option {:value 0.05} "0.05"]
         [:option {:value 0.10} "0.10"]
         [:option {:value 1.00} "1.00"]]]]
   ))

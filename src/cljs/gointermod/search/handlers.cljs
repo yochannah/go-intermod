@@ -108,6 +108,7 @@
  :concat-results
  (fn [db [_ search-results source]]
    (re-frame/dispatch [:aggregate-heatmap-results])
+   (re-frame/dispatch [:enrich-results])
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results)]
    (->
