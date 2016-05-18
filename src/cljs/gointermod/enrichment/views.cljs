@@ -25,7 +25,7 @@
  [:div.error [:svg.icon [:use {:xlinkHref "#icon-sad"}]] "Error loading results. The server says: \""[:pre (:error result)]"\"" ])
 
 (defn output-loading [result]
-  [:div "Loading results...."])
+  [:div [utils/loader] "Loading results...."])
 
 (defn build-class [organism this-response]
   (str (clj->js (:id organism)) " "

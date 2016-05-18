@@ -279,6 +279,32 @@ textarea {
     margin-bottom: (@spacer/2 + 0.1em);
   }
 }
+
+@keyframes pulse {
+  @fadeby: 0;
+  0% {
+    border-color: fadeout(@wormcolor, @fadeby);
+  }
+  15% {
+    border-color: fadeout(@flycolor, @fadeby);
+  }
+  30% {
+    border-color: fadeout(@ratcolor, @fadeby);
+  }
+  45% {
+    border-color: fadeout(@zebracolor, @fadeby);
+  }
+  60% {
+    border-color: fadeout(@yeastcolor, @fadeby);
+  }
+  75% {
+    border-color: fadeout(@humancolor, @fadeby);
+  }
+  90% {
+    border-color: fadeout(@mousecolor, @fadeby);
+  }
+}
+
 //general styles from here on.
 .search {
   .default-shadow;
@@ -329,30 +355,6 @@ textarea {
       animation-name: pulse;
       border: solid 1px @ctabackgroundcolor;
       border-left: solid 5px @ctabackgroundcolor;
-    }
-    @keyframes pulse {
-      @fadeby: 0;
-      0% {
-        border-color: fadeout(@wormcolor, @fadeby);
-      }
-      15% {
-        border-color: fadeout(@flycolor, @fadeby);
-      }
-      30% {
-        border-color: fadeout(@ratcolor, @fadeby);
-      }
-      45% {
-        border-color: fadeout(@zebracolor, @fadeby);
-      }
-      60% {
-        border-color: fadeout(@yeastcolor, @fadeby);
-      }
-      75% {
-        border-color: fadeout(@humancolor, @fadeby);
-      }
-      90% {
-        border-color: fadeout(@mousecolor, @fadeby);
-      }
     }
   }
   .intro {
@@ -530,7 +532,11 @@ textarea {
   }
 }
 .enrichment {
-  .notsearched {margin:1em 0em; border-left:solid 3px #ccc; padding:1em;}
+  .notsearched {
+    margin: 1em 0;
+    border-left: solid 3px #ccc;
+    padding: 1em;
+  }
   .settings {
     display: flex;
     justify-content: space-between;
@@ -554,7 +560,7 @@ textarea {
   }
   .organism {
     transition: 2s all;
-    @bg : rgba(255, 255, 255, 1);
+    @bg: rgba(255, 255, 255, 1);
     background: @bg;
     .default-shadow;
     min-width: 400px;
@@ -563,14 +569,24 @@ textarea {
     overflow: auto;
     padding: @spacer;
     margin: @spacer/2;
-    &.success {max-width:100%;}
-    &.loading {max-width:500px; background:darken(@bg,4%)}
+    &.success {
+      max-width: 100%;
+    }
+    &.loading {
+      max-width: 400px;
+      background: darken(@bg,4%);
+    }
     &.error {
-      max-width:500px;
+      .error {
+        max-width: 400px;
+      }
       background-color: darken(@bg,8%);
-      pre {display:inline;white-space:pre-wrap;}
+      pre {
+        display: inline;
+        white-space: pre-wrap;
+      }
       flex-grow: 1;
-      order:7;
+      order: 7;
       .icon {
         color: rgba(0,0,0,0.25);
         margin-right: @spacer/2;
@@ -597,7 +613,6 @@ textarea {
       &.fly {
         border-color: fadeout(@flycolor, @fadeby-error);
       }
-
     }
     border-left: solid 3px;
     @fadeby: 0;
@@ -612,24 +627,31 @@ textarea {
       text-align: left;
     }
     &.zebrafish {
+      order:6;
       border-color: fadeout(@zebracolor, @fadeby);
     }
     &.yeast {
+      order:3;
       border-color: fadeout(@yeastcolor, @fadeby);
     }
     &.human {
+      order:1;
       border-color: fadeout(@humancolor, @fadeby);
     }
     &.worm {
       border-color: fadeout(@wormcolor, @fadeby);
+      order:7;
     }
     &.mouse {
+      order:5;
       border-color: fadeout(@mousecolor, @fadeby);
     }
     &.rat {
+      order:4;
       border-color: fadeout(@ratcolor, @fadeby);
     }
     &.fly {
+      order:2;
       border-color: fadeout(@flycolor, @fadeby);
     }
   }
@@ -738,6 +760,45 @@ textarea {
     top: 0;
     right: 0;
     bottom: 0;
+  }
+}
+.loader {
+  @delay: 0.2s;
+  .loader-organism {
+    width: 40px;
+    height: 0;
+    display: block;
+    border: solid 5px #eee;
+    border-radius: 20px;
+    opacity: 0.75;
+    margin-right: -10px;
+    float: left;
+    animation-timing-function: ease-in;
+    position: relative;
+    animation-duration: @delay*14;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+  }
+  .worm {
+    animation-delay: @delay*1;
+  }
+  .zebra {
+    animation-delay: @delay*2;
+  }
+  .human {
+    animation-delay: @delay*3;
+  }
+  .yeast {
+    animation-delay: @delay*4;
+  }
+  .rat {
+    animation-delay: @delay*5;
+  }
+  .mouse {
+    animation-delay: @delay*6;
+  }
+  .fly {
+    animation-delay: @delay*7;
   }
 }
 .db {
