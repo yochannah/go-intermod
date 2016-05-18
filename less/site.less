@@ -63,6 +63,38 @@ a {
   font-weight: bold;
   font-size: 1.5em;
 }
+.default {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &> div {
+    margin-top: @spacer;
+    background: #fff;
+    border-radius:2px;
+    box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.3);
+    text-align: center;
+    p {
+      margin:@spacer 2*@spacer;
+      text-align: left;
+    }
+    img {margin:2*@spacer;}
+  }
+  h2 {
+    text-align: center;
+  }
+}
+//pretty rainbow line, just cos
+.organism-line {
+  display: flex;
+  width: 100%;
+  padding:0;
+  div {
+    width: 15%;
+    height: 0px;
+    border-bottom: solid 5px #ccc;
+  }
+}
 //mixins for general state behaviour
 .hoverstate {
   text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
@@ -132,6 +164,29 @@ a {
     }
   }
 }
+.organism-border-color(@fadeby) {
+  &.zebrafish {
+    border-color: fadeout(@zebracolor, @fadeby);
+  }
+  &.yeast {
+    border-color: fadeout(@yeastcolor, @fadeby);
+  }
+  &.human {
+    border-color: fadeout(@humancolor, @fadeby);
+  }
+  &.worm {
+    border-color: fadeout(@wormcolor, @fadeby);
+  }
+  &.mouse {
+    border-color: fadeout(@mousecolor, @fadeby);
+  }
+  &.rat {
+    border-color: fadeout(@ratcolor, @fadeby);
+  }
+  &.fly {
+    border-color: fadeout(@flycolor, @fadeby);
+  }
+}
 //mixin to make a cute little bar beside mine coloured things.
 .mine-color-pseudo-elements {
   &:before {
@@ -173,6 +228,7 @@ a {
 }
 //base stuff
 button {
+  cursor: pointer;
   padding: @spacer;
   color: @ctatextcolor;
   background: @ctabackgroundcolor;
@@ -279,7 +335,6 @@ textarea {
     margin-bottom: (@spacer/2 + 0.1em);
   }
 }
-
 @keyframes pulse {
   @fadeby: 0;
   0% {
@@ -303,8 +358,10 @@ textarea {
   90% {
     border-color: fadeout(@mousecolor, @fadeby);
   }
+  100% {
+    border-color: fadeout(@wormcolor, @fadeby);
+  }
 }
-
 //general styles from here on.
 .search {
   .default-shadow;
@@ -559,10 +616,10 @@ textarea {
     flex-wrap: wrap;
   }
   .organism {
-    transition: 2s all;
-    @bg: rgba(255, 255, 255, 1);
-    background: @bg;
     .default-shadow;
+    @bg: rgba(255, 255, 255, 1);
+    transition: 2s all;
+    background: @bg;
     min-width: 400px;
     flex-grow: 2;
     max-height: 300px;
@@ -577,45 +634,24 @@ textarea {
       background: darken(@bg,4%);
     }
     &.error {
+      margin: @spacer/2;
+      background-color: darken(@bg,8%);
+      flex-grow: 1;
+      order: 7;
       .error {
         max-width: 400px;
       }
-      background-color: darken(@bg,8%);
       pre {
         display: inline;
         white-space: pre-wrap;
       }
-      flex-grow: 1;
-      order: 7;
       .icon {
         color: rgba(0,0,0,0.25);
         margin-right: @spacer/2;
       }
-      @fadeby-error: 70%;
-      &.zebrafish {
-        border-color: fadeout(@zebracolor, @fadeby-error);
-      }
-      &.yeast {
-        border-color: fadeout(@yeastcolor, @fadeby-error);
-      }
-      &.human {
-        border-color: fadeout(@humancolor, @fadeby-error);
-      }
-      &.worm {
-        border-color: fadeout(@wormcolor, @fadeby-error);
-      }
-      &.mouse {
-        border-color: fadeout(@mousecolor, @fadeby-error);
-      }
-      &.rat {
-        border-color: fadeout(@ratcolor, @fadeby-error);
-      }
-      &.fly {
-        border-color: fadeout(@flycolor, @fadeby-error);
-      }
+      .organism-border-color(70%);
     }
     border-left: solid 3px;
-    @fadeby: 0;
     .matches {
       min-width: 3em;
       text-align: right;
@@ -626,32 +662,33 @@ textarea {
     .description {
       text-align: left;
     }
+    @fadeby: 0;
     &.zebrafish {
-      order:6;
+      order: 6;
       border-color: fadeout(@zebracolor, @fadeby);
     }
     &.yeast {
-      order:3;
+      order: 3;
       border-color: fadeout(@yeastcolor, @fadeby);
     }
     &.human {
-      order:1;
+      order: 1;
       border-color: fadeout(@humancolor, @fadeby);
     }
     &.worm {
       border-color: fadeout(@wormcolor, @fadeby);
-      order:7;
+      order: 7;
     }
     &.mouse {
-      order:5;
+      order: 5;
       border-color: fadeout(@mousecolor, @fadeby);
     }
     &.rat {
-      order:4;
+      order: 4;
       border-color: fadeout(@ratcolor, @fadeby);
     }
     &.fly {
-      order:2;
+      order: 2;
       border-color: fadeout(@flycolor, @fadeby);
     }
   }
@@ -672,29 +709,7 @@ textarea {
       background: darken(@searchbackgroundcolor, 15%);
       border-left: solid 3px darken(@ctabackgroundcolor,15%);
     }
-    @fadeby: 60%;
-    margin: 0;
-    &.zebrafish {
-      border-color: fadeout(@zebracolor, @fadeby);
-    }
-    &.yeast {
-      border-color: fadeout(@yeastcolor, @fadeby);
-    }
-    &.human {
-      border-color: fadeout(@humancolor, @fadeby);
-    }
-    &.worm {
-      border-color: fadeout(@wormcolor, @fadeby);
-    }
-    &.mouse {
-      border-color: fadeout(@mousecolor, @fadeby);
-    }
-    &.rat {
-      border-color: fadeout(@ratcolor, @fadeby);
-    }
-    &.fly {
-      border-color: fadeout(@flycolor, @fadeby);
-    }
+    .organism-border-color(80%);
   }
   h5 {
     margin: 0;
@@ -728,28 +743,7 @@ textarea {
       display: inline;
       margin: 0 @spacer/2 0 0;
     }
-    @fadeby: 0;
-    &.zebrafish {
-      border-color: fadeout(@zebracolor, @fadeby);
-    }
-    &.yeast {
-      border-color: fadeout(@yeastcolor, @fadeby);
-    }
-    &.human {
-      border-color: fadeout(@humancolor, @fadeby);
-    }
-    &.worm {
-      border-color: fadeout(@wormcolor, @fadeby);
-    }
-    &.mouse {
-      border-color: fadeout(@mousecolor, @fadeby);
-    }
-    &.rat {
-      border-color: fadeout(@ratcolor, @fadeby);
-    }
-    &.fly {
-      border-color: fadeout(@flycolor, @fadeby);
-    }
+    .organism-border-color(0);
   }
   //also for the modal
   .fade {
@@ -800,6 +794,9 @@ textarea {
   .fly {
     animation-delay: @delay*7;
   }
+}
+.organism-line div {
+  .organism-border-color(0);
 }
 .db {
   tr:nth-child(even) {

@@ -49,7 +49,7 @@
               [:td (get ortholog-details "biological_process" 0)]
               [:td (get ortholog-details "molecular_function" 0)]
               [:td (get ortholog-details "cellular_component" 0)]
-              [:td.dataset (:dataset ortholog-details)]
+              [:td.dataset (clojure.string/join ", " (:dataset ortholog-details))]
             ]) organism-details))
         ) @results))]))
 

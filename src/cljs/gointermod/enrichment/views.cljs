@@ -25,14 +25,16 @@
  [:div.error [:svg.icon [:use {:xlinkHref "#icon-sad"}]] "Error loading results. The server says: \""[:pre (:error result)]"\"" ])
 
 (defn output-loading [result]
-  [:div [utils/loader] "Loading results...."])
+  [:div [utils/loader]
+   [:br]
+   [:p "Loading results...."]])
 
 (defn build-class [organism this-response]
   (str (clj->js (:id organism)) " "
     (cond
-      (:loading this-response) "loading"
       (:wasSuccessful this-response) "success"
-      (:error this-response) "error")
+      (:error this-response) "error"
+      (:loading this-response) "loading")
        ))
 
 (defn process-response [organism this-response]
@@ -44,13 +46,12 @@
       (cond
         (:loading this-response)
           [output-loading this-response]
-        (:error this-response)
-          [output-error this-response]
         (:wasSuccessful this-response)
           [output-success this-response]
-         )
-   ]
-  )
+        (:error this-response)
+          [output-error this-response]
+        true [output-loading this-response]
+)])
 
 (defn organism-enrichment []
   "One enrichment results box per organism, outputting the error or the enrichment results"
@@ -60,7 +61,7 @@
       (doall (map (fn [[id organism]]
           ^{:key (str "enrich" id)}
           [process-response (id @organisms) (id @enrichment)]
-      ) @enrichment)
+      ) @organisms)
    )]))
 
 (defn test-correction-filter []

@@ -27,7 +27,6 @@
   (let [organisms (:organisms db)
         max-p (:max-p db)
         test-correction (:test-correction db)]
-        ;(.clear js/console)
     (doall (map (fn [[id organism]]
       (let [ids (get-ids (:id organism))]
         (cond
@@ -50,15 +49,14 @@
 (defn refresh-enrichment-statuses [db]
   "sets all enrichments to either loading or blank. use when a new search is initiated"
   (reduce (fn [new-map [id organism]]
-;            (.log js/console (clj->js new-map) (clj->js id) (clj->js organism))
     (cond (:output? organism)
       (assoc-in new-map [id :loading] true))
-) {}(:organisms db)))
+) (:enrichment db) (:organisms db)))
 
 (re-frame/register-handler
  :enrich-results
  (fn [db [_ _]]
-;   (.log js/console (clj->js ))
+  ; (.clear js/console)
    (enrich db)
    (assoc db :enrichment (refresh-enrichment-statuses db))))
 

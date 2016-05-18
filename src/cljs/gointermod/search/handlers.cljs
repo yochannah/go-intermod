@@ -48,7 +48,9 @@
      (->
          (update-in new-map [(:display-ortholog-id result) (:ontology-branch result)] inc)
          (assoc-in [(:display-ortholog-id result) :is-selected?] true)
-         (assoc-in [(:display-ortholog-id result) :dataset] (:data-set-name result))
+         (update-in [(:display-ortholog-id result) :dataset]
+            (fn [dataset new-val]
+              (conj (set dataset) new-val) ) (:data-set-name result) )
          (assoc-in [(:display-ortholog-id result) :original-id] (:display-original-id result))
        ))
       {} search-results)
@@ -124,7 +126,7 @@
     ;asynchronously query all dem mines and add the results to the db
     (go
       (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
-) (dissoc db :multi-mine-results :multi-mine-aggregate :enrichment)))
+) (dissoc db :multi-mine-results :multi-mine-aggregate)))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism

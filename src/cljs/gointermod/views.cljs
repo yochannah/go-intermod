@@ -8,6 +8,7 @@
       [gointermod.ontology.views :as ontology]
       [gointermod.enrichment.views :as enrichment]
       [gointermod.utils.icons :as icons]
+      [gointermod.utils.utils :as utils]
       [secretary.core :as secretary]
       [json-html.core :as json-html])
 (:use [json-html.core :only [edn->hiccup]]))
@@ -35,12 +36,27 @@
    identifier]
   )
 
+(defn organism-line []
+  [:div.organism-line
+  [:div.rat]
+  [:div.zebrafish]
+  [:div.yeast]
+  [:div.human]
+  [:div.mouse]
+  [:div.fly]
+  [:div.worm]
+])
+
 (defn default-content []
   [:div.default
-   [:h2 "InterMod GO Tool"]
-   [:div
-   [:p "Type a Gene identifier or symbol into the searchbar up the top and press search."] [:p "To get started, check out the results for "
-     [sample-query "SOX18"] " or " [sample-query "ADH5"]]]])
+    [:div
+    [:img {:src "/img/logo.jpg"}]
+      [:h2 "InterMOD GO Tool"]
+      [:p "Type a Gene identifier or symbol into the searchbar up the top and press search."]
+      [:p "If you're not sure what genes to choose, check out the results for "
+     [sample-query "SOX18"] " or " [sample-query "ADH5"]]
+     [organism-line]
+     ]])
 
 (defn main-panel []
   (fn []
@@ -58,10 +74,7 @@
               (do (aset js/window "location" "href" "#")
                  [default-content]
         ))]])
-;    (and (not @are-there-results?)
-;         (or (not= current-path "") (not= current-path "/#")))
 
-
-      ;  (when config/debug?
-      ;      [:div.db  (edn->hiccup (:enrichment (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
+        (when config/debug?
+            [:div.db  (edn->hiccup (:human (:enrichment (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))))])
     ]))
