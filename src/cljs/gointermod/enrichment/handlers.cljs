@@ -13,11 +13,10 @@
 (defn get-ids [organism]
   (let [results (re-frame/subscribe [:multi-mine-results])
         active-filter (re-frame/subscribe [:active-filter])
-        this-resultset (organism @results)
-        filtered (filter-by-branch this-resultset @active-filter)]
+        this-resultset (organism @results)]
     (distinct (reduce (fn [new-vec result]
       (conj new-vec (:ortho-db-id result) )
-) [] filtered))))
+) [] this-resultset))))
 
 (defn sort-by-pval [server-response]
   (let [results (:results server-response)]
@@ -26,6 +25,7 @@
 (defn enrich [db]
   (let [organisms (:organisms db)
         max-p (:max-p db)
+        filter (:active-filter db)
         test-correction (:test-correction db)]
     (doall (map (fn [[id organism]]
       (let [ids (get-ids (:id organism))]
@@ -36,6 +36,7 @@
               {:widget "go_enrichment_for_gene"
                :maxp max-p
                :format "json"
+               :filter filter
                :correction test-correction
                :ids ids}))]
                  (re-frame/dispatch [:concat-enrichment-results (sort-by-pval res) id])))

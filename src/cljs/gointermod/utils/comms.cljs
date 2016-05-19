@@ -95,13 +95,14 @@
 
     (defn enrichment
       "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
-      [ {{:keys [root token]} :service} {:keys [ids widget maxp correction]}]
+      [ {{:keys [root token]} :service} {:keys [ids widget maxp correction filter]}]
       (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
        {:with-credentials? false
         :keywordize-keys? true
         :form-params (merge
                        {:widget widget
                         :maxp maxp
+                        :filter filter
                         :format "json"
                         :correction correction}
                         {:ids (clojure.string/join "," ids)}

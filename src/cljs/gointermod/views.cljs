@@ -84,6 +84,6 @@
                  [default-content]
         ))]])
 
-        ; (when config/debug?
-        ;     [:div.db  (edn->hiccup (:initialised (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
+        ;  (when config/debug?
+        ;      [:div.db  (edn->hiccup (:multi-mine-aggregate (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
     ]))

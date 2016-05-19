@@ -24,9 +24,9 @@
   [:th "Species"]
   [:th "Input Gene"]
   [:th "Orthologs"]
-  [:th.count "Biological Process"]
-  [:th.count "Molecular Function"]
-  [:th.count "Cellular Component"]
+  [:th.count.bio "Biological Process"]
+  [:th.count.molecular "Molecular Function"]
+  [:th.count.cellular "Cellular Component"]
   [:th "Source"]
   ]])
 
@@ -46,9 +46,9 @@
               [:td.organism (utils/get-abbrev organism)]
               [:td (:original-id ortholog-details)]
               [:td (clj->js ortholog)]
-              [:td (get ortholog-details "biological_process" 0)]
-              [:td (get ortholog-details "molecular_function" 0)]
-              [:td (get ortholog-details "cellular_component" 0)]
+              [:td.bio (get ortholog-details "biological_process" 0)]
+              [:td.molecular (get ortholog-details "molecular_function" 0)]
+              [:td.cellular (get ortholog-details "cellular_component" 0)]
               [:td.dataset (clojure.string/join ", " (:dataset ortholog-details))]
             ]) organism-details))
         ) @results))]))
