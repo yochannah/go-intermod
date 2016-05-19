@@ -22,7 +22,15 @@
 
 (defn output-error [result]
   "Error. Error. Does not compute."
- [:div.error [:svg.icon [:use {:xlinkHref "#icon-sad"}]] "Error loading results. The server says: \""[:pre (:error result)]"\"" ])
+  [:div.error
+    [:svg.icon
+      [:use {:xlinkHref "#icon-sad"}]]
+      "Error loading results. The server says: \""
+      [:pre (:error result)]"\""
+      (cond (re-find #"I didn't get any values for \[list\]" (:error result))
+        [:p "This may be because InterMine to be upgraded on the organisms's server"]
+        )
+   ])
 
 (defn output-loading [result]
   [:div [utils/loader]
@@ -122,7 +130,7 @@
   (let [organisms (checked-organism-list)]
     (if (empty? organisms)
       nil
-      [:div.notsearched "The following organisms were not selected as an output species: " (clojure.string/join " " organisms)]
+      [:div.notsearched "The following organisms were not selected as an output species: " (clojure.string/join ", " organisms)]
     )
     ))
 
