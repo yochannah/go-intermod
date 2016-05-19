@@ -28,7 +28,7 @@
       "Error loading results. The server says: \""
       [:pre (:error result)]"\""
       (cond (re-find #"I didn't get any values for \[list\]" (:error result))
-        [:p "This may be because InterMine to be upgraded on the organisms's server"]
+        [:p "This error may have occurred because InterMine needs to be upgraded on the organisms's server"]
         )
    ])
 
