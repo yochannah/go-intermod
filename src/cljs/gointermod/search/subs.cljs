@@ -30,6 +30,12 @@
     (reaction (:expand-evidence-codes? @db))))
 
 (re-frame/register-sub
+  :initialised
+  (fn [db]
+    (reaction (:initialised @db))))
+
+
+(re-frame/register-sub
   :active-modal
   (fn [db]
     (reaction (:active-modal @db))))

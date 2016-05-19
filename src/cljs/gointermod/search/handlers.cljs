@@ -125,8 +125,17 @@
   (fn [db [_ _]]
     ;asynchronously query all dem mines and add the results to the db
     (go
-      (comms/query-all-selected-organisms (:selected-organism db) (:search-term db))
-) (dissoc db :multi-mine-results :multi-mine-aggregate)))
+      (comms/query-all-selected-organisms (:selected-organism db) (:search-term db)))
+    (re-frame/dispatch [:initialised])
+    (dissoc db :multi-mine-results :multi-mine-aggregate)))
+
+(re-frame/register-handler
+ ;;saves the most recent query xml to be associated with a given organism
+ :initialised
+ (fn [db [_ _]]
+  (assoc db :initialised true)
+  ))
+
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism

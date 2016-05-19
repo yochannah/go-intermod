@@ -47,7 +47,7 @@
   [:div.worm]
 ])
 
-(defn default-content []
+(defn starter-content []
   [:div.default
     [:div
     [:img {:src "/img/logo.jpg"}]
@@ -57,6 +57,15 @@
      [sample-query "SOX18"] " or " [sample-query "ADH5"]]
      [organism-line]
      ]])
+
+(defn default-content []
+  (let [initialised (re-frame/subscribe [:initialised])]
+  (if @initialised
+    ;;loader if we've seen the start page
+    [utils/loader]
+    ;;if this is our first load, let's have the start page.
+    [starter-content]))
+  )
 
 (defn main-panel []
   (fn []
@@ -75,6 +84,6 @@
                  [default-content]
         ))]])
 
-        (when config/debug?
-            [:div.db  (edn->hiccup (:human (:enrichment (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap))))])
+        ; (when config/debug?
+        ;     [:div.db  (edn->hiccup (:initialised (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
     ]))
