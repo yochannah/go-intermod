@@ -2,6 +2,7 @@
     (:require [re-frame.core :as re-frame]
       [gointermod.config :as config]
       [gointermod.nav :as nav]
+      [gointermod.about :as about]
       [gointermod.search.views :as search]
       [gointermod.orthologresults.views :as orthologs]
       [gointermod.heatmap.views :as heatmap]
@@ -25,6 +26,8 @@
         [ontology/ontology]
       (= @active-view :enrichment)
         [enrichment/enrichment]
+      (= @active-view :about)
+        [about/about]
 )))
 
 (defn sample-query [identifier]
@@ -69,10 +72,11 @@
 
 (defn main-panel []
   (fn []
-    [:div
+    [:div.bob
       [icons/icons]
       [search/search]
       (let [are-there-results? (re-frame/subscribe [:aggregate-results])]
+     [:div
         [:main
           (cond @are-there-results? [nav/nav])
           [:section.contentbody
@@ -82,8 +86,11 @@
               ;;Placeholder for non-results
               (do (aset js/window "location" "href" "#")
                  [default-content]
-        ))]])
-
-        ;  (when config/debug?
-        ;      [:div.db  (edn->hiccup (:multi-mine-aggregate (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
+        ))]]
+        (cond @are-there-results?[:footer
+          [:a {:href "#/about"} "About"]
+            ; (when config/debug?
+            ;     [:div.db  (edn->hiccup (:active-view (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
+         ])
+      ])
     ]))

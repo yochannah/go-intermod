@@ -33,5 +33,9 @@
       (re-frame/dispatch [:set-view :enrichment])
     )
 
+  (defroute "/about" []
+      (re-frame/dispatch [:set-view :about])
+    )
+
   ;; --------------------
   (hook-browser-navigation!))
