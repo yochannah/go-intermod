@@ -3,6 +3,7 @@
               [gointermod.db :as db]
               [gointermod.orthologresults.handlers :as orthologs]
               [gointermod.heatmap.handlers]
+              [gointermod.ontology.handlers]
               [gointermod.enrichment.handlers]
               [gointermod.search.handlers :as search]))
 

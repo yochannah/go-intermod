@@ -75,6 +75,8 @@
       :ontology-branch (get result 17)
       :data-set-name (get result 12)
       :data-set-url (get result 13)
+      :parent-go-term (get result 19)
+      :parent-go-id (get result 18)
       :display-ortholog-id (utils/get-id result :ortholog)
       :display-original-id (utils/get-id result :original)
      }

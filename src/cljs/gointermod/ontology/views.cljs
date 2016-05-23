@@ -10,7 +10,7 @@
   (fn []
      [:div.ontology
       [:h2 "Ontology graph"]
-      [:div.ontology "Not here yet. Sorry folks. Look at the kitten instead" [:br]
-        ;[:blockquote "She wore a raspberry beret, the kind you find in the second hand store."]
-        [:img {:src (str "https://placekitten.com/g/" (rand-nth [200 300 400 500]) "/" (rand-nth [200 300 400 500]))}]
-        ]]))
+      [:div
+       (re-frame/dispatch [:load-go-graph])
+       "This is where GO goes"
+       ]]))

@@ -19,10 +19,42 @@
     <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
 </query>"))
 
+(defn make-ontology-query [ids]
+  (str "<query model=\"genomic\" view=\"GOTerm.parents.identifier GOTerm.parents.name GOTerm.identifier GOTerm.name GOTerm.parents.parents.identifier GOTerm.parents.parents.name\" sortOrder=\"GOTerm.parents.parents.name ASC\" ><constraint path=\"GOTerm.identifier\" op=\"ONE OF\" code=\"A\">" ids "</constraint></query>"))
+
 (defn create-constraint-values [values]
   (reduce (fn [new-str value]
     (str new-str "<value>" value "</value>")
 ) "" values))
+
+(defn ontology-query
+  "Get the results of GO term query for specified symbol/identifier"
+  [organism identifiers]
+;  (.log js/console "%cgo-query. Input %s, output %s" (clj->js input-organism) (clj->js output-organism) output-organism)
+  (let [service (get-service organism)
+        ids (create-constraint-values identifiers)
+        query (make-ontology-query ids)]
+    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+       {:with-credentials? false
+        :keywordize-keys? true
+        :form-params
+        {:query query
+         :format "json"}}))]
+            (js->clj (-> response :body))
+))))
+
+(defn ontology-query-all-organisms [identifiers]
+  "query all organisms that are selected as an output species in the search bar"
+    (let [organisms (re-frame/subscribe [:organisms])]
+      (.log js/console "eh eh eh?" (clj->js identifiers))
+    (doall (map (fn [[organism vals]]
+      (cond (> (count vals) 0)
+      ;(.log js/console "YERP" (clj->js organism) (clj->js vals))
+        ;;query for it
+        (go (let [res(<! (ontology-query organism vals))]
+          (re-frame/dispatch [:concat-ontology-results res organism])))
+      )
+) identifiers))))
 
 (defn go-query
   "Get the results of GO term query for specified symbol/identifier"
