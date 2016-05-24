@@ -20,7 +20,8 @@
 </query>"))
 
 (defn make-ontology-query [ids]
-  (str "<query model=\"genomic\" view=\"GOTerm.parents.identifier GOTerm.parents.name GOTerm.identifier GOTerm.name GOTerm.parents.parents.identifier GOTerm.parents.parents.name\" sortOrder=\"GOTerm.parents.parents.name ASC\" ><constraint path=\"GOTerm.identifier\" op=\"ONE OF\" code=\"A\">" ids "</constraint></query>"))
+  (let [namespace (re-frame/subscribe [:active-filter])]
+  (str "<query model=\"genomic\" view=\"GOTerm.identifier GOTerm.name GOTerm.parents.identifier GOTerm.parents.name  GOTerm.parents.parents.identifier GOTerm.parents.parents.name\" sortOrder=\"GOTerm.parents.parents.name ASC\"  constraintLogic=\"A and B\"><constraint path=\"GOTerm.identifier\" op=\"ONE OF\" code=\"A\">" ids "</constraint><constraint path=\"GOTerm.namespace\" code=\"B\" op=\"=\" value=\"" @namespace "\"/></query>")))
 
 (defn create-constraint-values [values]
   (reduce (fn [new-str value]
@@ -39,14 +40,13 @@
         :keywordize-keys? true
         :form-params
         {:query query
-         :format "json"}}))]
+         :format "jsonobjects"}}))]
             (js->clj (-> response :body))
 ))))
 
 (defn ontology-query-all-organisms [identifiers]
   "query all organisms that are selected as an output species in the search bar"
     (let [organisms (re-frame/subscribe [:organisms])]
-      (.log js/console "eh eh eh?" (clj->js identifiers))
     (doall (map (fn [[organism vals]]
       (cond (> (count vals) 0)
       ;(.log js/console "YERP" (clj->js organism) (clj->js vals))

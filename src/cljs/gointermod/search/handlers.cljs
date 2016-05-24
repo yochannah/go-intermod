@@ -113,6 +113,7 @@
  (fn [db [_ search-results source]]
    (re-frame/dispatch [:aggregate-heatmap-results])
    (re-frame/dispatch [:enrich-results])
+   (re-frame/dispatch [:load-go-graph])
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results)]
    (->
@@ -129,7 +130,7 @@
     (go
       (comms/query-all-selected-organisms (:selected-organism db) (:search-term db)))
     (re-frame/dispatch [:initialised])
-    (dissoc db :multi-mine-results :multi-mine-aggregate)))
+    (dissoc db :multi-mine-results :multi-mine-aggregate :go-terms :go-ontology)))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism

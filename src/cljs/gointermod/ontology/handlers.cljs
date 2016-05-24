@@ -21,8 +21,13 @@
 (re-frame/register-handler
  :load-go-graph
  (fn [db [_ _]]
-   (.clear js/console)
+;   (.clear js/console)
    (let [go-termed-db (get-all-go-terms db)]
-;     (.log js/console "GO" (clj->js go-termed-db))
    (comms/ontology-query-all-organisms (:go-terms db))
    go-termed-db)))
+
+(re-frame/register-handler
+  :concat-ontology-results
+  (fn [db [_ results organism]]
+;    (.log js/console "GO" (clj->js results))
+  (assoc-in db [:go-ontology :flat organism] results)))

@@ -4,6 +4,7 @@
       [gointermod.orthologresults.subs :as orthologs]
       [gointermod.heatmap.subs]
       [gointermod.enrichment.subs]
+      [gointermod.ontology.subs]
       [gointermod.search.subs :as search]))
 
 (re-frame/register-sub

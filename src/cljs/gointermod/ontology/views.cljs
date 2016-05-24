@@ -7,10 +7,9 @@
 
 
 (defn ontology []
-  (fn []
-     [:div.ontology
-      [:h2 "Ontology graph"]
-      [:div
-       (re-frame/dispatch [:load-go-graph])
-       "This is where GO goes"
-       ]]))
+ [:div.ontology
+  [:h2 "Ontology graph"]
+  [:div
+   "D F"
+   (.log js/console (clj->js @(re-frame/subscribe [:go-ontology-tree])))
+   ]])
