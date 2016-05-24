@@ -47,7 +47,7 @@ footer {
   }
   a:hover {
     color: @highlightcolor;
-    text-shadow:1px 1px 1px rgba(0,0,0,0.4)
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
   }
 }
 a {
@@ -707,6 +707,50 @@ textarea {
       order: 2;
       border-color: fadeout(@flycolor, @fadeby);
     }
+  }
+}
+.ontology {
+  @linecolor: #999;
+  & > .goterm {
+    & > .flexy {
+      border: 0;
+      & > .goterm > .title {
+        border-top: solid 1px @linecolor;
+      }
+    }
+    & > .jonesy {
+      display: none;
+    }
+  }
+  .goterm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .flexy {
+    margin: 0 0.4em;
+    display: flex;
+    border-top: solid 1px @linecolor;
+    margin-top: -2px;
+    border-radius: 2px;
+  }
+  .children {
+    margin-top: -4px;
+    display: flex;
+  }
+  .jonesy {
+    color: @linecolor;
+  }
+  .title {
+    color: black;
+    max-width: 150px;
+    padding: 0.2em 0.6em;
+    border: solid 1px @linecolor;
+    border-top: 0;
+    background: #eee;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    border-radius: 2px;
+    text-align: center;
   }
 }
 ////////debug, kiddos:
