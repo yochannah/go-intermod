@@ -6,13 +6,15 @@
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
 (defn graph [node]
-  [:div.goterm [:div.jonesy "|"]
+  [:div [:div.jonesy "|"]
   [:div.flexy
     (map (fn [[k v]]
+^{:key (gensym)}[:div.goterm
       ;(.log js/console (clj->js k) (clj->js v))
+       [:div.title (str k)]
       (if (map?  v)
-      (do ^{:key k} [:div.goterm [:div.title k] [:div.children (graph v)]])
-      (do ^{:key (gensym)} [:div.title (str k)]))
+      (do ^{:key (gensym)} [:div.children (graph v)])
+      )]
 ) node)]])
 
 
