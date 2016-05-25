@@ -5,17 +5,24 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+(defn organism-node [organism vals]
+  [:div.title [:div.organism {:class (clj->js organism)} (clj->js organism)]])
+
 (defn graph [node]
   [:div [:div.jonesy "|"]
-  [:div.flexy
-    (map (fn [[k v]]
-^{:key (gensym)}[:div.goterm
-      ;(.log js/console (clj->js k) (clj->js v))
-       [:div.title (str k)]
-      (if (map?  v)
-      (do ^{:key (gensym)} [:div.children (graph v)])
-      )]
-) node)]])
+    [:div.flexy
+     (let [organisms (re-frame/subscribe [:organisms])]
+    (doall  (map (fn [[k v]]
+        [:div.goterm {:key k}
+         ;(.log js/console (clj->js organisms) (clj->js k))
+          (if (contains? @organisms k)
+            [organism-node k v]
+            [:div.title (clj->js k)]
+            )
+          (cond (and (map? v) (not (contains? @organisms k)))
+          [:div.children {:key (gensym)} (graph v)])
+]
+) node)))]])
 
 
 
@@ -24,7 +31,5 @@
   (re-frame/dispatch [:go-ontology-tree])
   [:h2 "Ontology graph"]
    (let [tree @(re-frame/subscribe [:go-ontology-tree])]
-     (.log js/console  "TREEEEEEEE"(clj->js tree))
     (graph tree)
-     )
-   ])
+)])

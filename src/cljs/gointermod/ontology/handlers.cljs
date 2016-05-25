@@ -45,16 +45,24 @@
   (defn make-organism-tree [results organism]
       (reduce (fn [new-map result]
         (let [keys (get-keys-for-tree (:parents result))]
-        (assoc-in new-map (conj keys organism) true))
+        (assoc-in new-map (conj keys organism) {:thingy 2}))
             ) {} (sort-by-parent-count results))
   )
 
+  (defn deep-merge [& maps]
+    (if (every? map? maps)
+      (apply merge-with deep-merge maps)
+      (println "Something unexpected occurred" maps)
+      )
+    )
+
 (defn make-tree [flat-terms]
-  (reduce (fn [new-map [organism results]]
+  (apply deep-merge (vals (reduce (fn [new-map [organism results]]
     (assoc new-map organism
       (make-organism-tree (:results results) organism))
   ) {} flat-terms)
-  )
+  )))
+
 
   (re-frame/register-handler
    :go-ontology-tree
