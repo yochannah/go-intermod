@@ -42,18 +42,23 @@
                (:name result))
   )  [] (sort-by-parent-count parents)))
 
-  (defn make-tree [flat-terms]
-    (reduce (fn [new-map [organism results]]
-      (cond (seq (:results results))
-      (do (.log js/console "%cResult" "border-bottom:solid 3px hotpink" (clj->js organism)(clj->js (:results results)))
-        (reduce (fn [x result]
-          (assoc-in new-map (conj (get-keys-for-tree (:parents result)) organism) true)) (sort-by-parent-count (:results results))))
-  )) {} flat-terms))
+  (defn make-organism-tree [results organism]
+      (reduce (fn [new-map result]
+        (let [keys (get-keys-for-tree (:parents result))]
+        (assoc-in new-map (conj keys organism) true))
+            ) {} (sort-by-parent-count results))
+  )
+
+(defn make-tree [flat-terms]
+  (reduce (fn [new-map [organism results]]
+    (assoc new-map organism
+      (make-organism-tree (:results results) organism))
+  ) {} flat-terms)
+  )
 
   (re-frame/register-handler
    :go-ontology-tree
    (fn [db [_ _]]
      (let [tr (make-tree (:flat (:go-ontology db)))]
        (.log js/console "%cTreetop" "border-bottom:solid 3px cornflowerblue" (clj->js tr))
-
      (assoc-in db [:go-ontology :tree] tr))))
