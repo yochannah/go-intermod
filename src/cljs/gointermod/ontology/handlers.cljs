@@ -42,12 +42,19 @@
                (:name result))
   )  [] (sort-by-parent-count parents)))
 
+(defn get-orthologs-for-term [go-term organism]
+    (let [unfiltered-results (re-frame/subscribe [:multi-mine-results])]
+    (filterv (fn [result]
+        (= (:go-term result) go-term)
+      ) (organism @unfiltered-results))
+    ))
+
   (defn make-organism-tree [results organism]
-      (reduce (fn [new-map result]
-        (let [keys (get-keys-for-tree (:parents result))]
-        (assoc-in new-map (conj keys organism) {:thingy 2}))
-            ) {} (sort-by-parent-count results))
-  )
+    (reduce (fn [new-map result]
+      (let [keys (get-keys-for-tree (:parents result))]
+        (assoc-in new-map (conj keys :results organism)
+            (get-orthologs-for-term (last keys) organism)))
+  ) {} (sort-by-parent-count results)))
 
   (defn deep-merge [& maps]
     (if (every? map? maps)
@@ -55,6 +62,7 @@
       (println "Something unexpected occurred" maps)
       )
     )
+
 
 (defn make-tree [flat-terms]
   (apply deep-merge (vals (reduce (fn [new-map [organism results]]
@@ -67,6 +75,5 @@
   (re-frame/register-handler
    :go-ontology-tree
    (fn [db [_ _]]
-     (let [tr (make-tree (:flat (:go-ontology db)))]
-       (.log js/console "%cTreetop" "border-bottom:solid 3px cornflowerblue" (clj->js tr))
-     (assoc-in db [:go-ontology :tree] tr))))
+     (let [tree (make-tree (:flat (:go-ontology db)))]
+     (assoc-in db [:go-ontology :tree] tree))))

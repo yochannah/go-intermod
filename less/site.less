@@ -345,8 +345,8 @@ textarea {
   fill: currentColor;
 }
 .contentbody {
-  width: 100%;
   margin: @spacer;
+  overflow:auto;
   h2 {
     margin-bottom: (@spacer/2 + 0.1em);
   }
@@ -711,19 +711,16 @@ textarea {
 }
 .ontology {
   @linecolor: #999;
-  & > div > .jonesy {
-    display: none;
-  }
-  & > .goterm {
-    & > .flexy {
-      border: 0;
-      & > .goterm > .title {
-        border-top: solid 1px @linecolor;
-      }
-    }
-  }
+  position:relative;
+  #lineplacer {
+  background:rgba(0,0,0,0.1);
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:4;}
+  div {z-index: 5}
   .goterm {
-    width: 100%;
+    //width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -731,28 +728,20 @@ textarea {
   .flexy {
     margin: 0 0.4em;
     display: flex;
-    margin-top: -2px;
+    margin-top: 1em;
     border-radius: 2px;
   }
   .children {
     margin-top: -4px;
     display: flex;
   }
-  .jonesy {
-    color: @linecolor;
-    text-align: center;
-    padding: 0;
-    font-size: 1.3em;
-    height: 1em;
-    border-bottom: solid 1px @linecolor;
-  }
   .title {
     color: black;
-    max-width: 150px;
-    width: 100%;
+    width: 150px;
     padding: 0.2em 0.6em;
     border: solid 1px @linecolor;
     background: #eee;
+    box-sizing:border-box;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     border-radius: 2px;
     text-align: center;

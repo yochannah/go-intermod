@@ -59,7 +59,7 @@
 (defn resultset-to-map [results]
   "translate that silly vector of results into a map with meaninful keys"
   (map (fn [result]
-    {:results result
+    {;:results result
       :ortho-db-id (get result 0)
       :ortho-symbol (get result 1)
       :ortho-secondary-id (get result 2)

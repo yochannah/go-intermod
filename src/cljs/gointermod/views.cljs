@@ -91,7 +91,7 @@
           [:a {:href "#/about"} "About"]
             ; (when config/debug?
             ;     [:div.db  (edn->hiccup (:active-view (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))])
-;            [:div.db ":)" (edn->hiccup @(re-frame/subscribe [:go-ontology-tree]))]
+          ;  [:div.db ":)" (edn->hiccup @(re-frame/subscribe [:go-ontology-tree]))]
          ])
       ])
     ]))
