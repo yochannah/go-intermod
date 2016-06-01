@@ -10,7 +10,7 @@
 (defn elem [id] (.getElementById js/document (make-id id)))
 
 
-(defn organism-node [term vals]
+(defn organism-node [term vals parent]
   (into [:div.title term]
    (map (fn [[organism results]]
       [:div.organism
@@ -18,20 +18,26 @@
        (utils/get-abbrev organism) " " (reduce (fn [_ result] (:display-ortholog-id result)) [] results)]
 ) vals)))
 
-;;pixelcalcs
-(defn x-offset [] (aget js/document "body" "scrollTop"))
-(defn get-middle-x [box] (- (+ (.-left js/box) (/ (.-width js/box) 2)) 272 ))
-(defn get-middle-y-top [box] (+ (- (.-top js/box) 224) (x-offset)) )
-(defn get-middle-y-bottom [box] (+ (- (.-bottom js/box) 224) (x-offset)))
+;;common definitions for elements we come back to a bit.
+(def jango (elem "jango"))
+(def lineplacer (elem "lineplacer"))
 
-(def jango (elem "jango")) (def lineplacer (elem "lineplacer"))
+;;pixelcalcs
+(defn svg-offset [] (.-top (.getBoundingClientRect (elem "lineplacer"))))
+(defn y-offset [] (+ (aget js/document "body" "scrollTop") (svg-offset)))
+(defn get-middle-x [box] (- (+ (.-left js/box) (/ (.-width js/box) 2)) 272 ))
+(defn get-middle-y-top [box] (- (.-top js/box) (y-offset)) )
+(defn get-middle-y-bottom [box] (- (.-bottom js/box) (y-offset)))
+
 (defn clonepath []
+  "Clones the master path node and appends it to the svg. Returns the cloned appended node so it can be shaped correctly."
   (let [boba (.cloneNode js/jango)]
       (.removeAttribute js/boba "id")
       (.appendChild js/lineplacer boba)
   boba))
 
 (defn drawline [parent child]
+  "given a parent HTML element and a child HTML element, draw a line between the bottom of the parent and the top of the child. This is done by calculating the locations of each of the boxes, and offsetting by 1) the amount scrolled on the window if any and 2) the other elements in the page."
   (let [parent-size (.getBoundingClientRect js/parent)
         child-size (.getBoundingClientRect js/child)
         start-x (get-middle-x parent-size)
@@ -40,8 +46,6 @@
         end-y (get-middle-y-top child-size)
         d (str "M " start-x " " start-y " S " start-x " " start-y ", "  end-x " " end-y)
         path (clonepath)]
-
-;    (.log js/console "path" path "d" d)
      (.setAttribute js/path "d" d)
     ))
 
@@ -55,7 +59,7 @@
             [:div.goterm {:key k}
               (if
                 (contains? v :results)
-                  [organism-node k (:results v)]
+                  [organism-node k (:results v) parent]
                 ;(not= k :results)
                   [:div.title {:id (make-id k) } (clj->js k) ]
                 )
