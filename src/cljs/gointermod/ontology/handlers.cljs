@@ -94,9 +94,9 @@
 
 
   (re-frame/register-handler
-    :go-ontology-nodelist
+    :go-ontology-nodecount
     (fn [db [_ _]]
       (let [tree (get-in db [:go-ontology :tree])
             nodelist (nodelist tree)]
-        (assoc-in db [:go-ontology :nodes] nodelist)
+        (assoc-in db [:go-ontology :nodes] (count nodelist))
         )))

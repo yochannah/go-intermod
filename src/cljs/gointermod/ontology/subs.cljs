@@ -13,6 +13,6 @@
     (reaction (:tree (:go-ontology @db)))))
 
 (re-frame/register-sub
- :go-ontology-nodelist
+ :go-ontology-nodecount
  (fn [db]
    (reaction (:nodes (:go-ontology @db)))))
