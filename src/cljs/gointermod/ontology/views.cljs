@@ -6,6 +6,18 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+;;;;; this is big and messy! Know these things:
+;; The layout calculates the x and y of each of the nodes
+;; this can't work if we haven't rendered the component, so
+;; we do as follows:
+;;
+;; 1) check in the nodelist atom to see if our current graph node's go term already exists - done by component-will-mount in graph. duplicate terms if any are stored in the local state atom my-state.
+;; 2) render the node, omitting the GO term if it's a dupe, as established in the previous step.
+;; 3) still in the render function, we add the term we've just encountered to the node-list atom.
+;; 4) in component-will-unmount, we wipe the my-state atom and remove each go-term from the nodelist. If we don't, this state persists in between renders, and at the second or any subsequent render, nothing will happen as nodelist will say we already rendered the term!
+;;
+;;OK, see why I said it was confusing? The End.
+
 ;;some utility dom handling functions
 (defn make-id [thenaughtystring]
   "escaping those annoying spaces found in go terms so we can use the go term as an HTML ID"
@@ -23,7 +35,7 @@
 ;;pixelcalcs
 (defn svg-offset-y [] (.-top (.getBoundingClientRect (elem "lineplacer"))))
 (defn svg-offset-x [] (.-left (.getBoundingClientRect (elem "lineplacer"))))
-(defn y-offset [] (+ (aget js/document "body" "scrollTop") (svg-offset-y)))
+(defn y-offset [] (+ 0 (svg-offset-y)))
 (defn get-middle-x [box] (- (+ (.-left js/box) (/ (.-width js/box) 2)) (svg-offset-x) ))
 (defn get-middle-y [box] (- (+ (.-top js/box) (/ (.-height js/box) 2)) (y-offset)) )
 
