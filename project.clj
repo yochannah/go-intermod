@@ -2,7 +2,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [json-html "0.3.6"]
                  [org.clojure/clojurescript "1.7.170"]
-                 [reagent "0.6.0-alpha"]
+                 [reagent "0.6.0-alpha2"]
                  [org.clojure/core.async "0.2.374"]
                  [cljs-http "0.1.39"]
                  [secretary "1.2.3"]
