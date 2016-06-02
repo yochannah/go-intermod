@@ -345,8 +345,9 @@ textarea {
   fill: currentColor;
 }
 .contentbody {
+  &.startpage {width:100%;}
   margin: @spacer;
-  overflow: auto;
+//  overflow: auto;
   h2 {
     margin-bottom: (@spacer/2 + 0.1em);
   }
@@ -731,7 +732,7 @@ textarea {
   .flexy {
     margin: 0 0.4em;
     display: flex;
-    margin-top: 1.2em;
+    margin-top: 1.4em;
     border-radius: 2px;
   }
   .children {
@@ -741,7 +742,7 @@ textarea {
   .title {
     color: black;
     width: 150px;
-    font-size:0.9em;
+    font-size:0.8em;
     padding: 0.2em 0.6em;
     border: solid 1px @linecolor;
     background: #eee;

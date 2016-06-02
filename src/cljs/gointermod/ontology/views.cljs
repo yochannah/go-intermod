@@ -17,11 +17,11 @@
 (def lineplacer (elem "lineplacer"))
 
 ;;pixelcalcs
-(defn svg-offset [] (.-top (.getBoundingClientRect (elem "lineplacer"))))
-(defn y-offset [] (+ (aget js/document "body" "scrollTop") (svg-offset)))
-(defn get-middle-x [box] (- (+ (.-left js/box) (/ (.-width js/box) 2)) 272 ))
-(defn get-middle-y-top [box] (- (.-top js/box) (y-offset)) )
-(defn get-middle-y-bottom [box] (- (.-bottom js/box) (y-offset)))
+(defn svg-offset-y [] (.-top (.getBoundingClientRect (elem "lineplacer"))))
+(defn svg-offset-x [] (.-left (.getBoundingClientRect (elem "lineplacer"))))
+(defn y-offset [] (+ (aget js/document "body" "scrollTop") (svg-offset-y)))
+(defn get-middle-x [box] (- (+ (.-left js/box) (/ (.-width js/box) 2)) (svg-offset-x) ))
+(defn get-middle-y [box] (- (+ (.-top js/box) (/ (.-height js/box) 2)) (y-offset)) )
 
 (defn clonepath []
   "Clones the master path node and appends it to the svg. Returns the cloned appended node so it can be shaped correctly."
@@ -30,15 +30,25 @@
       (.appendChild js/lineplacer boba)
   boba))
 
+(defn build-path [parent child]
+  (let [parent-size (.getBoundingClientRect js/parent)
+  child-size (.getBoundingClientRect js/child)
+  start-x (get-middle-x parent-size)
+  start-y (get-middle-y parent-size)
+  end-x (get-middle-x child-size)
+  end-y (get-middle-y child-size)]
+;  (.log js/console "Start x: %s, y: %s. End x: %s, y: %s" start-x start-y end-x end-y (.-id parent))
+  (str "M " start-x " " start-y " S " start-x " "
+       (if (not= start-y end-y)
+         ;;don't make it curvy if it's a direct left-right line
+        (- start-y 35)
+        start-y)
+       ", "  end-x " " end-y)
+))
+
 (defn drawline [parent child]
   "given a parent HTML element and a child HTML element, draw a line between the bottom of the parent and the top of the child. This is done by calculating the locations of each of the boxes, and offsetting by 1) the amount scrolled on the window if any and 2) the other elements in the page."
-  (let [parent-size (.getBoundingClientRect js/parent)
-        child-size (.getBoundingClientRect js/child)
-        start-x (get-middle-x parent-size)
-        start-y (get-middle-y-bottom parent-size)
-        end-x (get-middle-x child-size)
-        end-y (get-middle-y-top child-size)
-        d (str "M " start-x " " start-y " S " start-x " " start-y ", "  end-x " " end-y)
+  (let [d (build-path parent child)
         path (clonepath)]
      (.setAttribute js/path "d" d)
     ))
@@ -61,13 +71,13 @@
             duplicates (clojure.set/intersection nodes @nodelist)]
         (cond (seq duplicates)
           (do
-        (.log js/console "component will mount" (clj->js (keys (reagent/props this))) (clj->js (clojure.set/intersection nodes @nodelist)))
+        ;(.log js/console "component will mount" (clj->js (keys (reagent/props this))) (clj->js (clojure.set/intersection nodes @nodelist)))
             (swap! my-state assoc :what duplicates)
           ))
       )
     )
     :component-will-unmount (fn [this]
-      (.log js/console "un mount" (clj->js @my-state) (clj->js (set (keys (reagent/props this)))))
+      ;(.log js/console "un mount" (clj->js @my-state) (clj->js (set (keys (reagent/props this)))))
       (reset! my-state {})
       (swap! nodelist clojure.set/difference (set (keys (reagent/props this))))
           )

@@ -79,7 +79,7 @@
      [:div
         [:main
           (cond @are-there-results? [nav/nav])
-          [:section.contentbody
+          [:section.contentbody {:class (cond (not @(re-frame/subscribe [:initialised])) "startpage")}
             (if @are-there-results?
               ;;if there are results:
               [content]
