@@ -77,3 +77,26 @@
    (fn [db [_ _]]
      (let [tree (make-tree (:flat (:go-ontology db)))]
      (assoc-in db [:go-ontology :tree] tree))))
+
+ (defn flatten-content [node]
+   (lazy-seq
+     (if (string? node)
+       (list node)
+       (mapcat flatten-content (:content node)))))
+
+
+  (defn nodelist [nodes]
+    (set (flatten (reduce (fn [new-set [name vals]]
+      (if (= name :results)
+        new-set
+        (concat new-set [name] (nodelist vals)))
+  ) #{} nodes))))
+
+
+  (re-frame/register-handler
+    :go-ontology-nodelist
+    (fn [db [_ _]]
+      (let [tree (get-in db [:go-ontology :tree])
+            nodelist (nodelist tree)]
+        (assoc-in db [:go-ontology :nodes] nodelist)
+        )))

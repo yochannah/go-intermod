@@ -8,15 +8,9 @@
 
 (defn make-id [thenaughtystring] (clojure.string/escape thenaughtystring {" " "_"}))
 (defn elem [id] (.getElementById js/document (make-id id)))
+(def nodelist (reagent/atom #{}))
+(def dontrender (reagent/atom #{}))
 
-
-(defn organism-node [term vals parent]
-  (into [:div.title term]
-   (map (fn [[organism results]]
-      [:div.organism
-       {:key (gensym) :class (clj->js organism) :id (make-id term)}
-       (utils/get-abbrev organism) " " (reduce (fn [_ result] (:display-ortholog-id result)) [] results)]
-) vals)))
 
 ;;common definitions for elements we come back to a bit.
 (def jango (elem "jango"))
@@ -49,46 +43,71 @@
      (.setAttribute js/path "d" d)
     ))
 
+(defn organism-node [term vals parent]
+  "outputs the go term, organism, and orthologue for nodes with these types of results"
+  (into [:div.title {:id (make-id term)} term ]
+    (map (fn [[organism results]]
+      [:div.organism {:class (clj->js organism)}
+        (utils/get-abbrev organism) " "
+        (reduce (fn [_ result] (:display-ortholog-id result)) [] results)]
+) vals)))
+
 (defn graph [node parent]
+  "recursively builds an HTML tree of terms. "
+  (let [my-state (reagent/atom {})]
   (reagent/create-class {
-    :reagent-render
-      (fn [node parent]
-      [:div {:parent-node parent}
-       ;(.log js/console parent)
-          (into [:div.flexy] (map (fn [[k v]]
-            [:div.goterm {:key k}
-              (if
-                (contains? v :results)
-                  [organism-node k (:results v) parent]
-                ;(not= k :results)
-                  [:div.title {:id (make-id k) } (clj->js k) ]
-                )
-             (let [non-result-children (dissoc v :results)]
-              (cond (and (map? non-result-children) (seq non-result-children))
-              [:div.children
-               {:key (gensym)} [graph non-result-children k]]))
-            ]) node))])
+    :component-will-mount (fn [this]
+      (let [nodes (set (keys (reagent/props this)))
+            duplicates (clojure.set/intersection nodes @nodelist)]
+        (cond (seq duplicates)
+          (do
+        (.log js/console "component will mount" (clj->js (keys (reagent/props this))) (clj->js (clojure.set/intersection nodes @nodelist)))
+            (swap! my-state assoc :what duplicates)
+          ))
+      )
+    )
+    :component-will-unmount (fn [this]
+      (.log js/console "un mount" (clj->js @my-state) (clj->js (set (keys (reagent/props this)))))
+      (reset! my-state {})
+      (swap! nodelist clojure.set/difference (set (keys (reagent/props this))))
+          )
+
+    :reagent-render (fn [node parent]
+      (into [:div.flexy] (map (fn [[k v]]
+;(cond (not (does-node-exist? k))
+;;save the node to an atom so we don't make duplicates
+(swap! nodelist conj k)
+        [:div.goterm {:key k}
+          (if (contains? v :results)
+            ;;output the goterm and the organisms/orthologues, or just the go term if it has no orthologues associated.
+              [organism-node k (:results v) parent]
+            (cond (empty? @my-state)  [:div.title {:id (make-id k) }
+               (clj->js k) ]))
+         (let [non-result-children (dissoc v :results)]
+            (cond (and (map? non-result-children) (seq non-result-children))
+              [:div.children {:key (gensym)} [graph non-result-children k]]))
+    ]) node)))
+    ;;it's impossible to calculate the position of a node that hasn't been added to the screen-dom (as opposed to the shadow dom) yet, so we have to wait until the html has been added to the screen, then we send the relevant html nodes to the line calculator function
     :component-did-mount (fn [this]
-      (let [props (reagent/props this)]
-        (mapv (fn [[parentname propvals]]
-            (mapv (fn [[childname _]]
-                    (cond (and (not (keyword? childname)) (some? parentname)  )
-                  (drawline (elem parentname) (elem childname)))
-                    ) propvals)
-               ) props)))
-}))
+      (mapv (fn [[parentname propvals]]
+        (mapv (fn [[childname _]]
+          (cond (and (not (keyword? childname)) (some? parentname)  )
+            (drawline (elem parentname) (elem childname)))
+        ) propvals)
+    ) (reagent/props this)))
+})))
 
 
 
 (defn ontology []
  [:div.ontology
  (let [tree @(re-frame/subscribe [:go-ontology-tree])]
-  (re-frame/dispatch [:go-ontology-tree])
+ (re-frame/dispatch [:go-ontology-tree])
   [:h2 "Ontology graph "]
   (.clear js/console)
-   [:div [:svg#lineplacer
-   [:path#jango ;;we clone this element lots.
-    {:style {:stroke "#666" :stroke-width 2 :fill "transparent"},
-     :d ""}]]
+   [:div
+    [:svg#lineplacer
+      [:path#jango ;;we clone this element lots.
+        {:style {:stroke "#666" :stroke-width 2 :fill "transparent"} :d ""}]]
     [graph tree nil]]
 )])

@@ -11,3 +11,8 @@
   :go-ontology-tree
   (fn [db]
     (reaction (:tree (:go-ontology @db)))))
+
+(re-frame/register-sub
+ :go-ontology-nodelist
+ (fn [db]
+   (reaction (:nodes (:go-ontology @db)))))
