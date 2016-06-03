@@ -20,7 +20,19 @@
  (re-frame/register-handler
   :active-filter
   (fn [db [_ active-filter]]
-;    (re-frame/dispatch [:enrich-results])
-;    (re-frame/dispatch [:load-go-graph])
-;    (re-frame/dispatch [:aggregate-heatmap-results])
+    (re-frame/dispatch [:trigger-data-handler-for-active-view])
     (assoc db :active-filter active-filter)))
+
+(def triggers
+  {:ontology :load-go-graph
+   :heatmap :aggregate-heatmap-results
+   :enrichment :enrich-results
+})
+
+(re-frame/register-handler
+ :trigger-data-handler-for-active-view
+ (fn [db [_ _]]
+   (let [view (:active-view db)
+         handler-to-dispatch (view triggers)]
+     (re-frame/dispatch [handler-to-dispatch])
+  db)))

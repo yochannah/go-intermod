@@ -5,8 +5,10 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
-(defn output-success [this-response]
+(defn output-success
   "This is the bog standard enrichment widget results we know and love."
+  [this-response]
+
   [:table [:thead [:tr
       [:th.matches "Matches"]
       [:th.description "GO Term"]
@@ -20,8 +22,10 @@
          [:td.pval (:p-value result)]]) (:results this-response))]
     ])
 
-(defn output-error [result]
-  "Error. Error. Does not compute."
+(defn output-error
+  "Visual component. Error. Error. Does not compute."
+  [result]
+
   [:div.error
     [:svg.icon
       [:use {:xlinkHref "#icon-sad"}]]
@@ -45,8 +49,10 @@
       (:loading this-response) "loading")
        ))
 
-(defn process-response [organism this-response]
+(defn process-response
   "When there's been a response, we need to either tell the user there was an error or just output the data"
+  [organism this-response]
+
   ^{:key (:id organism)}
   [:div.organism
     {:class (build-class organism this-response)}
@@ -61,8 +67,9 @@
         true [output-loading this-response]
 )])
 
-(defn organism-enrichment []
+(defn organism-enrichment
   "One enrichment results box per organism, outputting the error or the enrichment results"
+  []
   (let [organisms (re-frame/subscribe [:organisms])
         enrichment (re-frame/subscribe [:enrichment-results])]
     [:div.organisms
@@ -72,8 +79,9 @@
       ) @organisms)
    )]))
 
-(defn test-correction-filter []
+(defn test-correction-filter
   "Visual component to allow users to select a test correction value"
+  []
   (let [correction (re-frame/subscribe [:test-correction])]
   [:div [:label "Test correction"
       [:select
@@ -87,8 +95,9 @@
           [:option {:value "None"} "None"]]]
 ]))
 
-(defn ontology-filter []
-  "interactive dropedown to select the ontology (biological process, molecular function, or cellular component. Stays in sync with the fliter on the left."
+(defn ontology-filter
+  "interactive dropdown to select the ontology (biological process, molecular function, or cellular component. Stays in sync with the fliter on the left."
+  []
   (let [filters (re-frame/subscribe [:filters])
         active-filter (re-frame/subscribe [:active-filter])]
   [:div [:label "Ontology"
@@ -103,8 +112,9 @@
         @filters)
 ]]]))
 
-(defn max-p-filter []
+(defn max-p-filter
   "UI component to allow the user to select a p-value"
+  []
   (let [max-p (re-frame/subscribe [:max-p])]
     [:div [:label "Max p-value"
       [:select
@@ -117,16 +127,18 @@
         [:option {:value 1.00} "1.00"]]]]
   ))
 
-(defn checked-organism-list []
+(defn checked-organism-list
   "returns a list of output organisms, filtered for ones that are actually checked"
+  []
   (remove nil? (into [] (map
     (fn [[id organism]]
       (cond (not (:output? organism))
       (:abbrev organism))
       ) @(re-frame/subscribe [:organisms])))))
 
-(defn non-searched-organisms []
+(defn non-searched-organisms
   "This is where it's the user's fault - it's not showing because it's not selected. Dude. "
+  []
   (let [organisms (checked-organism-list)]
     (if (empty? organisms)
       nil
@@ -136,8 +148,8 @@
 
 
 (defn enrichment []
-      (re-frame/dispatch [:enrich-results])
-   [:div.enrichment
+  (re-frame/dispatch [:trigger-data-handler-for-active-view])
+  [:div.enrichment
     [:h2 "Enrichment"]
     [:div.settings
       [test-correction-filter]
@@ -145,5 +157,4 @@
       [ontology-filter] ]
     [organism-enrichment]
     [non-searched-organisms]
-    ]
-)
+])

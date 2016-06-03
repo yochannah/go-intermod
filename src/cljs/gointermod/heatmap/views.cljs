@@ -81,8 +81,8 @@
 
 (defn heatmap []
   (fn []
-    (re-frame/dispatch [:aggregate-heatmap-results])
-     [:div.heatmap
+    (re-frame/dispatch [:trigger-data-handler-for-active-view])
+    [:div.heatmap
       [:h2 "Annotation count by species"]
         [:table
         [headers]
