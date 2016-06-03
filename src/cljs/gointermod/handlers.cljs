@@ -20,6 +20,7 @@
  (re-frame/register-handler
   :active-filter
   (fn [db [_ active-filter]]
-    (re-frame/dispatch [:enrich-results])
-    (re-frame/dispatch [:aggregate-heatmap-results])
+;    (re-frame/dispatch [:enrich-results])
+;    (re-frame/dispatch [:load-go-graph])
+;    (re-frame/dispatch [:aggregate-heatmap-results])
     (assoc db :active-filter active-filter)))

@@ -130,30 +130,27 @@
 
 (defn no-spaghetti-graphs-please [nodes]
   [:div
-
    [:p
     [:svg.icon [:use {:xlinkHref "#icon-info"}]]
     " Looks like there are " nodes " GO terms associated with these genes. "]
-   [:p "This many terms usually results in an unreadable spaghetti monster graph. Try selecting fewer genes / orthologs / organisms and searching again."]]
+   [:p "This many terms usually results in an unreadable spaghetti monster graph. Try selecting fewer genes / orthologs / organisms and searching again. Fewer than 40 GO terms is usually fine."]]
 )
 
 
 (defn ontology []
- [:div.ontology
- (let [tree @(re-frame/subscribe [:go-ontology-tree])
-      nodes (re-frame/subscribe [:go-ontology-nodecount])]
-
- (re-frame/dispatch [:go-ontology-tree])
- (re-frame/dispatch [:go-ontology-nodecount])
-  [:h2 "Ontology graph "]
-;  (.clear js/console)
-  (if (> @nodes 40)
-    ;;Dude. No spaghetti here. This graph would be massive.
-    [no-spaghetti-graphs-please @nodes]
-    ;;ok it's a small graph. Let's render.
-   [:div
-    [:svg#lineplacer
-      [:path#jango ;;we clone this element lots.
-        {:style {:stroke-width 2 :fill "transparent"} :d ""}]]
-    [graph tree nil]]
-))])
+  (re-frame/dispatch [:load-go-graph])
+  (let [tree (re-frame/subscribe [:go-ontology-tree])
+       nodes (re-frame/subscribe [:go-ontology-nodecount])]
+  (fn []
+    [:div.ontology
+      [:h2 "Ontology graph "]
+      (if (> @nodes 40)
+        ;;Dude. No spaghetti here. This graph would be massive.
+        [no-spaghetti-graphs-please @nodes]
+        ;;ok it's a small graph. Let's render.
+       [:div
+        [:svg#lineplacer
+          [:path#jango ;;we clone this element lots.
+            {:style {:stroke-width 2 :fill "transparent"} :d ""}]]
+        [graph @tree nil]]
+)])))

@@ -136,8 +136,7 @@
 
 
 (defn enrichment []
-  (let [max-p (re-frame/subscribe [:max-p])]
-    (re-frame/dispatch [:enrich-results])
+      (re-frame/dispatch [:enrich-results])
    [:div.enrichment
     [:h2 "Enrichment"]
     [:div.settings
@@ -146,5 +145,5 @@
       [ontology-filter] ]
     [organism-enrichment]
     [non-searched-organisms]
-    ])
+    ]
 )

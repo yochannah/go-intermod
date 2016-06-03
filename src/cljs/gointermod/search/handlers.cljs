@@ -111,9 +111,6 @@
 (re-frame/register-handler
  :concat-results
  (fn [db [_ search-results source]]
-   (re-frame/dispatch [:aggregate-heatmap-results])
-   (re-frame/dispatch [:enrich-results])
-   (re-frame/dispatch [:load-go-graph])
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results)]
    (->
