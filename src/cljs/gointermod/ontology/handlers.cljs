@@ -76,6 +76,18 @@
       (assoc new-map id (get-go-terms id db))
 ) {} (:multi-mine-results db))))
 
+(defn loading-state
+  "sets all organisms go results to loading."
+  []
+  (let [organisms (re-frame/subscribe [:organisms])
+        go-terms (re-frame/subscribe [:go-terms])]
+    (reduce (fn [new-map [organism vals]]
+      ( if (and (:output? vals) (seq (organism @go-terms)))
+        (assoc new-map organism "loading")
+        new-map
+      )
+    ) {} @organisms)
+))
 
 (re-frame/register-handler
  ;;Grabs all the GO terms from the search and queries for their parents.
@@ -83,17 +95,25 @@
  :load-go-graph
  (fn [db [_ _]]
     (let [go-termed-db (get-all-go-terms db)]
+      (.log js/console (clj->js (:go-terms go-termed-db)))
       (comms/ontology-query-all-organisms (:go-terms go-termed-db))
- go-termed-db)))
+      (->
+          (assoc-in go-termed-db [:go-ontology :nodes] 0)
+          (assoc-in [:go-ontology :loading] true)
+          (assoc-in [:go-ontology :status] (loading-state)))
+)))
 
 (re-frame/register-handler
 ;; Adds asynchronously fetched results to the DB, and dispatches events to generate the count of nodes and to generate the graph data shape (tree).
  :concat-ontology-results
   (fn [db [_ results organism]]
     (let [flat (assoc-in db [:go-ontology :flat organism] results)]
+
       (re-frame/dispatch [:go-ontology-tree])
       (re-frame/dispatch [:go-ontology-nodecount])
-flat)))
+
+      (assoc-in flat [:go-ontology :status organism] "done")
+)))
 
 (defn nodelist
 "Flatten out that massive node graph so that we can count the individual
@@ -115,3 +135,10 @@ flat)))
           nodelist (nodelist tree)]
       (assoc-in db [:go-ontology :nodes] (count nodelist))
 )))
+
+(re-frame/register-handler
+ ;;handler for the nodelist function above.
+  :go-ontology-loading
+  (fn [db [_ loading]]
+    (assoc-in db [:go-ontology :loading] loading)
+))

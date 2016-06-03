@@ -132,19 +132,37 @@
   [:div
    [:p
     [:svg.icon [:use {:xlinkHref "#icon-info"}]]
-    " Looks like there are " nodes " GO terms associated with these genes. "]
-   [:p "This many terms usually results in an unreadable spaghetti monster graph. Try selecting fewer genes / orthologs / organisms and searching again. Fewer than 40 GO terms is usually fine."]]
+    " Looks like there are " nodes " GO terms in the graph associated with these genes. "]
+   [:p "This many terms usually results in an unreadable spaghetti monster graph. Fewer than 40 GO terms is usually fine."]
+   [:ul
+    [:li "Try selecting fewer genes / orthologs / organisms and searching again."]
+    [:li "Try a different filter. Biological Process usually returns more results than the other two."]]]
 )
 
+(defn status []
+  (let [statuses (re-frame/subscribe [:go-ontology-status])
+        still-loading (keys (filter (fn [[k v]] (= v "loading")) @statuses))
+        still-loading-pretty (reduce (fn [new-vec x]
+          (conj new-vec (utils/get-abbrev x))) [] still-loading)]
+  ;;if there are no more loading status mines, turn the loading status overall to false;
+  (cond (empty? still-loading) (re-frame/dispatch [:go-ontology-loading false]))
+    ;;if there are some mines loading, tell us what they are :)
+  [:div.loadcount "Loading: "
+    (clojure.string/join ", " still-loading-pretty)
+   [utils/loader]
+]))
 
 (defn ontology []
-  (re-frame/dispatch [:load-go-graph])
+  (re-frame/dispatch [:trigger-data-handler-for-active-view])
   (let [tree (re-frame/subscribe [:go-ontology-tree])
-       nodes (re-frame/subscribe [:go-ontology-nodecount])]
+        nodes (re-frame/subscribe [:go-ontology-nodecount])
+        loading (re-frame/subscribe [:go-ontology-loading])]
   (fn []
     [:div.ontology
       [:h2 "Ontology graph "]
-      (if (> @nodes 40)
+     (if @loading
+       [status]
+       (if (> @nodes 40)
         ;;Dude. No spaghetti here. This graph would be massive.
         [no-spaghetti-graphs-please @nodes]
         ;;ok it's a small graph. Let's render.
@@ -153,4 +171,4 @@
           [:path#jango ;;we clone this element lots.
             {:style {:stroke-width 2 :fill "transparent"} :d ""}]]
         [graph @tree nil]]
-)])))
+))])))

@@ -90,6 +90,8 @@
         :url "yeastmine.yeastgenome.org/yeastmine"
         :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
     }
+   :go-ontology {:nodes 0
+                 :loading true}
    :evidence-codes
    [
     {:name "Inferred from Experiment (EXP)" :code "EXP" :checked true}
