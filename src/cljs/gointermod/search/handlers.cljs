@@ -119,13 +119,22 @@
     (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue mapped-results))))
 ))
 
+(defn search-token-fixer-upper "accept any separator, so long as it's newling, tab, space, or comma. Yeast will need special treatment."
+  [term]
+  (clojure.string/escape term
+    {"\n" ","
+     ";"  ","
+     " "  ","
+     "\t" ","
+}))
+
 (re-frame/register-handler
   ;;What do we do when a search button is pressed? This.
   :perform-search
   (fn [db [_ _]]
     ;asynchronously query all dem mines and add the results to the db
     (go
-      (comms/query-all-selected-organisms (:selected-organism db) (:search-term db)))
+      (comms/query-all-selected-organisms (:selected-organism db) (search-token-fixer-upper (:search-term db))))
     (re-frame/dispatch [:initialised])
     (dissoc db :multi-mine-results :multi-mine-aggregate :go-terms :go-ontology)))
 
@@ -135,7 +144,6 @@
  (fn [db [_ _]]
   (assoc db :initialised true)
   ))
-
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism
