@@ -89,18 +89,39 @@
     ) {} @organisms)
 ))
 
+(defn count-go-terms
+  "searching for hundreds of GO terms can be quite slow, and since we don't actually want to search for results we *know* will be more than we will ever display, we count results before we dispatch the query"
+  [go-terms]
+(reduce (fn [totalcount val] (+ totalcount (count val))) 0 (vals go-terms)))
+
+(defn query-for-go-tree
+  "Grabs all the GO terms from the search and queries for their parents.
+  As each result is returned, it dispatches concat-ontology-results. It laso handles resetting statuses of the organisms / page to loading."
+  [db]
+  (comms/ontology-query-all-organisms (:go-terms db))
+  (->
+      (assoc-in db [:go-ontology :nodes] 0)
+      (assoc-in [:go-ontology :loading] true)
+      (assoc-in [:go-ontology :status] (loading-state)))
+)
+
+(defn handle-large-result
+  "This is the counterpart of query-for-go-tree, for when there are simply too many results for it to be sane to return results"
+  [db count-of-terms]
+  (->
+      (assoc-in db [:go-ontology :nodes] (str count-of-terms " or more "))
+      (assoc-in [:go-ontology :loading] false)))
+
 (re-frame/register-handler
- ;;Grabs all the GO terms from the search and queries for their parents.
- ;;As eachresult is returned, it dispatches concat-ontology-results below.
  :load-go-graph
+ ;;decides if there're too many terms to search for or not, and either searches or tells the users sorry, too big.
  (fn [db [_ _]]
-    (let [go-termed-db (get-all-go-terms db)]
-      (.log js/console (clj->js (:go-terms go-termed-db)))
-      (comms/ontology-query-all-organisms (:go-terms go-termed-db))
-      (->
-          (assoc-in go-termed-db [:go-ontology :nodes] 0)
-          (assoc-in [:go-ontology :loading] true)
-          (assoc-in [:go-ontology :status] (loading-state)))
+    (let [go-termed-db (get-all-go-terms db)
+          count-of-terms (count-go-terms (:go-terms go-termed-db))]
+      (if (< count-of-terms 40)
+        (query-for-go-tree go-termed-db)
+        (handle-large-result go-termed-db count-of-terms)
+      )
 )))
 
 (re-frame/register-handler
@@ -137,7 +158,7 @@
 )))
 
 (re-frame/register-handler
- ;;handler for the nodelist function above.
+ ;;set statuses to loading.
   :go-ontology-loading
   (fn [db [_ loading]]
     (assoc-in db [:go-ontology :loading] loading)

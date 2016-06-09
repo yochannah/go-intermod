@@ -23,6 +23,9 @@
   "escaping those annoying spaces found in go terms so we can use the go term as an HTML ID"
   (clojure.string/escape thenaughtystring {" " "_"}))
 (defn elem [id] (.getElementById js/document (make-id id)))
+(defn organism-id "organism id makes a slightly different ID just for organism nodes. this allows a non-organism GO term node and an organism go tem node to co-exist. I hope."
+  [id]
+  (str "organism-" (make-id id)))
 
 ;;some state required to ensure we don't render the same terms twice.
 ;;duplicate IDs makes angry browsers.
@@ -50,7 +53,6 @@
 (defn build-path
   "Makes a pretty line from smack bang the middle of [parent] to [child]"
   [parent child]
-
   (let [parent-size (.getBoundingClientRect js/parent)
   child-size (.getBoundingClientRect js/child)
   start-x (get-middle-x parent-size)
@@ -68,18 +70,21 @@
 (defn drawline
   "given a parent HTML element and a child HTML element, draw a line between the bottom of the parent and the top of the child. This is done by calculating the locations of each of the boxes, and offsetting by 1) the amount scrolled on the window if any and 2) the other elements in the page."
   [parent child]
-     (.setAttribute (clonepath) "d" (build-path parent child)))
+     (let [childnode (if (elem child) (elem child) (elem (organism-id child)))
+           parentnode (if (elem parent) (elem parent) (elem (organism-id parent)))]
+     (.setAttribute (clonepath) "d" (build-path parentnode childnode))))
 
 (defn organism-node
   "outputs the go term, organism, and orthologue for nodes with these types of results"
   [term vals parent]
 
-  (into [:div.title {:id (make-id term)} term ]
+  (into [:div.title {:id (organism-id term)} term ]
     (map (fn [[organism results]]
       [:div.organism {:class (clj->js organism)}
         (utils/get-abbrev organism) " "
         (reduce (fn [_ result] (:display-ortholog-id result)) [] results)]
 ) vals)))
+
 
 (defn graph
 "recursively builds an HTML tree of terms. "
@@ -123,7 +128,7 @@
       (mapv (fn [[parentname propvals]]
         (mapv (fn [[childname _]]
           (cond (and (not (keyword? childname)) parentname)
-            (drawline (elem parentname) (elem childname)))
+            (drawline parentname childname))
         ) propvals)
     ) (reagent/props this)))
 })))
@@ -152,6 +157,14 @@
    [utils/loader]
 ]))
 
+(defn svg-html-hybrid-graph [tree nodes]
+  [:div
+   [:svg#lineplacer {:nodes nodes}
+     [:path#jango ;;we clone this element lots.
+       {:style {:stroke-width 2 :fill "transparent"} :d ""}]]
+   [graph tree nil]]
+  )
+
 (defn ontology []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
   (let [tree (re-frame/subscribe [:go-ontology-tree])
@@ -161,14 +174,12 @@
     [:div.ontology
       [:h2 "Ontology graph "]
      (if @loading
+       ;;show loader if loading data
        [status]
-       (if (> @nodes 40)
+       ;;if data is loaded, show the graph.
+       (if (or (> @nodes 40) (string? @nodes))
         ;;Dude. No spaghetti here. This graph would be massive.
         [no-spaghetti-graphs-please @nodes]
         ;;ok it's a small graph. Let's render.
-       [:div
-        [:svg#lineplacer
-          [:path#jango ;;we clone this element lots.
-            {:style {:stroke-width 2 :fill "transparent"} :d ""}]]
-        [graph @tree nil]]
+       [svg-html-hybrid-graph @tree @nodes]
 ))])))
