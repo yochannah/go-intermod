@@ -67,12 +67,28 @@
        ", "  end-x " " end-y)
 ))
 
+(defn setpath [parentnode childnode]
+  (.setAttribute (clonepath) "d" (build-path parentnode childnode)))
+
 (defn drawline
   "given a parent HTML element and a child HTML element, draw a line between the bottom of the parent and the top of the child. This is done by calculating the locations of each of the boxes, and offsetting by 1) the amount scrolled on the window if any and 2) the other elements in the page."
   [parent child]
-     (let [childnode (if (elem child) (elem child) (elem (organism-id child)))
-           parentnode (if (elem parent) (elem parent) (elem (organism-id parent)))]
-     (.setAttribute (clonepath) "d" (build-path parentnode childnode))))
+     (let [child-node (elem child)
+           org-child (elem (organism-id child))
+           parent-node (elem parent)
+           org-parent (elem (organism-id parent))]
+       ;;this is chaotic looking but seems to avoid all nullpointer errors
+       ;;as well as avoiding all the seemingly 'parentless' go terms without lines
+       (cond (and child-node parent-node)
+         (setpath parent-node child-node))
+       (cond (and child-node org-parent)
+         (setpath org-parent child-node))
+       (cond (and org-child parent-node)
+         (setpath parent-node org-child))
+       (cond (and org-child org-parent)
+         (setpath org-parent org-child))
+
+     ))
 
 (defn organism-node
   "outputs the go term, organism, and orthologue for nodes with these types of results"
