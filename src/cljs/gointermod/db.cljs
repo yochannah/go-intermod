@@ -27,8 +27,10 @@
        :status {:status :na}
        :mine
        {:name "HumanMine"
-        :url "beta.humanmine.org/beta"
-        :service {:root "beta.humanmine.org/beta"}}}
+       :url "www.humanmine.org/humanmine"
+       :service {:root "www.humanmine.org/humanmine"}}}
+      ;  :url "beta.humanmine.org/beta"
+      ;  :service {:root "beta.humanmine.org/beta"}}}
     :fly
      {:id     :fly
       :common "Fly"
@@ -37,8 +39,10 @@
       :abbrev "D. melanogaster"
       :mine
        {:name "FlyMine"
-        :url "beta.flymine.org/beta"
-        :service {:root "beta.flymine.org/beta"}}}
+      ;  :url "beta.flymine.org/beta"
+      ;  :service {:root "beta.flymine.org/beta"}}}
+       :url "www.flymine.org/flymine"
+       :service {:root "www.flymine.org/flymine"}}}
     :mouse
      {:id     :mouse
       :common "Mouse"
@@ -47,8 +51,10 @@
       :status {:status :na}
       :mine
        {:name "MouseMine"
-        :url "www.mousemine.org/mousemine"
-        :service {:root "www.mousemine.org/mousemine"}}}
+      ;  :url "www.mousemine.org/mousemine"
+      ;  :service {:root "www.mousemine.org/mousemine"}}}
+       :url "beta.mousemine.org/mousemine"
+       :service {:root "beta.mousemine.org/mousemine"}}}
     :rat
      {:id     :rat
       :common "Rat"
