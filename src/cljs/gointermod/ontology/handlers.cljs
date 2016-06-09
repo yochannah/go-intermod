@@ -115,10 +115,10 @@
 
 (defn handle-large-result
   "This is the counterpart of query-for-go-tree, for when there are simply too many results for it to be sane to return results"
-  [db]
+  [db go-term-count-for-filter]
   (->
       (assoc-in db [:go-ontology :nodes]
-        (str (count-go-terms (:go-terms db)) " or more "))
+        (str go-term-count-for-filter " or more "))
       (assoc-in [:go-ontology :loading] false)))
 
 (re-frame/register-handler
@@ -129,7 +129,7 @@
           go-termed-db (get-all-go-terms-by-organism db)]
       (if (< go-terms-by-filter 40)
         (query-for-go-tree go-termed-db)
-        (handle-large-result go-termed-db)
+        (handle-large-result go-termed-db go-terms-by-filter)
       )
 )))
 

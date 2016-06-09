@@ -153,7 +153,7 @@
   [:div
    [:p
     [:svg.icon [:use {:xlinkHref "#icon-info"}]]
-    " Looks like there are " nodes " GO terms in the graph associated with these genes. "]
+    " Looks like there are " [:strong nodes ] " GO terms in the "[:strong  @(re-frame/subscribe [:active-filter-pretty])] " graph associated with these genes. "]
    [:p "This many terms usually results in an unreadable spaghetti monster graph. Fewer than 40 GO terms is usually fine."]
    [:ul
     [:li "Try selecting fewer genes / orthologs / organisms and searching again."]
