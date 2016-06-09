@@ -68,13 +68,21 @@
     ) [] these-results)
     ))
 
-(defn get-all-go-terms
+(defn get-all-go-terms-by-organism
   "gets go terms for all organisms that have results."
   [db]
   (assoc db :go-terms
     (reduce (fn [new-map [id organism]]
       (assoc new-map id (get-go-terms id db))
 ) {} (:multi-mine-results db))))
+
+(defn get-count-of-go-terms-by-filter
+  "Returns the count of terms represented by the active ontology."
+  [db]
+  (let [filter-ontology (:active-filter db)
+        results (apply concat (vals (:multi-mine-results db)))]
+  (count (filter (fn [result] (= (:ontology-branch result) filter-ontology)) results))))
+
 
 (defn loading-state
   "sets all organisms go results to loading."
@@ -107,20 +115,21 @@
 
 (defn handle-large-result
   "This is the counterpart of query-for-go-tree, for when there are simply too many results for it to be sane to return results"
-  [db count-of-terms]
+  [db]
   (->
-      (assoc-in db [:go-ontology :nodes] (str count-of-terms " or more "))
+      (assoc-in db [:go-ontology :nodes]
+        (str (count-go-terms (:go-terms db)) " or more "))
       (assoc-in [:go-ontology :loading] false)))
 
 (re-frame/register-handler
  :load-go-graph
  ;;decides if there're too many terms to search for or not, and either searches or tells the users sorry, too big.
  (fn [db [_ _]]
-    (let [go-termed-db (get-all-go-terms db)
-          count-of-terms (count-go-terms (:go-terms go-termed-db))]
-      (if (< count-of-terms 40)
+    (let [go-terms-by-filter (get-count-of-go-terms-by-filter db)
+          go-termed-db (get-all-go-terms-by-organism db)]
+      (if (< go-terms-by-filter 40)
         (query-for-go-tree go-termed-db)
-        (handle-large-result go-termed-db count-of-terms)
+        (handle-large-result go-termed-db)
       )
 )))
 
