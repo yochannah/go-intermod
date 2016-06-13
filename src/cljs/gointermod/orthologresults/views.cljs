@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [re-frame.core :as re-frame]
       [gointermod.utils.utils :as utils]
+      [gointermod.utils.exportcsv :as exportcsv]
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
@@ -68,10 +69,11 @@
      (let [are-there-results? (re-frame/subscribe [:aggregate-results])]
       (if @are-there-results?
         ;;if there are results:
-        (do [:h2 "Orthologous Genes"]
-        [:table.aggregate
-          [aggregate-headers]
-          [aggregate-results]])
+        [:div
+          [exportcsv/download-button "A, B, C \n 1, 2, 3"] [:h2 "Orthologous Genes"]
+          [:table.aggregate
+            [aggregate-headers]
+            [aggregate-results]]]
         ;;Placeholder for non-results
         [:div "type something into the searchbar up the top and press search"]
 ))]))

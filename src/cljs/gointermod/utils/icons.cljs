@@ -42,9 +42,9 @@
     [:path.path1
      {:d
       "M31 16l-15-15v9h-16v12h16v9z"}]]
-   [:symbol#icon-download3
+   [:symbol#icon-download
     {:viewBox "0 0 16 16"}
-    [:title "download3"]
+    [:title "download"]
     [:path.path1
      {:d
       "M11.5 7l-4 4-4-4h2.5v-6h3v6zM7.5 11h-7.5v4h15v-4h-7.5zM14 13h-2v-1h2v1z"}]]
