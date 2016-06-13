@@ -49,31 +49,52 @@
     {:background (str "rgb(" bg-color "," mid-color "," "255)")}
 )))
 
-(defn organism-orthologue-tds [result]
+(defn organism-orthologue-tds
+  "Visually outputs the first two tds in the heatmap, orthologue and organism.  They require some custom logic compared to the basic number cells"
+  [result]
   (let [organism-name (first result)
         organism-id (utils/organism-name-to-id organism-name)
         orthologue-counts (re-frame/subscribe [:ortholog-count])
-        org-count (organism-id @orthologue-counts)]
+        org-count (organism-id @orthologue-counts)
+        ortholog (second result)]
   [:tr {:class organism-id}
     [:td organism-name]
-   (if (number? (second result))
-    [:td
-      (if (= org-count 1)
-        (second result)
-        [:span {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} org-count " genes " [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]])]
-    [:td (second result)]
+    (if (number? ortholog)
+      ;;handle aggregate result counts
+      [:td
+        (if (= org-count 1)
+          ;;don't say "1 gene", just output the gene itself.
+          ortholog
+          [:span {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} org-count " genes " [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]])]
+      ;;if the results aren't aggregate (e.g. the user expanded them) we just output its name
+      [:td ortholog]
      )]))
 
-(defn counts []
+(defn make-cell-title
+  "Creates hover text for td cells"
+  [result go-term]
+  (let [ortholog-name (second result)
+        organism (first result)]
+  (str organism ", " ortholog-name
+       (if (number? ortholog-name) " genes" )
+    ".\nGO term: " go-term ".")
+))
+
+(defn counts
+  "Visually output the table of annotation counts."
+  []
   ;;subscribe to the heatmap data
-  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
+        go-terms (:headers @heatmap)]
   ;;output tr, one per organism,ortholog combo
     (into [:tbody]
       (map (fn [result]
         (into (organism-orthologue-tds result)
-          (map (fn [val]
+          (map-indexed (fn [index val]
              ;;one td per go term
-             [:td {:style (calc-color val)} val]) (drop 2 result)))
+             [:td {:style (calc-color val)
+                   :title (make-cell-title result (nth go-terms index)) } val]
+          ) (drop 2 result)))
       )) (:rows @heatmap))
 ))
 
