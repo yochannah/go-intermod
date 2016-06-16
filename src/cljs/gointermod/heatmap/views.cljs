@@ -123,7 +123,7 @@
 
 (defn heatmap []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
-    [:div.heatmap
+  (fn []  [:div.heatmap
       [:header
         [:h2 "Annotation count by species"]
         [exportcsv/download-button (csv-counts)]]
@@ -131,4 +131,4 @@
         [headers]
         [counts]
         [empty-rows]
-]])
+]]))

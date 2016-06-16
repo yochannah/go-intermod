@@ -63,8 +63,10 @@
       :status {:status :na}
       :mine
        {:name "RatMine"
-        :url "ratmine.mcw.edu/ratmine"
-        :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
+       :url "dev.ratmine.mcw.edu/ratmine"
+       :service {:root "dev.ratmine.mcw.edu/ratmine"}}}
+      ;  :url "ratmine.mcw.edu/ratmine"
+      ;  :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
     :zebrafish
      {:id     :zebrafish
       :common "Zebrafish"

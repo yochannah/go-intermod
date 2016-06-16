@@ -64,7 +64,6 @@
  (re-frame/register-handler
   :concat-enrichment-results
   (fn [db [_ results organism]]
-;    (.log js/console (clj->js results) (clj->js organism))
     (assoc-in db [:enrichment organism] results)))
 
  (re-frame/register-handler

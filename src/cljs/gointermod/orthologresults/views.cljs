@@ -76,7 +76,8 @@
         [:div
           [:header
             [:h2 "Orthologous Genes"]
-            [exportcsv/download-button (csv-body)]]
+            ;[exportcsv/download-button (csv-body)]
+           ]
           [:table.aggregate
             [aggregate-headers]
             [aggregate-results]]]

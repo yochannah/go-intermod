@@ -73,12 +73,11 @@
   []
   (let [organisms (re-frame/subscribe [:organisms])
         enrichment (re-frame/subscribe [:enrichment-results])]
-    [:div.organisms
-      (doall (map (fn [[id organism]]
-          ^{:key (str "enrich" id)}
+    (into [:div.organisms]
+      (map (fn [[id organism]]
           [process-response (id @organisms) (id @enrichment)]
       ) @organisms)
-   )]))
+   )))
 
 (defn test-correction-filter
   "Visual component to allow users to select a test correction value"
@@ -147,18 +146,39 @@
     )
     ))
 
+(defn result-to-csv-rows "helper for csv-body. converts a single organism's results to a set of csv rows" [organism organism-results]
+  (let [results (:results organism-results) ]
+    (if results
+      ;;return each result formatted nicely if there are results
+      (reduce (fn [new-str result] (str
+        new-str organism ","
+        (:matches result) ","
+        (:identifier result) ","
+        (:description result) ","
+        (:p-value result) "\n")
+      ) "" results)
+      ;;this means we have no results....
+      "")
+  ))
+
 (defn csv-body
   "output graph as summary of all enrichments across all organisms."
   []
-;;  "It's a trap!,Ackbar"
-  "TODO,This isn't implemented yet but it will be soon. <3"
-  )
+  (let [enrichment @(re-frame/subscribe [:enrichment-results])
+        headers "Organism,Matches,GO ID, GO Term,P-Value\n"]
+    (str headers
+      (reduce (fn [new-str [id organism]]
+        (str new-str (result-to-csv-rows id (id enrichment)))
+      ) "" enrichment))
+  ;"TODO,This isn't implemented yet but it will be soon. <3"
+  ))
 
 (defn enrichment []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
   [:div.enrichment
     [:header
-      [:h2 "Enrichment"] [exportcsv/download-button (csv-body)]]
+      [:h2 "Enrichment"] ;[exportcsv/download-button (csv-body)]
+     ]
     [:div.settings
       [test-correction-filter]
       [max-p-filter]
