@@ -114,13 +114,12 @@
 (defn csv-counts
   "format heatmap results as a csv for download"
   []
-  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate-csv])
         go-terms (:headers @heatmap)
         headers (str "Organism,Ortholog," (clojure.string/join "," go-terms) "\n")]
     (reduce (fn [csv-str result]
       (str csv-str (clojure.string/join "," result) "\n" )
-    ) headers (:rows @heatmap))
-))
+) headers (:rows @heatmap))))
 
 (defn heatmap []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])

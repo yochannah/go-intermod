@@ -45,14 +45,12 @@ organism) results)))))
   ) results))))
 
 (defn orthologue-key [result aggregate-orthologs? orthologue-count]
-  ;(.log js/console "%c(:ortho-organism result) orthologue-count)" "color:hotpink;font-weight:bold;" (clj->js  result ))
   (let [organism-id (utils/organism-name-to-id (:ortho-organism result))]
     [(:ortho-organism result)
      (if aggregate-orthologs?
        (if (= 1 (organism-id orthologue-count))
           (:display-ortholog-id result)
           (organism-id orthologue-count))
-;       "collapsed"
        (:display-ortholog-id result))
 ]))
 
@@ -99,11 +97,11 @@ organism) results)))))
 
 (defn extract-results
   "Formats results in aggregated way"
-  [search-results]
+  ([search-results aggregate-orthologs?]
   (let [active-filter (re-frame/subscribe [:active-filter])
         merged-results (merge-results search-results @active-filter)
         go-terms (extract-go-terms merged-results)
-        counts (aggregate-orthologs merged-results)
+        counts (aggregate-orthologs merged-results aggregate-orthologs?)
         final-heatmap-matrix (build-result-matrix go-terms counts)
         max-count (get-ortholog-count-max counts)
         organisms-present (keys counts)
@@ -115,6 +113,8 @@ organism) results)))))
       :missing-organisms missing-organisms
       :all-results merged-results}
     ))
+  ([search-results] (extract-results search-results true))
+  )
 
 (defn expand-organism-to-ortholog-level
   "helper to expand the data for a specific organism from organism level aggregation to go-term level aggregation.
@@ -123,7 +123,7 @@ organism) results)))))
   (let [active-filter (re-frame/subscribe [:active-filter])
         go-terms (:headers (:heatmap db))
         aggregate-results (:aggregate-results (:heatmap db))]
-    (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) false)))))
+    (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) true)))))
 
 
 (re-frame/register-handler
@@ -137,14 +137,17 @@ organism) results)))))
           new-aggregate (:aggregate-results (:heatmap new-db))
           go-terms (:headers (:heatmap db))
           max-count (get-ortholog-count-max new-aggregate)]
-    (-> (assoc-in db [:heatmap :rows] (build-result-matrix go-terms new-aggregate))
-        (assoc-in [:heatmap :max-count] max-count)
-         )
-)))
+    (->
+      (assoc-in db [:heatmap :rows] (build-result-matrix go-terms new-aggregate))
+      (assoc-in [:heatmap :max-count] max-count)
+))))
 
 (re-frame/register-handler
   :aggregate-heatmap-results
   (fn [db [_ _]]
-    ;(.clear js/console)
-    (assoc db :heatmap (extract-results (:multi-mine-results db)))
+    (->
+     ;;visual results aren't expanded for multiple orthologs
+      (assoc db :heatmap (extract-results (:multi-mine-results db)))
+     ;;csv export results are expanded because they can't be interactive with expand-on-click like the webapp results can be! :) 
+      (assoc :heatmap-csv (extract-results (:multi-mine-results db) false)))
     ))

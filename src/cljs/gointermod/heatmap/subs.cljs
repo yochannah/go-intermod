@@ -8,6 +8,12 @@
   (reaction (:heatmap @db))))
 
 (re-frame/register-sub
+ :heatmap-aggregate-csv
+ (fn [db]
+  (reaction (:heatmap-csv @db))))
+
+
+(re-frame/register-sub
  :all-results
  (fn [db]
   (reaction (:all-results (:heatmap @db)))))
