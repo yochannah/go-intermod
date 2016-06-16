@@ -3,6 +3,7 @@
     (:require [re-frame.core :as re-frame]
       [gointermod.search.handlers :as search]
       [gointermod.utils.utils :as utils]
+      [gointermod.utils.exportcsv :as exportcsv]
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
@@ -110,10 +111,21 @@
           [:td.no-go-terms {:col-span (- cols 2)} "N/A"]
 ]) empties))))
 
+(defn csv-counts
+  "format heatmap results as a csv for download"
+  []
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
+        go-terms (:headers @heatmap)
+        headers (str "Organism,Ortholog," (clojure.string/join "," go-terms) "\n")]
+    (reduce (fn [csv-str result]
+      (str csv-str (clojure.string/join "," result) "\n" )
+    ) headers (:rows @heatmap))
+))
+
 (defn heatmap []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
     [:div.heatmap
-      [:h2 "Annotation count by species"]
+      [:h2 "Annotation count by species"] [exportcsv/download-button (csv-counts)]
         [:table
           [headers]
           [counts]
