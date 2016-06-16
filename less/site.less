@@ -108,7 +108,7 @@ a {
   div {
     width: 15%;
     height: 0;
-    border-bottom: solid 5px #ccc;
+    border-bottom: solid 5px @bordercolor;
   }
 }
 //mixins for general state behaviour
@@ -345,11 +345,21 @@ textarea {
   fill: currentColor;
 }
 .contentbody {
-  &.startpage {width:100%;}
+  &.startpage {
+    width: 100%;
+    h2 {float:none;}
+  }
   margin: @spacer;
-//  overflow: auto;
+  //  overflow: auto;
   h2 {
     margin-bottom: (@spacer/2 + 0.1em);
+    float: left;
+  }
+  .download {
+    float: left;
+    line-height: 36px;
+    margin-left: 1em;
+    svg {margin-top:@spacer/2;}
   }
 }
 @keyframes pulse {
@@ -579,8 +589,8 @@ textarea {
   }
   td {
     border: 0;
-    border-right: solid 1px #ccc;
-    border-bottom: solid 1px #ccc;
+    border-right: solid 1px @bordercolor;
+    border-bottom: solid 1px @bordercolor;
     text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
   }
   .no-orthologs {
@@ -597,7 +607,7 @@ textarea {
     td:first-child {
       min-width: 7.5em;
       white-space: nowrap;
-      border-bottom: solid 1px #ccc;
+      border-bottom: solid 1px @bordercolor;
       border-right: 0;
     }
   }
@@ -608,7 +618,7 @@ textarea {
 .enrichment {
   .notsearched {
     margin: 1em 0;
-    border-left: solid 3px #ccc;
+    border-left: solid 3px @bordercolor;
     padding: 1em;
   }
   .settings {
@@ -714,8 +724,8 @@ textarea {
   @linecolor: #999;
   position: relative;
   #lineplacer {
-    stroke : @linecolor;
-//    background: rgba(0,0,0,0.1);
+    stroke: @linecolor;
+    //    background: rgba(0,0,0,0.1);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -743,7 +753,7 @@ textarea {
   .title {
     color: black;
     width: 150px;
-    font-size:0.8em;
+    font-size: 0.8em;
     padding: 0.2em 0.6em;
     border: solid 1px @linecolor;
     background: #eee;
@@ -770,7 +780,7 @@ textarea {
 .status {
   .organism {
     background: @searchbackgroundcolor;
-    border-left: solid 3px #ccc;
+    border-left: solid 3px @bordercolor;
     padding: @spacer/2 @spacer/2 @spacer/2 @spacer;
     &:hover {
       .hoverstate;

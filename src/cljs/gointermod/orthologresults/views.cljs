@@ -45,7 +45,9 @@
             ]) organism-details))
         ) @results))]))
 
-(defn csv-body []
+(defn csv-body
+  "returns results of the graph in csv string format for download"
+  []
   (let [results (re-frame/subscribe [:aggregate-results])]
     (reduce (fn [outer-str [organism organism-details] organisms]
       (str outer-str
@@ -72,7 +74,7 @@
       (if @are-there-results?
         ;;if there are results:
         [:div
-          [exportcsv/download-button (csv-body)] [:h2 "Orthologous Genes"]
+          [:h2 "Orthologous Genes"] [exportcsv/download-button (csv-body)]
           [:table.aggregate
             [aggregate-headers]
             [aggregate-results]]]

@@ -106,7 +106,7 @@
       (map (fn [organism]
         [:tr {:class (utils/organism-name-to-id organism)}
           [:td organism]
-          [:td.no-orthologs {:col-span 3} "No orthologs available"]
+          [:td.no-orthologs {:col-span 3} "No results available"]
           [:td.no-go-terms {:col-span (- cols 2)} "N/A"]
 ]) empties))))
 

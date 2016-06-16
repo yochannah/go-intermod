@@ -10,9 +10,8 @@
 (defn download-button
   "Visual component with an interactivity handler for when the user clicks the button. Triggers a CSV download of the provided data."
   [csv-data]
-     [:a
-      {:style {:float "right"}
-       :on-click (fn []
+     [:a.download
+      {:on-click (fn []
         (.open js/window (encode-data csv-data))
       )}
   [:svg.icon [:use {:xlinkHref "#icon-download"}]]
