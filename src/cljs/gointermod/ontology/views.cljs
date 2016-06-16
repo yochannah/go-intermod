@@ -188,7 +188,8 @@
         loading (re-frame/subscribe [:go-ontology-loading])]
   (fn []
     [:div.ontology
-      [:h2 "Ontology graph "]
+     [:header
+      [:h2 "Ontology graph "]]
      (if @loading
        ;;show loader if loading data
        [status]

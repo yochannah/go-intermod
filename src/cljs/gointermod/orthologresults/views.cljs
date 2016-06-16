@@ -74,7 +74,9 @@
       (if @are-there-results?
         ;;if there are results:
         [:div
-          [:h2 "Orthologous Genes"] [exportcsv/download-button (csv-body)]
+          [:header
+            [:h2 "Orthologous Genes"]
+            [exportcsv/download-button (csv-body)]]
           [:table.aggregate
             [aggregate-headers]
             [aggregate-results]]]

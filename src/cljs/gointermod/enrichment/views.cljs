@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [re-frame.core :as re-frame]
       [gointermod.utils.utils :as utils]
+      [gointermod.utils.exportcsv :as exportcsv]
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
@@ -146,11 +147,18 @@
     )
     ))
 
+(defn csv-body
+  "output graph as summary of all enrichments across all organisms."
+  []
+;;  "It's a trap!,Ackbar"
+  "TODO,This isn't implemented yet but it will be soon. <3"
+  )
 
 (defn enrichment []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
   [:div.enrichment
-    [:h2 "Enrichment"]
+    [:header
+      [:h2 "Enrichment"] [exportcsv/download-button (csv-body)]]
     [:div.settings
       [test-correction-filter]
       [max-p-filter]

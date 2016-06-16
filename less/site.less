@@ -347,7 +347,11 @@ textarea {
 .contentbody {
   &.startpage {
     width: 100%;
-    h2 {float:none;}
+  }
+  header:after {
+    content: "";
+    display: table;
+    clear: both;
   }
   margin: @spacer;
   //  overflow: auto;
@@ -357,9 +361,12 @@ textarea {
   }
   .download {
     float: left;
+    clear: right;
     line-height: 36px;
     margin-left: 1em;
-    svg {margin-top:@spacer/2;}
+    svg {
+      margin-top: @spacer/2;
+    }
   }
 }
 @keyframes pulse {

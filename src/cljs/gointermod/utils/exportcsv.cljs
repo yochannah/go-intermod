@@ -1,5 +1,4 @@
-(ns gointermod.utils.exportcsv
-(:require [re-frame.core :as re-frame]))
+(ns gointermod.utils.exportcsv)
 
 (defn encode-data
   "helper to encode and format csv data for download"
