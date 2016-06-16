@@ -2,17 +2,9 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [re-frame.core :as re-frame]
       [gointermod.utils.utils :as utils]
+      [gointermod.utils.exportcsv :as exportcsv]
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
-
-(defn headers []
-  [:thead [:tr
-  [:th "Species"]
-  [:th "Orthologs"]
-  [:th "GO identifier thingy"]
-  [:th "Term"]
-  [:th "Branch"]
-   ]])
 
 (defn aggregate-headers []
   [:thead [:tr
@@ -53,13 +45,24 @@
             ]) organism-details))
         ) @results))]))
 
-(defn resolve-ids []
-  (go
-    (let [search-term (re-frame/subscribe [:search-term])
-          input-organism (re-frame/subscribe [:input-organism])
-          ids (<! (comms/resolve-id @input-organism @search-term))]
-      )
-  ))
+(defn csv-body []
+  (let [results (re-frame/subscribe [:aggregate-results])]
+    (reduce (fn [outer-str [organism organism-details] organisms]
+      (str outer-str
+        (reduce (fn [inner-str [ortholog ortholog-details] organism-details]
+          (str inner-str
+               (utils/get-abbrev organism) ","
+               (:original-id ortholog-details) ","
+               (clj->js ortholog) ","
+               (get ortholog-details "biological_process" 0) ","
+               (get ortholog-details "molecular_function" 0) ","
+               (get ortholog-details "cellular_component" 0) ","
+               "\""
+               (clojure.string/join ", " (:dataset ortholog-details))
+               "\"" "\n")
+        ) "" organism-details))
+    ) "" @results)
+))
 
 
 (defn orthologs []
@@ -68,10 +71,9 @@
      (let [are-there-results? (re-frame/subscribe [:aggregate-results])]
       (if @are-there-results?
         ;;if there are results:
-        (do [:h2 "Orthologous Genes"]
-        [:table.aggregate
-          [aggregate-headers]
-          [aggregate-results]])
-        ;;Placeholder for non-results
-        [:div "type something into the searchbar up the top and press search"]
+        [:div
+          [exportcsv/download-button (csv-body)] [:h2 "Orthologous Genes"]
+          [:table.aggregate
+            [aggregate-headers]
+            [aggregate-results]]]
 ))]))
