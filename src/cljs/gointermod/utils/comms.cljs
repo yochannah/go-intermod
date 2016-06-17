@@ -12,7 +12,8 @@
 
 (defn make-base-query [identifier organism evidence-codes]
   (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.id Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"A and B and C and D and E\" name=\"intermod_go\" >
-    <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
+  <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
+  <join path=\"Gene.goAnnotation.evidence\" style=\"OUTER\"/><constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
     <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
     <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"H. sapiens\"/>
     <constraint path=\"Gene.organism.shortName\" code=\"D\" op=\"=\" value=\"" (utils/get-abbrev organism) "\"/>
