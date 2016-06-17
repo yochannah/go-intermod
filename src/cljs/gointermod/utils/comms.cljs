@@ -10,16 +10,6 @@
         service (:service (:mine (source @mines)))]
 (clj->js service)))
 
-(defn make-base-query [identifier organism evidence-codes]
-  (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.id Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"A and B and C and D and E\" name=\"intermod_go\" >
-  <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
-  <join path=\"Gene.goAnnotation.evidence\" style=\"OUTER\"/><constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
-    <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
-    <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"H. sapiens\"/>
-    <constraint path=\"Gene.organism.shortName\" code=\"D\" op=\"=\" value=\"" (utils/get-abbrev organism) "\"/>
-    <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
-</query>"))
-
 (defn make-ontology-query [ids]
   (let [namespace (re-frame/subscribe [:active-filter])]
   (str "<query model=\"genomic\" view=\"GOTerm.identifier GOTerm.name GOTerm.parents.identifier GOTerm.parents.name  GOTerm.parents.parents.identifier GOTerm.parents.parents.name\" sortOrder=\"GOTerm.parents.parents.name ASC\"  constraintLogic=\"A and B\"><constraint path=\"GOTerm.identifier\" op=\"ONE OF\" code=\"A\">" ids "</constraint><constraint path=\"GOTerm.namespace\" code=\"B\" op=\"=\" value=\"" @namespace "\"/></query>")))
@@ -57,10 +47,22 @@
       )
 ) identifiers))))
 
+(defn make-base-query [identifier organism evidence-codes]
+  (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.id Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and E and F and (A or (G and H))\" name=\"intermod_go\" >
+  <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
+  <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
+  <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
+  <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"H. sapiens\"/>
+  <constraint path=\"Gene.organism.shortName\" code=\"D\" op=\"=\" value=\"" (utils/get-abbrev organism) "\"/>
+  <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
+  <constraint path=\"Gene.homologues.type\" code=\"F\" op=\"!=\" value=\"paralogue\"/>
+  <constraint path=\"Gene\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"H. sapiens\" code=\"G\" />
+ <constraint path=\"Gene.homologues.homologue.organism.shortName\" op=\"=\" value=\"H. sapiens\" code=\"H\" />
+</query>"))
+
 (defn go-query
   "Get the results of GO term query for specified symbol/identifier"
   [input-organism identifiers output-organism]
-;  (.log js/console "%cgo-query. Input %s, output %s" (clj->js input-organism) (clj->js output-organism) output-organism)
   (let [service (get-service output-organism)
         evidence-codes (re-frame/subscribe [:active-evidence-codes])
         evidence-code-constraint-values (create-constraint-values @evidence-codes)

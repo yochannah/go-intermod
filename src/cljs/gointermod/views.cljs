@@ -88,10 +88,10 @@
                  [default-content]
         ))]]
         (cond @are-there-results?[:footer
-          [:a {:href "#/about"} "About"]
-            ; (when config/debug?
-            ;     [:div.db  (edn->hiccup (:go-ontology (dissoc @(re-frame/subscribe [:db]) :multi-mine-results :heatmap)))]
-            ;)
+           [:a {:href "#/about"} "About"]
+          ;   (when config/debug?
+          ;       [:div.db  (edn->hiccup  @(re-frame/subscribe [:db]) )]
+          ;   )
 
             ;[:div.db ":)" (edn->hiccup @(re-frame/subscribe [:go-ontology-tree]))]
          ])

@@ -42,6 +42,7 @@
     (assoc db :search-term term)
     ))
 
+
 (defn aggregate-by-orthologue [search-results]
   "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
   (reduce (fn [new-map result]
@@ -72,7 +73,7 @@
       :original-organism (get result 10)
       :go-id (get result 15)
       :go-term (get result 16)
-      :ontology-branch (get result 17)
+      :ontology-branch (get result 17 "XXX")
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :parent-go-term (get result 19)
