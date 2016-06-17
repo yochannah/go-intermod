@@ -85,7 +85,7 @@
       :status {:status :na}
       :mine
        {:name "WormMine"
-        :url "http://intermine.wormbase.org/tools/wormmine"
+        :url "intermine.wormbase.org/tools/wormmine"
         :service {:root "intermine.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
@@ -95,8 +95,10 @@
       :status {:status :na}
       :mine
        {:name "YeastMine"
-        :url "yeastmine.yeastgenome.org/yeastmine"
-        :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
+;       :url "yeastmine.yeastgenome.org/yeastmine"
+;       :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
+       :url "yeastmine-test.yeastgenome.org/yeastmine-dev"
+       :service {:root "yeastmine-test.yeastgenome.org/yeastmine-dev"}}}
     }
    :go-ontology {:nodes 0
                  :loading true}
