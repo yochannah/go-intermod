@@ -1,7 +1,9 @@
 (ns gointermod.nav
     (:require [re-frame.core :as re-frame]))
 
-(defn build-url [organism]
+(defn build-url
+  "generate a deep link for a given mine go query - e.g. link straight to humanmine query results page"
+  [organism]
   (str "http://"
       (:url (:mine organism))
       "/loadQuery.do?skipBuilder=true&query="
@@ -9,7 +11,9 @@
       "&trail=|query&method=xml"
 ))
 
-(defn modal [organism]
+(defn modal
+  "visual component - modal popup to show the query in search status sidebar"
+  [organism]
   [:div.fade {:on-click
       (fn [e]
         (.stopPropagation js/e)
@@ -36,18 +40,21 @@
     ]]]
   )
 
-(defn prep-status-details [organism]
+(defn prep-status-details
+  "status bar for a given mine"
+  [organism]
+
   [:div
-  (cond
-    (= (:status (:status organism)) :loading)
-    [:span.loading "Loading . . ."]
-    (= (:status (:status organism)) :error)
-    [:span.error "Error loading results"]
-    (= (:status (:status organism)) :na)
-    [:span.na "No search performed"]
-    (= (:status (:status organism)) :success)
-    [:span.success (:details (:status organism)) " results"]
-    )
+    (cond
+      (= (:status (:status organism)) :loading)
+        [:span.loading "Loading . . ."]
+      (= (:status (:status organism)) :error)
+        [:span.error "Error loading results"]
+      (= (:status (:status organism)) :na)
+        [:span.na "No search performed"]
+      (= (:status (:status organism)) :success)
+        [:span.success (:details (:status organism)) " results"]
+      )
    (let [status (:status organism)
          active-modal (re-frame/subscribe [:active-modal])
          active (= @active-modal (:id organism))]
@@ -60,18 +67,17 @@
   (let [organisms (re-frame/subscribe [:organisms])]
     [:div.status
     [:h4 "Search status: "]
-     [:div.results
-    (doall (map (fn [[_ organism]]
-      ^{:key (:id organism)}
-      [:div.organism
-        {:on-click
-          #(re-frame/dispatch [:active-modal (:id organism)])
-          :class (clj->js (:id organism))}
-          [:h5 (:abbrev organism)]
-          [:div (prep-status-details organism)
-        ]]
-           ) @organisms))
-    [:p.info "'Result' in this context means a single organism + ortholog + GO Term combination. Results in the main pane are aggregated, so will not match the numbers shown here."] ]]))
+    (into [:div.results]
+      (map (fn [[_ organism]]
+        [:div.organism
+          {:on-click
+            #(re-frame/dispatch [:active-modal (:id organism)])
+            :class (clj->js (:id organism))}
+            [:h5 (:abbrev organism)]
+            [:div (prep-status-details organism)
+          ]]
+    ) @organisms))
+    [:p.info "'Result' in this context means a single organism + ortholog + GO Term combination. Results in the main pane are aggregated, so will not match the numbers shown here."] ]))
 
 (defn nav []
 (let [active-view (re-frame/subscribe [:active-view])
