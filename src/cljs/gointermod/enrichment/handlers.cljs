@@ -3,6 +3,7 @@
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]
               [gointermod.utils.comms :as comms]
+              [gointermod.utils.utils :as utils]
               [gointermod.utils.exportcsv :as exportcsv]
               [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
@@ -97,7 +98,7 @@
      (let [headers "Organism,Matches,GO ID, GO Term,P-Value\n"]
        (str headers
          (reduce (fn [new-str [id organism]]
-           (str new-str (result-to-csv-rows id (:results organism)))
+           (str new-str (result-to-csv-rows (utils/get-abbrev id) (:results organism)))
          ) "" enrichment)
      )))
 
