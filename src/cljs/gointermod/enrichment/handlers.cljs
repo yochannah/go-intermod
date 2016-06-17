@@ -3,6 +3,7 @@
     (:require [re-frame.core :as re-frame]
               [gointermod.db :as db]
               [gointermod.utils.comms :as comms]
+              [gointermod.utils.exportcsv :as exportcsv]
               [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
 (defn filter-by-branch [results branch]
@@ -75,3 +76,33 @@
  :max-p
  (fn [db [_ max-p-value]]
    (assoc db :max-p max-p-value)))
+
+   (defn result-to-csv-rows "helper for csv-body. converts a single organism's results to a set of csv rows" [organism results]
+       (if results
+         ;;return each result formatted nicely if there are results
+         (reduce (fn [new-str result] (str
+           new-str organism ","
+           (:matches result) ","
+           (:identifier result) ","
+           (:description result) ","
+           (:p-value result) "\n")
+         ) "" results)
+         ;;this means we have no results....
+         "")
+     )
+
+   (defn csv-body
+     "output graph as summary of all enrichments across all organisms."
+     [enrichment]
+     (let [headers "Organism,Matches,GO ID, GO Term,P-Value\n"]
+       (str headers
+         (reduce (fn [new-str [id organism]]
+           (str new-str (result-to-csv-rows id (:results organism)))
+         ) "" enrichment)
+     )))
+
+(re-frame/register-handler
+  :download-enrichment
+  (fn [db [_ _]]
+    (.open js/window (exportcsv/encode-data (csv-body (:enrichment db))))
+    db))
