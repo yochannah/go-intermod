@@ -48,7 +48,9 @@
 (defn csv-body
   "returns results of the graph in csv string format for download"
   []
-  (let [results (re-frame/subscribe [:aggregate-results])]
+  (let [results (re-frame/subscribe [:aggregate-results])
+        headers (str "Organism,Original Gene,Ortholog,Biological process, Molecular function,Cellular component, Datasources\n")]
+    (str headers
     (reduce (fn [outer-str [organism organism-details] organisms]
       (str outer-str
         (reduce (fn [inner-str [ortholog ortholog-details] organism-details]
@@ -64,7 +66,7 @@
                "\"" "\n")
         ) "" organism-details))
     ) "" @results)
-))
+)))
 
 
 (defn orthologs []
@@ -76,7 +78,7 @@
         [:div
           [:header
             [:h2 "Orthologous Genes"]
-            ;[exportcsv/download-button (csv-body)]
+            [exportcsv/download-button (csv-body)]
            ]
           [:table.aggregate
             [aggregate-headers]
