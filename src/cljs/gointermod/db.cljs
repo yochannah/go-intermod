@@ -80,13 +80,13 @@
     :worm
      {:id     :worm
       :common "Worm"
-      :output? false
+      :output? true
       :abbrev "C. elegans"
       :status {:status :na}
       :mine
        {:name "WormMine"
-        :url "intermine.wormbase.org/tools/wormmine"
-        :service {:root "intermine.wormbase.org/tools/wormmine"}}}
+        :url "im-251.wormbase.org/tools/wormmine"
+        :service {:root "im-251.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
       :output? true
@@ -95,10 +95,10 @@
       :status {:status :na}
       :mine
        {:name "YeastMine"
-;       :url "yeastmine.yeastgenome.org/yeastmine"
-;       :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
-       :url "yeastmine-test.yeastgenome.org/yeastmine-dev"
-       :service {:root "yeastmine-test.yeastgenome.org/yeastmine-dev"}}}
+       :url "yeastmine.yeastgenome.org/yeastmine"
+       :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
+;       :url "yeastmine-test.yeastgenome.org/yeastmine-dev"
+;       :service {:root "yeastmine-test.yeastgenome.org/yeastmine-dev"}}}
     }
    :go-ontology {:nodes 0
                  :loading true}
