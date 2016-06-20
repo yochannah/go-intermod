@@ -25,25 +25,25 @@
 (defn aggregate-results []
   "output aggregated search results into table rows"
   (let [results (re-frame/subscribe [:aggregate-results])]
-    [:tbody
-    (doall (map (fn [[organism organism-details] organisms]
+    (into [:tbody]
+     (map (fn [[organism organism-details] organisms]
       (doall  (map (fn [[ortholog ortholog-details] organism-details]
-           ^{:key (gensym)}
+           ^{:key (str organism ortholog)}
            [:tr {:class (clj->js organism)}
             [:td
               [:input
                {:type "checkbox"
                 :checked (:is-selected? ortholog-details)
                 :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
-              [:td.organism (utils/get-abbrev organism)]
-              [:td (:original-id ortholog-details)]
-              [:td (clj->js ortholog)]
-              [:td.bio (get ortholog-details "biological_process" 0)]
-              [:td.molecular (get ortholog-details "molecular_function" 0)]
-              [:td.cellular (get ortholog-details "cellular_component" 0)]
-              [:td.dataset (clojure.string/join ", " (:dataset ortholog-details))]
+            [:td.organism (utils/get-abbrev organism)]
+            [:td (:original-id ortholog-details)]
+            [:td (clj->js ortholog)]
+            [:td.bio (get ortholog-details "biological_process" 0)]
+            [:td.molecular (get ortholog-details "molecular_function" 0)]
+            [:td.cellular (get ortholog-details "cellular_component" 0)]
+            [:td.dataset (clojure.string/join ", " (:dataset ortholog-details))]
             ]) organism-details))
-        ) @results))]))
+        ) @results))))
 
 (defn csv-body
   "returns results of the graph in csv string format for download"

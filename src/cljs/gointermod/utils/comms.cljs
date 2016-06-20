@@ -48,7 +48,7 @@
 ) identifiers))))
 
 (defn make-base-query [identifier organism evidence-codes]
-  (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.id Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and E and F and (A or (G and H))\" name=\"intermod_go\" >
+  (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.homologues.homologue.id Gene.homologues.homologue.primaryIdentifier Gene.homologues.homologue.secondaryIdentifier Gene.homologues.homologue.symbol Gene.homologues.homologue.organism.shortName Gene.homologues.homologue.organism.taxonId Gene.homologues.dataSets.name Gene.homologues.dataSets.url Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and E and F and A\" name=\"intermod_go\" >
   <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
   <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
   <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
@@ -56,9 +56,14 @@
   <constraint path=\"Gene.organism.shortName\" code=\"D\" op=\"=\" value=\"" (utils/get-abbrev organism) "\"/>
   <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
   <constraint path=\"Gene.homologues.type\" code=\"F\" op=\"!=\" value=\"paralogue\"/>
-  <constraint path=\"Gene\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"H. sapiens\" code=\"G\" />
- <constraint path=\"Gene.homologues.homologue.organism.shortName\" op=\"=\" value=\"H. sapiens\" code=\"H\" />
 </query>"))
+
+(defn original-gene-query [input-organism identifiers output-organism]
+  ;;ok so I can't for the life of me find a neat way to return all of the annotations for the input gene in the orginal query without adding an ugly constraint and getting all of the orthologues back again which is stupid. I only want them once. Let's just do it in a separate stinking query.
+  ;;then we simply glom the results into the same result pile but leave blanks?
+  ;;or do we do them in a different bucket? What are the implications?
+  ;;maybe a separate tbody but same table and a separate data structure for the results, but include it IN the heatmap, ontology diagram, and enrichment. Ok. I think that makes sense. Suckbunnies.
+  "")
 
 (defn go-query
   "Get the results of GO term query for specified symbol/identifier"
