@@ -89,9 +89,9 @@
         ))]]
         (cond @are-there-results?[:footer
            [:a {:href "#/about"} "About"]
-          ;   (when config/debug?
-          ;       [:div.db  (edn->hiccup  @(re-frame/subscribe [:db]) )]
-          ;   )
+            ; (when config/debug?
+            ;     [:div.db  (edn->hiccup  @(re-frame/subscribe [:db]) )]
+            ; )
 
             ;[:div.db ":)" (edn->hiccup @(re-frame/subscribe [:go-ontology-tree]))]
          ])

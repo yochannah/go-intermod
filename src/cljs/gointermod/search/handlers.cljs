@@ -73,7 +73,7 @@
       :original-organism (get result 10)
       :go-id (get result 15)
       :go-term (get result 16)
-      :ontology-branch (get result 17 "XXX")
+      :ontology-branch (get result 17)
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :parent-go-term (get result 19)
@@ -83,14 +83,15 @@
      }
   ) results))
 
-(defn result-status [search-results]
+(defn result-status [search-results mapped-results]
   (if (:error search-results)
     ;;return the error details if there are some
     {:status :error
      :details (:error search-results)}
     ;;else, return the count of results
     {:status :success
-     :details (count (:results search-results))}
+      :annotations (count (reduce (fn [new-set result] (conj new-set (:go-term result))) #{} mapped-results))
+      :orthologs (count (reduce (fn [new-set result] (conj new-set (:display-ortholog-id result))) #{} mapped-results))}
     )
    )
 
@@ -113,7 +114,8 @@
  :concat-results
  (fn [db [_ search-results source]]
    (let [mapped-results (resultset-to-map (:results search-results))
-         status (result-status search-results)]
+         status (result-status search-results mapped-results)]
+     (.log js/console "%cmapped-results" "color:cornflowerblue;font-weight:bold;" (clj->js mapped-results))
    (->
     (assoc-in db [:multi-mine-results source] mapped-results)
     (assoc-in [:organisms source :status] status)

@@ -53,7 +53,11 @@
       (= (:status (:status organism)) :na)
         [:span.na "No search performed"]
       (= (:status (:status organism)) :success)
-        [:span.success (:details (:status organism)) " results"]
+          [:div.counts
+            [:span.success "Orthologs: " (:orthologs (:status organism))]
+            (cond (not= 0 (:orthologs (:status organism)) )
+              [:span.success "Annotations: " (:annotations (:status organism))])
+           ]
       )
    (let [status (:status organism)
          active-modal (re-frame/subscribe [:active-modal])
@@ -77,7 +81,7 @@
             [:div (prep-status-details organism)
           ]]
     ) @organisms))
-    [:p.info "'Result' in this context means a single organism + ortholog + GO Term combination. Results in the main pane are aggregated, so will not match the numbers shown here."] ]))
+]))
 
 (defn nav []
 (let [active-view (re-frame/subscribe [:active-view])
