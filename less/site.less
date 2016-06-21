@@ -788,6 +788,9 @@ textarea {
 }
 ////////debug, kiddos:
 .status {
+  &:hover {
+    cursor: pointer;
+  }
   .success {
     font-size: 75%;
     width: 45%;
@@ -795,13 +798,12 @@ textarea {
     display: block;
     float: left;
   }
-
-  .success:after, .counts:after {
+  .success:after,
+  .counts:after {
     content: "";
     display: table;
     clear: both;
   }
-
   .organism {
     background: @searchbackgroundcolor;
     border-left: solid 3px @bordercolor;

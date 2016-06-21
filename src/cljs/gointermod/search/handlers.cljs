@@ -115,7 +115,6 @@
  (fn [db [_ search-results source]]
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results mapped-results)]
-     (.log js/console "%cmapped-results" "color:cornflowerblue;font-weight:bold;" (clj->js mapped-results))
    (->
     (assoc-in db [:multi-mine-results source] mapped-results)
     (assoc-in [:organisms source :status] status)
@@ -135,11 +134,27 @@
   ;;What do we do when a search button is pressed? This.
   :perform-search
   (fn [db [_ _]]
-    ;asynchronously query all dem mines and add the results to the db
-    (go
-      (comms/query-all-selected-organisms (:selected-organism db) (search-token-fixer-upper (:search-term db))))
+    ;;if the input genes aren't human, we'll need to resolve them to their human orthologues.
+    (let [input-org (:selected-organism db)
+          search-terms (search-token-fixer-upper (:search-term db))]
+      (if (= input-org :human)
+        ;if the input organism is human, go straight to the remote organism mines with the main query.
+        ;asynchronously query all dem mines and add the results to the db
+        (go (comms/query-all-selected-organisms (:selected-organism db) search-terms))
+        ; if the input organism is not human, first we have to resolve the
+        ; identifiers to their human orthologues, then do the above query
+        (go (let [response (<! (comms/get-human-orthologs search-terms input-org))
+                  results (:results response)]
+              (.log js/console "%cresults" "color:hotpink;font-weight:bold;" (clj->js (clojure.string/join "," results)))
+          (if results
+            ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
+            (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (flatten results)))
+            ;;so this is what happens when we had an error trying to retrieve orthologues.
+            (re-frame/dispatch [:error-loading-human-orthologs]))
+         ))
+        )
     (re-frame/dispatch [:initialised])
-    (dissoc db :multi-mine-results :multi-mine-aggregate :go-terms :go-ontology)))
+    (dissoc db :multi-mine-results :enrichment :multi-mine-aggregate :go-terms :go-ontology))))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism

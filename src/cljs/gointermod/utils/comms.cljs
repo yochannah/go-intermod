@@ -58,6 +58,28 @@
   <constraint path=\"Gene.homologues.type\" code=\"F\" op=\"!=\" value=\"paralogue\"/>
 </query>"))
 
+(defn human-ortholog-query [identifier organism]
+  (str "<query model=\"genomic\" view=\"Gene.primaryIdentifier\" sortOrder=\"Gene.id ASC\" constraintLogic=\"A and B\" name=\"intermod_go\" >
+  <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"" (utils/get-abbrev organism) "\"/>
+  <constraint path=\"Gene.organism.shortName\" code=\"B\" op=\"=\" value=\"H. sapiens\"/>
+</query>"))
+
+(defn get-human-orthologs
+  "Get the results of GO term query for specified symbol/identifier"
+  [identifiers input-organism]
+  (let [service (get-service input-organism)
+        query (human-ortholog-query identifiers input-organism)]
+    ;(re-frame/dispatch [:save-query query output-organism])
+    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+       {:with-credentials? false
+        :keywordize-keys? true
+        :form-params
+        {:query query
+         :format "json"}}))]
+            (js->clj (-> response :body))
+))))
+
+
 (defn original-gene-query [input-organism identifiers output-organism]
   ;;ok so I can't for the life of me find a neat way to return all of the annotations for the input gene in the orginal query without adding an ugly constraint and getting all of the orthologues back again which is stupid. I only want them once. Let's just do it in a separate stinking query.
   ;;then we simply glom the results into the same result pile but leave blanks?
