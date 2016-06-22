@@ -23,6 +23,13 @@
   (reaction (:organisms @db))))
 
 (re-frame/register-sub
+ :checked-organisms
+ (fn [db]
+  (reaction (filter (fn [[organism details]]
+;  (.log js/console "%corganism" "color:goldenrod;font-weight:bold;" (clj->js organism) (clj->js details))
+    (:output? details)) (:organisms @db)))))
+
+(re-frame/register-sub
  :active-view
  (fn [db]
    (reaction (:active-view @db))))

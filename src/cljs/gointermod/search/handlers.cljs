@@ -145,7 +145,6 @@
         ; identifiers to their human orthologues, then do the above query
         (go (let [response (<! (comms/get-human-orthologs search-terms input-org))
                   results (:results response)]
-              (.log js/console "%cresults" "color:hotpink;font-weight:bold;" (clj->js (clojure.string/join "," results)))
           (if results
             ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
             (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (flatten results)))
@@ -170,9 +169,9 @@
   (assoc-in db [:organisms organism :query] query)
   ))
 
-  (re-frame/register-handler
-    ;;There's only one input organism for the search. Set it.
-    :active-modal
-    (fn [db [_ organism]]
-      (assoc-in db [:active-modal] organism)
-      ))
+(re-frame/register-handler
+  ;;There's only one input organism for the search. Set it.
+  :active-modal
+  (fn [db [_ organism]]
+    (assoc-in db [:active-modal] organism)
+    ))
