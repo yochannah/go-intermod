@@ -118,9 +118,7 @@
       {:status :error
        :details (:error search-results)}
       ;;else, return the count of results
-      {:status :success
-        :annotations (count (reduce (fn [new-set result] (conj new-set (:go-term result))) #{} mapped-results))
-        :orthologs (count (reduce (fn [new-set result] (conj new-set (:display-ortholog-id result))) #{} mapped-results))}
+      {:status :success}
       )
     ;;if the server didn't respond or something
     {:status :error
@@ -152,8 +150,8 @@
   ;   (.log js/console "%caggregate %s" "color:firebrick;font-weight:bold;" (clj->js source)(clj->js aggregate))
    (->
     (update-in db [:multi-mine-results source] concat mapped-results)
-    (assoc-in [:organisms source :status] status)
-    (update-in [:multi-mine-aggregate source] concat aggregate)))
+    (assoc-in     [:organisms source :status] status)
+    (update-in    [:multi-mine-aggregate source] concat aggregate)))
 ))
 
 (re-frame/register-handler
@@ -162,14 +160,10 @@
     (let [mapped-results (original-resultset-to-map (:results search-results))
           status (result-status search-results mapped-results)
           aggregate (aggregate-by-orthologue mapped-results)]
-      (.log js/console "%cstatus" "color:goldenrod;font-weight:bold;" (clj->js mapped-results) (clj->js search-results) (clj->js aggregate))
-  ;  (->
-  ;   (assoc-in db [:multi-mine-results :human-original] mapped-results)
-  ;   ;(assoc-in [:organisms source :status] status)
-      (update-in db [:multi-mine-aggregate :human] concat aggregate)
-      ;))
-      )
-))
+    (->
+      (update-in db [:multi-mine-results :human] concat mapped-results)
+      (update-in  [:multi-mine-aggregate :human] concat aggregate))
+)))
 
 
 

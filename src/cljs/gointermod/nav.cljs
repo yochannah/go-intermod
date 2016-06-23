@@ -43,29 +43,31 @@
 (defn prep-status-details
   "status bar for a given mine"
   [organism]
-
-  [:div
-    (cond
-      (= (:status (:status organism)) :loading)
-        [:span.loading "Loading . . ."]
-      (= (:status (:status organism)) :error)
-        [:span.error "Error loading results"]
-      (= (:status (:status organism)) :na)
-        [:span.na "No search performed"]
-      (= (:status (:status organism)) :success)
-          [:div.counts
-            [:span.success "Genes: " (:orthologs (:status organism))]
-            (cond (not= 0 (:orthologs (:status organism)) )
-              [:span.success "Annotations: " (:annotations (:status organism))])
-           ]
-      )
-   (let [status (:status organism)
-         active-modal (re-frame/subscribe [:active-modal])
-         active (= @active-modal (:id organism))]
-      [:div.query {:class (cond active "active")}
-        (cond active [modal organism])
-        [:svg.icon [:use {:xlinkHref "#icon-code"}]]]
-)])
+  (let [result-counts @(re-frame/subscribe [:mine-result-counts])
+        organism-id (:id organism)
+        result-count (organism-id result-counts)]
+    [:div
+      (cond
+        (= (:status (:status organism)) :loading)
+          [:span.loading "Loading . . ."]
+        (= (:status (:status organism)) :error)
+          [:span.error "Error loading results"]
+        (= (:status (:status organism)) :na)
+          [:span.na "No search performed"]
+        (= (:status (:status organism)) :success)
+            [:div.counts
+              [:span.success "Genes: " (:genes result-count)]
+              (cond (not= 0 (:orthologs (:genes result-count)) )
+                [:span.success "Annotations: " (:annotations result-count)])
+             ]
+        )
+     (let [status (:status organism)
+           active-modal (re-frame/subscribe [:active-modal])
+           active (= @active-modal (:id organism))]
+        [:div.query {:class (cond active "active")}
+          (cond active [modal organism])
+          [:svg.icon [:use {:xlinkHref "#icon-code"}]]]
+)]))
 
 (defn status []
   (let [organisms (re-frame/subscribe [:organisms])]
