@@ -54,7 +54,7 @@
         [:span.na "No search performed"]
       (= (:status (:status organism)) :success)
           [:div.counts
-            [:span.success "Orthologs: " (:orthologs (:status organism))]
+            [:span.success "Genes: " (:orthologs (:status organism))]
             (cond (not= 0 (:orthologs (:status organism)) )
               [:span.success "Annotations: " (:annotations (:status organism))])
            ]

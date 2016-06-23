@@ -111,15 +111,21 @@
     ) results)))
 
 (defn result-status [search-results mapped-results]
-  (if (:error search-results)
-    ;;return the error details if there are some
+  (if (seq search-results)
+    ;;if there even are any results:
+    (if (:error search-results)
+      ;;return the error details if there are some
+      {:status :error
+       :details (:error search-results)}
+      ;;else, return the count of results
+      {:status :success
+        :annotations (count (reduce (fn [new-set result] (conj new-set (:go-term result))) #{} mapped-results))
+        :orthologs (count (reduce (fn [new-set result] (conj new-set (:display-ortholog-id result))) #{} mapped-results))}
+      )
+    ;;if the server didn't respond or something
     {:status :error
-     :details (:error search-results)}
-    ;;else, return the count of results
-    {:status :success
-      :annotations (count (reduce (fn [new-set result] (conj new-set (:go-term result))) #{} mapped-results))
-      :orthologs (count (reduce (fn [new-set result] (conj new-set (:display-ortholog-id result))) #{} mapped-results))}
-    )
+     :details "Unable to connect to server"}
+      )
    )
 
 (re-frame/register-handler
