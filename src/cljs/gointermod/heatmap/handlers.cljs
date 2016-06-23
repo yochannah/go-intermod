@@ -119,10 +119,7 @@ organism) results)))))
   "helper to expand the data for a specific organism from organism level aggregation to go-term level aggregation.
   Returns the ortholog-level results for the organism"
   [db organism]
-  (let [active-filter (re-frame/subscribe [:active-filter])
-        go-terms (:headers (:heatmap db))
-        aggregate-results (:aggregate-results (:heatmap db))]
-    (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) true)))))
+    (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) false))))
 
 
 (re-frame/register-handler
