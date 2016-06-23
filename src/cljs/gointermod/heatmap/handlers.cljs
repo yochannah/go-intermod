@@ -77,7 +77,6 @@ organism) results)))))
 (defn build-result-matrix
   "This is basically a matrix representation of the table we'll output. We can't just use maps because the order is important, and maps can't be trusted."
   [go-terms aggregate-ortholog-counts]
-
   (apply concat (map (fn [[organism orthologs]]
   (map (fn [[ortholog terms]]
       (concat [organism ortholog] (map-terms go-terms terms))
@@ -137,6 +136,7 @@ organism) results)))))
           new-aggregate (:aggregate-results (:heatmap new-db))
           go-terms (:headers (:heatmap db))
           max-count (get-ortholog-count-max new-aggregate)]
+    ;  (.log js/console "%chi" "color:hotpink;font-weight:bold;" (clj->js org-count))
     (->
       (assoc-in db [:heatmap :rows] (build-result-matrix go-terms new-aggregate))
       (assoc-in [:heatmap :max-count] max-count)

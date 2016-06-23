@@ -66,7 +66,7 @@
         (if (= org-count 1)
           ;;don't say "1 gene", just output the gene itself.
           ortholog
-          [:span {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} org-count " genes " [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]])]
+          [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} org-count " genes " [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]])]
       ;;if the results aren't aggregate (e.g. the user expanded them) we just output its name
       [:td ortholog]
      )]))
