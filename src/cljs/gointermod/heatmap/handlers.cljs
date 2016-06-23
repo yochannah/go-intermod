@@ -148,6 +148,6 @@ organism) results)))))
     (->
      ;;visual results aren't expanded for multiple orthologs
       (assoc db :heatmap (extract-results (:multi-mine-results db)))
-     ;;csv export results are expanded because they can't be interactive with expand-on-click like the webapp results can be! :) 
+     ;;csv export results are expanded because they can't be interactive with expand-on-click like the webapp results can be! :)
       (assoc :heatmap-csv (extract-results (:multi-mine-results db) false)))
     ))
