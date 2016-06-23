@@ -8,7 +8,9 @@
      (= :ortholog original-or-ortholog)
       (get-id (get resultvec 3) (get resultvec 2) (get resultvec 1)  (get resultvec 4))
      (= :original original-or-ortholog)
-      (get-id (get resultvec 7) (get resultvec 8) (get resultvec 9)  (get resultvec 10)))
+      (get-id (get resultvec 7) (get resultvec 8) (get resultvec 9)  (get resultvec 10))
+     (= :original-gene-set)
+      (get-id (get resultvec 3) (get resultvec 2) (get resultvec 1)  (get resultvec 4)))
   )
   ([primary secondary symbol organism]
   "returns first non-null identifier, preferring symbol or primary id"

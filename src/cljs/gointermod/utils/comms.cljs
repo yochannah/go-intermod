@@ -80,12 +80,33 @@
 ))))
 
 
-(defn original-gene-query [input-organism identifiers output-organism]
-  ;;ok so I can't for the life of me find a neat way to return all of the annotations for the input gene in the orginal query without adding an ugly constraint and getting all of the orthologues back again which is stupid. I only want them once. Let's just do it in a separate stinking query.
-  ;;then we simply glom the results into the same result pile but leave blanks?
-  ;;or do we do them in a different bucket? What are the implications?
-  ;;maybe a separate tbody but same table and a separate data structure for the results, but include it IN the heatmap, ontology diagram, and enrichment. Ok. I think that makes sense. Suckbunnies.
-  "")
+(defn original-gene-query-text [identifiers evidence-codes]
+  ;;ok so I can't for the life of me find a neat way to return all of the annotations for the input gene in the orginal query without adding an ugly constraint and getting all of the orthologues back again. So we query it separately.
+  (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and E and F and A\" name=\"intermod_go\" >
+  <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
+  <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
+  <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
+  <constraint path=\"Gene\" code=\"A\" op=\"LOOKUP\" value=\"" identifiers "\" extraValue=\"H. sapiens\"/>
+
+  <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
+</query>"))
+
+(defn original-gene-query
+  "Get the results of GO term query for specified symbol/identifier"
+  [identifiers]
+  (let [service (get-service :human)
+        evidence-codes (re-frame/subscribe [:active-evidence-codes])
+        evidence-code-constraint-values (create-constraint-values @evidence-codes)
+        query (original-gene-query-text identifiers evidence-code-constraint-values)]
+    (re-frame/dispatch [:save-query query :human]);;todo this line will overwrite the other human query.
+    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+       {:with-credentials? false
+        :keywordize-keys? true
+        :form-params
+        {:query query
+         :format "json"}}))]
+            (js->clj (-> response :body))
+))))
 
 (defn go-query
   "Get the results of GO term query for specified symbol/identifier"
@@ -109,7 +130,10 @@
   (let [output-organisms (re-frame/subscribe [:checked-organisms])]
     (doall (map (fn [[output-organism vals] stuff]
       ;;query for it
-      (go (let [res(<! (go-query input-organism identifiers output-organism))]
+      (go (let [res (<! (go-query input-organism identifiers output-organism))]
+      (cond (= output-organism :human)
+
+         (re-frame/dispatch [:concat-original-genes (<! (original-gene-query  identifiers ))]))
         (re-frame/dispatch [:concat-results res output-organism])
 ))) @output-organisms))))
 
@@ -123,8 +147,8 @@
   ;(.log js/console (clj->js source) (clj->js input))
   (go (let [root (.-root (get-service source))
             response (<! (http/post (str "http://" root "/service/ids")
-                                    {:with-credentials? false
-                                     :json-params (clj->js input)}))]
+                            {:with-credentials? false
+                              :json-params (clj->js input)}))]
         (if-let [uid (-> response :body :uid)]
           (loop []
             (let [status-response (<! (http/get (str "http://" root "/service/ids/" uid "/status")
@@ -152,20 +176,18 @@
           :extra (utils/get-abbrev source)}))]
     (-> res :body :results))))
 
-    (defn enrichment
-      "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
-      [ {{:keys [root token]} :service} {:keys [ids widget maxp correction filter]}]
-      (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
-       {:with-credentials? false
-        :keywordize-keys? true
-        :form-params (merge
-                       {:widget widget
-                        :maxp maxp
-                        :filter filter
-                        :format "json"
-                        :correction correction}
-                        {:ids (clojure.string/join "," ids)}
-
-
-            )}))]
-            (-> response :body))))
+(defn enrichment
+  "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
+  [ {{:keys [root token]} :service} {:keys [ids widget maxp correction filter]}]
+  (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
+   {:with-credentials? false
+    :keywordize-keys? true
+    :form-params (merge
+     {:widget widget
+      :maxp maxp
+      :filter filter
+      :format "json"
+      :correction correction}
+      {:ids (clojure.string/join "," ids)}
+  )}))]
+(-> response :body))))

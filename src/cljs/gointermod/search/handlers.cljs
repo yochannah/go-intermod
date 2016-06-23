@@ -83,6 +83,33 @@
      }
   ) results))
 
+  (defn original-resultset-to-map [results]
+    "translate that silly vector of results into a map with meaninful keys"
+    (let [na "N/A"] ;;hey jude
+    (map (fn [result]
+      {;:results result
+        :ortho-db-id na
+        :ortho-symbol na
+        :ortho-secondary-id na
+        :ortho-primary-id na
+        :ortho-organism na
+        :original-db-id (get result 0)
+        :original-symbol (get result 1)
+        :original-secondary-id (get result 2)
+        :original-primary-id (get result 3)
+        :original-organism (get result 4)
+        :go-id (get result 7)
+        :go-term (get result 8)
+        :ontology-branch (get result 9)
+        :data-set-name (str na " - original input gene")
+        :data-set-url na
+        :parent-go-term na
+        :parent-go-id na
+        :display-ortholog-id (utils/get-id result :original-gene-set)
+        :display-original-id (utils/get-id result :original-gene-set)
+       }
+    ) results)))
+
 (defn result-status [search-results mapped-results]
   (if (:error search-results)
     ;;return the error details if there are some
@@ -114,12 +141,31 @@
  :concat-results
  (fn [db [_ search-results source]]
    (let [mapped-results (resultset-to-map (:results search-results))
-         status (result-status search-results mapped-results)]
+         status (result-status search-results mapped-results)
+         aggregate (aggregate-by-orthologue mapped-results)]
+  ;   (.log js/console "%caggregate %s" "color:firebrick;font-weight:bold;" (clj->js source)(clj->js aggregate))
    (->
-    (assoc-in db [:multi-mine-results source] mapped-results)
+    (update-in db [:multi-mine-results source] concat mapped-results)
     (assoc-in [:organisms source :status] status)
-    (assoc-in [:multi-mine-aggregate source] (aggregate-by-orthologue mapped-results))))
+    (update-in [:multi-mine-aggregate source] concat aggregate)))
 ))
+
+(re-frame/register-handler
+ :concat-original-genes
+ (fn [db [_ search-results]]
+    (let [mapped-results (original-resultset-to-map (:results search-results))
+          status (result-status search-results mapped-results)
+          aggregate (aggregate-by-orthologue mapped-results)]
+      (.log js/console "%cstatus" "color:goldenrod;font-weight:bold;" (clj->js mapped-results) (clj->js search-results) (clj->js aggregate))
+  ;  (->
+  ;   (assoc-in db [:multi-mine-results :human-original] mapped-results)
+  ;   ;(assoc-in [:organisms source :status] status)
+      (update-in db [:multi-mine-aggregate :human] concat aggregate)
+      ;))
+      )
+))
+
+
 
 (defn search-token-fixer-upper "accept any separator, so long as it's newling, tab, space, or comma. Yeast will need special treatment."
   [term]
