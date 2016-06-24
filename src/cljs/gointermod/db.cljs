@@ -51,10 +51,10 @@
       :status {:status :na}
       :mine
        {:name "MouseMine"
-      ;  :url "www.mousemine.org/mousemine"
-      ;  :service {:root "www.mousemine.org/mousemine"}}}
-       :url "beta.mousemine.org/mousemine"
-       :service {:root "beta.mousemine.org/mousemine"}}}
+        :url "www.mousemine.org/mousemine"
+        :service {:root "www.mousemine.org/mousemine"}}}
+      ; :url "beta.mousemine.org/mousemine"
+      ; :service {:root "beta.mousemine.org/mousemine"}}}
     :rat
      {:id     :rat
       :common "Rat"
@@ -63,10 +63,10 @@
       :status {:status :na}
       :mine
        {:name "RatMine"
-       :url "dev.ratmine.mcw.edu/ratmine"
-       :service {:root "dev.ratmine.mcw.edu/ratmine"}}}
-      ;  :url "ratmine.mcw.edu/ratmine"
-      ;  :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
+      ; :url "dev.ratmine.mcw.edu/ratmine"
+      ; :service {:root "dev.ratmine.mcw.edu/ratmine"}}}
+        :url "ratmine.mcw.edu/ratmine"
+        :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
     :zebrafish
      {:id     :zebrafish
       :common "Zebrafish"

@@ -5,6 +5,8 @@
           [re-frame.core :as re-frame]
           [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
+;; THIS WHOLE FILE COULD REALLY USE SOME REFACTORING
+
 (defn get-service [source]
 (let [mines (re-frame/subscribe [:organisms])
         service (:service (:mine (source @mines)))]
@@ -22,7 +24,6 @@
 (defn ontology-query
   "Get the results of GO term query for specified symbol/identifier"
   [organism identifiers]
-;  (.log js/console "%cgo-query. Input %s, output %s" (clj->js input-organism) (clj->js output-organism) output-organism)
   (let [service (get-service organism)
         ids (create-constraint-values identifiers)
         query (make-ontology-query ids)]
@@ -40,7 +41,6 @@
     (let [organisms (re-frame/subscribe [:organisms])]
     (doall (map (fn [[organism vals]]
       (cond (> (count vals) 0)
-      ;(.log js/console "YERP" (clj->js organism) (clj->js vals))
         ;;query for it
         (go (let [res(<! (ontology-query organism vals))]
           (re-frame/dispatch [:concat-ontology-results res organism])))
@@ -87,7 +87,6 @@
   <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
   <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
   <constraint path=\"Gene\" code=\"A\" op=\"LOOKUP\" value=\"" identifiers "\" extraValue=\"H. sapiens\"/>
-
   <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
 </query>"))
 

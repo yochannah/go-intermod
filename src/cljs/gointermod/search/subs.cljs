@@ -49,3 +49,8 @@
   :search-term
   (fn [db]
     (reaction (:search-term @db))))
+
+(re-frame/register-sub
+ :human-orthologs-of-other-input-organism
+ (fn [db]
+   (reaction (:human-orthologs-of-other-input-organism @db))))

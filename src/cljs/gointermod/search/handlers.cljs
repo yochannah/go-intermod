@@ -85,7 +85,8 @@
 
   (defn original-resultset-to-map [results]
     "translate that silly vector of results into a map with meaninful keys"
-    (let [na "N/A"] ;;hey jude
+    (let [na "N/A" ;;hey jude
+          original-datasource (re-frame/subscribe [:human-orthologs-of-other-input-organism])]
     (map (fn [result]
       {;:results result
         :ortho-db-id na
@@ -101,7 +102,7 @@
         :go-id (get result 7)
         :go-term (get result 8)
         :ontology-branch (get result 9)
-        :data-set-name (str na " - original input gene")
+        :data-set-name (get @original-datasource (get result 1) (str na " - original input gene"))
         :data-set-url na
         :parent-go-term na
         :parent-go-id na
@@ -176,6 +177,27 @@
      "\t" ","
 }))
 
+(defn handle-human-orthologues-for-nonhuman-query [results db]
+  (if results
+    (let [results-map (reduce (fn [new-map [k v]] (assoc new-map k v)) {} results)]
+    ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
+      (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results-map))
+      (re-frame/dispatch [:human-orthologs-of-other-input-organism results-map])
+      (comms/query-all-selected-organisms (:selected-organism db)
+          ;;every even result is an ID, every odd is the data type
+         (clojure.string/join "," (keys results-map)))
+      )
+    ;;so this is what happens when we had an error trying to retrieve orthologues.
+    (re-frame/dispatch [:error-loading-human-orthologs])))
+
+    (re-frame/register-handler
+      ;;What do we do when a search button is pressed? This.
+      :human-orthologs-of-other-input-organism
+(fn [db [_ orthologs]]
+  (.log js/console "%corthologs" "color:hotpink;font-weight:bold;" (clj->js orthologs))
+  (assoc db :human-orthologs-of-other-input-organism orthologs)
+  ))
+
 (re-frame/register-handler
   ;;What do we do when a search button is pressed? This.
   :perform-search
@@ -191,15 +213,11 @@
         ; identifiers to their human orthologues, then do the above query
         (go (let [response (<! (comms/get-human-orthologs search-terms input-org))
                   results (:results response)]
-          (if results
-            ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
-            (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (flatten results)))
-            ;;so this is what happens when we had an error trying to retrieve orthologues.
-            (re-frame/dispatch [:error-loading-human-orthologs]))
+          (handle-human-orthologues-for-nonhuman-query results db)
          ))
         )
     (re-frame/dispatch [:initialised])
-    (dissoc db :multi-mine-results :enrichment :multi-mine-aggregate :go-terms :go-ontology))))
+    (dissoc db :multi-mine-results :enrichment :multi-mine-aggregate :go-terms :go-ontology :human-orthologs-of-other-input-organism))))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism

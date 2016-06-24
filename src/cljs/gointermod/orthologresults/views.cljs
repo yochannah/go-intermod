@@ -29,7 +29,7 @@
      (map (fn [[organism organism-details] organisms]
        (cond (seq organism-details)
           (doall (map (fn [[ortholog ortholog-details] organism-details]
-            ^{:key (str organism ortholog)}
+            ^{:key (str organism ortholog (gensym))}
             [:tr {:class (clj->js organism)}
               [:td
                 [:input
