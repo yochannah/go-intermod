@@ -27,3 +27,9 @@
  (fn [db]
    (reaction (count-orthologs (:multi-mine-aggregate @db)))
 ))
+
+(re-frame/register-sub
+ :heatmap-expansion
+ (fn [db]
+   (reaction (:heatmap-expansion @db))
+))

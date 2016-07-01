@@ -130,4 +130,5 @@
     ]
    :expand-evidence-codes? false
    :ontology-graph-max-limit 150
+   :heatmap-expansion {}
 })

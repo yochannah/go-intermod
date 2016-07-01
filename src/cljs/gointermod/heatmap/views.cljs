@@ -18,6 +18,7 @@
         active-filter (re-frame/subscribe [:active-filter])
         filters (re-frame/subscribe [:filters])
         filter-info (get @filters @active-filter)]
+;    (.log js/console "%c@expanded" "color:goldenrod;font-weight:bold;" (clj->js @expanded))
   [:thead
    [:tr
     [:th.axis {:col-span 2}
@@ -57,16 +58,38 @@
         organism-id (utils/organism-name-to-id organism-name)
         orthologue-counts (re-frame/subscribe [:ortholog-count])
         org-count (organism-id @orthologue-counts)
-        ortholog (second result)]
+        ortholog (second result)
+        expanded-org (re-frame/subscribe [:heatmap-expansion])
+        is-expanded? (contains? @expanded-org organism-id)
+        is-expanded-but-summary-row? (and is-expanded? (number? ortholog))]
   [:tr {:class organism-id}
-    [:td organism-name]
+   ;;organism name td:
+    [:td
+      ;;output differently depending on the status of the
+      ;;expanded/expandable) row
+      (cond
+        is-expanded-but-summary-row? organism-name
+        is-expanded? [:svg.icon [:use {:xlinkHref "#expanded-row"}]]
+        true organism-name)
+
+     (cond
+        ;;so if it's a number, it's a multi-result row. We want number rows to be expandable.
+      (number? ortholog)
+        [:span
+          (if is-expanded?
+            [:span.expand {:on-click #(re-frame/dispatch [:collapse-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-down"}]]]
+            [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]]
+        )]
+     )
+
+     ]
     (if (number? ortholog)
       ;;handle aggregate result counts
       [:td
         (if (= org-count 1)
           ;;don't say "1 gene", just output the gene itself.
           ortholog
-          [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} org-count " genes " [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]])]
+          [:span org-count " genes " ])]
       ;;if the results aren't aggregate (e.g. the user expanded them) we just output its name
       [:td ortholog]
      )]))

@@ -117,9 +117,13 @@ organism) results)))))
 
 (defn expand-organism-to-ortholog-level
   "helper to expand the data for a specific organism from organism level aggregation to go-term level aggregation.
-  Returns the ortholog-level results for the organism"
+  Returns the ortholog-level results for the organism, as well as a summary row."
   [db organism]
-    (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) false))))
+  (re-frame/dispatch [:heatmap-expansion-status organism true])
+  (let [aggregated (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) true)))
+        non-aggregated (first (vals (aggregate-orthologs (organism (:multi-mine-results db)) false)))]
+
+    (assoc non-aggregated (first (keys aggregated)) (first (vals aggregated)) )))
 
 
 (re-frame/register-handler
@@ -129,11 +133,11 @@ organism) results)))))
     (let [org-count (expand-organism-to-ortholog-level db organism)
           org-name (utils/get-abbrev organism)
           new-db (assoc-in db [:heatmap :aggregate-results org-name] org-count)
-          ;;if we wanted to allow more than one "open" result set, we'd simply assoc this too.
+          ;;if we wanted to allow more than one "open" result set, we'd simply assoc this too. See also the heatmap-expansion-status handler
           new-aggregate (:aggregate-results (:heatmap new-db))
           go-terms (:headers (:heatmap db))
           max-count (get-ortholog-count-max new-aggregate)]
-    ;  (.log js/console "%chi" "color:hotpink;font-weight:bold;" (clj->js org-count))
+;      (.log js/console "%chi" "color:hotpink;font-weight:bold;" (clj->js org-count))
     (->
       (assoc-in db [:heatmap :rows] (build-result-matrix go-terms new-aggregate))
       (assoc-in [:heatmap :max-count] max-count)
@@ -148,3 +152,21 @@ organism) results)))))
      ;;csv export results are expanded because they can't be interactive with expand-on-click like the webapp results can be! :)
       (assoc :heatmap-csv (extract-results (:multi-mine-results db) false)))
     ))
+
+(re-frame/register-handler
+ ;;convert one organism's result set to the expanded view. No more than one due to performance.
+  :heatmap-expansion-status
+ (fn [db [_ organism expanded?]]
+   ;;this automatically de-expands all the others.
+   (assoc-in db [:heatmap-expansion] {organism expanded?})
+   ;;this would just modify the specified one:
+   ;;(assoc-in db [:heatmap-expansion organism] expanded?)
+))
+
+(re-frame/register-handler
+ :collapse-heatmap
+ (fn [db [_ organism]];;doesn't use the arg right now.
+   ;;oh me, you're so lazy. refactor to just modify the organism section
+   ;;if performance is poor.
+   (re-frame/dispatch [:aggregate-heatmap-results])
+   (assoc db :heatmap-expansion {})))
