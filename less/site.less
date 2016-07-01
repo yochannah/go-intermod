@@ -590,7 +590,7 @@ textarea {
     min-width: 7.5em;
     float: left;
   }
-  .ortholog {
+  div.ortholog {
     text-align: right;
     float: right;
     margin-right: 8px;
@@ -603,6 +603,8 @@ textarea {
     border-right: solid 1px @bordercolor;
     border-bottom: solid 1px @bordercolor;
     text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
+    svg {float:right}
+    &.ortholog {min-width:100px;}
   }
   .no-orthologs {
     border-right: 0;
@@ -615,6 +617,7 @@ textarea {
   .mouse,
   .yeast,
   .fly {
+    td:nth-child(2) {border-right: 0;}
     td:first-child {
       min-width: 7.5em;
       white-space: nowrap;

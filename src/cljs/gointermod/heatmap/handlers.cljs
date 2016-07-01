@@ -169,4 +169,5 @@ organism) results)))))
    ;;oh me, you're so lazy. refactor to just modify the organism section
    ;;if performance is poor.
    (re-frame/dispatch [:aggregate-heatmap-results])
+   ;;this tells the view not to use the expanded view options
    (assoc db :heatmap-expansion {})))
