@@ -21,7 +21,7 @@
 ;    (.log js/console "%c@expanded" "color:goldenrod;font-weight:bold;" (clj->js @expanded))
   [:thead
    [:tr
-    [:th.axis {:col-span 3}
+    [:th.axis {:col-span 2}
       [:div
         [:h3
           [:svg.icon [:use {:xlinkHref (:icon filter-info)}]] " "
@@ -67,29 +67,31 @@
     [:td
       ;;output differently depending on the status of the
       ;;expanded/expandable) row
-      (if
+      (cond
         is-expanded-but-summary-row? organism-name
-        organism-name)
-     ]
-      (if
+        is-expanded? [:svg.icon [:use {:xlinkHref "#expanded-row"}]]
+        true organism-name)
+
+     (cond
         ;;so if it's a number, it's a multi-result row. We want number rows to be expandable.
       (number? ortholog)
-        [:td
+        [:span
           (if is-expanded?
             [:span.expand {:on-click #(re-frame/dispatch [:collapse-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-down"}]]]
             [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]]
         )]
-        [:td]
      )
+
+     ]
     (if (number? ortholog)
       ;;handle aggregate result counts
-      [:td.ortholog
+      [:td
         (if (= org-count 1)
           ;;don't say "1 gene", just output the gene itself.
           ortholog
           [:span org-count " genes " ])]
       ;;if the results aren't aggregate (e.g. the user expanded them) we just output its name
-      [:td.ortholog ortholog]
+      [:td ortholog]
      )]))
 
 (defn make-cell-title
