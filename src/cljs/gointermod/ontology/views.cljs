@@ -184,6 +184,7 @@
 (defn ontology []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
   (let [tree (re-frame/subscribe [:go-ontology-tree])
+        max-nodes (re-frame/subscribe [:ontology-graph-max-limit])
         nodes (re-frame/subscribe [:go-ontology-nodecount])
         loading (re-frame/subscribe [:go-ontology-loading])]
   (fn []
@@ -194,7 +195,7 @@
        ;;show loader if loading data
        [status]
        ;;if data is loaded, show the graph.
-       (if (or (> @nodes 40) (string? @nodes))
+       (if (or (> @nodes @max-nodes) (string? @nodes))
         ;;Dude. No spaghetti here. This graph would be massive.
         [no-spaghetti-graphs-please @nodes]
         ;;ok it's a small graph. Let's render.

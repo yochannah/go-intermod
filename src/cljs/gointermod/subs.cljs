@@ -74,3 +74,8 @@
  :mine-result-counts
  (fn [db]
    (reaction (get-result-counts @db))))
+
+(re-frame/register-sub
+ :ontology-graph-max-limit
+(fn [db]
+  (reaction (:ontology-graph-max-limit @db))))

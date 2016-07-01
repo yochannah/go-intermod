@@ -127,7 +127,7 @@
  (fn [db [_ _]]
     (let [go-terms-by-filter (get-count-of-go-terms-by-filter db)
           go-termed-db (get-all-go-terms-by-organism db)]
-      (if (< go-terms-by-filter 40)
+      (if (< go-terms-by-filter (:ontology-graph-max-limit db))
         (query-for-go-tree go-termed-db)
         (handle-large-result go-termed-db go-terms-by-filter)
       )

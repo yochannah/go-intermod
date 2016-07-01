@@ -85,8 +85,10 @@
       :status {:status :na}
       :mine
        {:name "WormMine"
-        :url "im-251.wormbase.org/tools/wormmine"
-        :service {:root "im-251.wormbase.org/tools/wormmine"}}}
+  ;     :url "im-251.wormbase.org/tools/wormmine"
+  ;     :service {:root "im-251.wormbase.org/tools/wormmine"}}}
+       :url "intermine.wormbase.org/tools/wormmine"
+       :service {:root "intermine.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
       :output? true
@@ -127,4 +129,5 @@
     {:name "Inferred from Electronic Annotation (IEA)" :checked false :code "IEA"}
     ]
    :expand-evidence-codes? false
+   :ontology-graph-max-limit 150
 })
