@@ -151,11 +151,14 @@
   [:div.enrichment
     [:header
       [:h2 "Enrichment"]
-      [:a.download
+      [:div.download
+       [:h3 "TSV Downloads: "]
+       [:a.download
        {:on-click #(re-frame/dispatch [:download-enrichment])}
-   [:svg.icon [:use {:xlinkHref "#icon-download"}]]
-   "Download data as TSV" ]
-     ]
+        [:svg.icon [:use {:xlinkHref "#icon-download"}]]
+        "Just enrichment"]
+       [exportcsv/all-term-button]
+    ]]
     [:div.settings
       [test-correction-filter]
       [max-p-filter]

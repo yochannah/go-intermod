@@ -8,8 +8,10 @@
 @searchtextcolor: @maintextcolor;
 @searchbackgroundcolor: #EEE;
 @somecolor: #607D8B;
+@sometextcolor: @ctatextcolor;
 @tablestripecolor: #eaeaea;
 @highlightcolor: #FFFDE7;
+@footercolor: #444;
 //Colours for the types:
 @zebracolor: #FF5722;
 @yeastcolor: #FFC107;
@@ -37,13 +39,13 @@ h6 {
   }
 }
 footer {
-  background: #444;
+  background: @footercolor;
   padding: 1em;
   box-shadow: inset 0 3px 9px rgba(0,0,0,0.6);
   a,
   a:visited {
     font-weight: normal;
-    color: #fff;
+    color: @ctatextcolor;
   }
   a:hover {
     color: @highlightcolor;
@@ -84,7 +86,7 @@ a {
   align-items: center;
   &> div {
     margin-top: @spacer;
-    background: #fff;
+    background: @ctatextcolor;
     border-radius: 2px;
     box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.3);
     text-align: center;
@@ -302,14 +304,14 @@ nav {
       &.active {
         transition: all 1s;
         background-color: @somecolor;
-        color: #fff;
+        color: @sometextcolor;
         &:hover {
           background-color: @somecolor;
-          color: #fff;
+          color: @sometextcolor;
         }
         border-left: solid 3px darken(@somecolor,15%);
         svg {
-          fill: #fff;
+          fill: @sometextcolor;
         }
       }
       svg {
@@ -363,12 +365,20 @@ textarea {
     float: left;
   }
   .download {
-    float: left;
-    clear: right;
-    line-height: 36px;
-    margin-left: 1em;
-    svg {
-      margin-top: @spacer/2;
+    float:right;
+    h3,
+    a {
+      float: left;
+      clear: right;
+      line-height: 1.8em;
+      margin: 0 0 0 @spacer*1.2;
+      svg {
+        margin-top: (@spacer/2 + 0em);
+        margin-right: 0.2em;
+      }
+    }
+    a {
+      line-height: 2.2em;
     }
   }
 }
@@ -492,7 +502,9 @@ textarea {
           flex-direction: column;
         }
       }
-      a.change-codes {font-weight:normal}
+      a.change-codes {
+        font-weight: normal;
+      }
     }
     .evidence-mini {
       flex-grow: 1;
@@ -534,6 +546,7 @@ textarea {
   }
 }
 .heatmap {
+  .download {float:left}
   h3 {
     line-height: 1.2em;
     vertical-align: middle;
@@ -585,7 +598,9 @@ textarea {
       }
     }
   }
-  .expand {cursor:pointer}
+  .expand {
+    cursor: pointer;
+  }
   .species,
   .ortholog {
     min-width: 7.5em;
@@ -604,8 +619,12 @@ textarea {
     border-right: solid 1px @bordercolor;
     border-bottom: solid 1px @bordercolor;
     text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
-    svg {float:right}
-    &.ortholog {min-width:100px;}
+    svg {
+      float: right;
+    }
+    &.ortholog {
+      min-width: 100px;
+    }
   }
   .no-orthologs {
     border-right: 0;
@@ -618,7 +637,9 @@ textarea {
   .mouse,
   .yeast,
   .fly {
-    td:nth-child(2) {border-right: 0;}
+    td:nth-child(2) {
+      border-right: 0;
+    }
     td:first-child {
       min-width: 7.5em;
       white-space: nowrap;
@@ -793,8 +814,11 @@ textarea {
 }
 ////////debug, kiddos:
 .status {
-.success, .error {    font-size: 75%;
-}  &:hover {
+  .success,
+  .error {
+    font-size: 75%;
+  }
+  &:hover {
     cursor: pointer;
   }
   .success {
@@ -858,7 +882,9 @@ textarea {
       display: inline;
       margin: 0 @spacer/2 0 0;
     }
-    h4 {margin-bottom:@spacer}
+    h4 {
+      margin-bottom: @spacer;
+    }
     .organism-border-color(0);
   }
   //also for the modal
