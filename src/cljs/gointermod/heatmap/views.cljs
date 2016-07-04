@@ -139,9 +139,9 @@
   []
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate-csv])
         go-terms (:headers @heatmap)
-        headers (str "Organism,Ortholog," (clojure.string/join "," go-terms) "\n")]
+        headers (str "Organism" exportcsv/export-token "Ortholog" exportcsv/export-token (clojure.string/join exportcsv/export-token go-terms) "\n")]
     (reduce (fn [csv-str result]
-      (str csv-str (clojure.string/join "," result) "\n" )
+      (str csv-str (clojure.string/join exportcsv/export-token result) "\n" )
 ) headers (:rows @heatmap))))
 
 (defn heatmap []

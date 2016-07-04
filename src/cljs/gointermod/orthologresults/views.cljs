@@ -42,7 +42,7 @@
               [:td.bio (get ortholog-details "biological_process" 0)]
               [:td.molecular (get ortholog-details "molecular_function" 0)]
               [:td.cellular (get ortholog-details "cellular_component" 0)]
-              [:td.dataset (clojure.string/join ", " (:dataset ortholog-details))]
+              [:td.dataset (clojure.string/join exportcsv/export-token (:dataset ortholog-details))]
             ]) organism-details)))
 ) @results))))
 
@@ -60,20 +60,20 @@
   "returns results of the graph in csv string format for download"
   []
   (let [results (re-frame/subscribe [:aggregate-results])
-        headers (str "Organism,Original Gene,Ortholog,Biological process, Molecular function,Cellular component, Datasources\n")]
+        headers (clojure.string/join exportcsv/export-token ["Organism" "Original Gene""Ortholog""Biological process""Molecular function""Cellular component""Datasources\n"])]
     (str headers
     (reduce (fn [outer-str [organism organism-details] organisms]
       (str outer-str
         (reduce (fn [inner-str [ortholog ortholog-details] organism-details]
           (str inner-str
-               (utils/get-abbrev organism) ","
-               (:original-id ortholog-details) ","
-               (clj->js ortholog) ","
-               (get ortholog-details "biological_process" 0) ","
-               (get ortholog-details "molecular_function" 0) ","
-               (get ortholog-details "cellular_component" 0) ","
+               (utils/get-abbrev organism) exportcsv/export-token
+               (:original-id ortholog-details) exportcsv/export-token
+               (clj->js ortholog) exportcsv/export-token
+               (get ortholog-details "biological_process" 0) exportcsv/export-token
+               (get ortholog-details "molecular_function" 0) exportcsv/export-token
+               (get ortholog-details "cellular_component" 0) exportcsv/export-token
                "\""
-               (clojure.string/join ", " (:dataset ortholog-details))
+               (clojure.string/join " | " (:dataset ortholog-details))
                "\"" "\n")
         ) "" organism-details))
     ) "" @results)

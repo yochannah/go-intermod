@@ -81,12 +81,14 @@
    (defn result-to-csv-rows "helper for csv-body. converts a single organism's results to a set of csv rows" [organism results]
        (if results
          ;;return each result formatted nicely if there are results
-         (reduce (fn [new-str result] (str
-           new-str organism ","
-           (:matches result) ","
-           (:identifier result) ","
-           (:description result) ","
-           (:p-value result) "\n")
+          (reduce (fn [new-str result]
+            (str
+              new-str (clojure.string/join exportcsv/export-token
+                [organism
+                (:matches result)
+                (:identifier result)
+                (:description result)
+                (:p-value result)]) "\n" )
          ) "" results)
          ;;this means we have no results....
          "")
@@ -95,7 +97,7 @@
    (defn csv-body
      "output graph as summary of all enrichments across all organisms."
      [enrichment]
-     (let [headers "Organism,Matches,GO ID, GO Term,P-Value\n"]
+     (let [headers (clojure.string/join exportcsv/export-token ["Organism""Matches""GO ID""GO Term""P-Value\n"])]
        (str headers
          (reduce (fn [new-str [id organism]]
            (str new-str (result-to-csv-rows (utils/get-abbrev id) (:results organism)))

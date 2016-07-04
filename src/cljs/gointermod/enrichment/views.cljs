@@ -154,7 +154,7 @@
       [:a.download
        {:on-click #(re-frame/dispatch [:download-enrichment])}
    [:svg.icon [:use {:xlinkHref "#icon-download"}]]
-   "Download data as CSV" ]
+   "Download data as TSV" ]
      ]
     [:div.settings
       [test-correction-filter]

@@ -15,4 +15,6 @@
         (.open js/window (encode-data csv-data))
       )}
   [:svg.icon [:use {:xlinkHref "#icon-download"}]]
-  "Download data as CSV" ])
+  "Download data as TSV" ])
+
+(def export-token  "\t")
