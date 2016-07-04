@@ -72,7 +72,7 @@
         is-expanded? [:svg.icon [:use {:xlinkHref "#expanded-row"}]]
         true organism-name)
 
-     (cond
+      (if
         ;;so if it's a number, it's a multi-result row. We want number rows to be expandable.
       (number? ortholog)
         [:span

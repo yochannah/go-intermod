@@ -26,18 +26,17 @@
         :on-click (fn [e]
           (.stopPropagation js/e)
           (re-frame/dispatch [:active-modal nil]))} "×"]
+    [:a.view-query { :href (build-url organism)
+          :target "_blank"}
+      [:svg.icon [:use {:xlinkHref "#icon-external"}]]
+           "View this query in " (:name (:mine organism))]
     (if (:query organism)
       ;;show the query if there is one
       [:pre (:query organism)]
       ;;Else tell them it wasn't searched
       [:p "This organism wasn't selected as an output species so no query was performed."]
     )
-   [:a
-    {:href (build-url organism)
-     :target "_blank"}
-    [:svg.icon [:use {:xlinkHref "#icon-external"}]]
-    "View this query in " (:name (:mine organism))
-    ]]]
+   ]]
   )
 
 (defn prep-status-details

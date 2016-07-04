@@ -81,20 +81,19 @@
         [organism-output-selector]]
       [:div.filter
         [:h4 "Evidence codes"]
-        [:h5 "Showing: "
-        [:a
-        {:href "#"
-         :on-click
-          (fn [e]
-            (.preventDefault js/e)
-            (re-frame/dispatch [:toggle-evidence-codes]))}
-            (if @expand-codes?
-              "(Shrink codes)"
-              "(Change codes)")]]
+        [:h5 "Showing: "]
           (if @expand-codes?
             [evidence-code-filters-expanded]
             [evidence-code-filters-mini])
-       ]]))
+            [:a.change-codes
+            {:href "#"
+             :on-click
+              (fn [e]
+                (.preventDefault js/e)
+                (re-frame/dispatch [:toggle-evidence-codes]))}
+                (if @expand-codes?
+                  "(Shrink codes)"
+                  "(Change codes)")]]]))
 
 
 (defn search []
