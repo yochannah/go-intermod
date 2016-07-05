@@ -54,3 +54,8 @@
  :human-orthologs-of-other-input-organism
  (fn [db]
    (reaction (:human-orthologs-of-other-input-organism @db))))
+
+(re-frame/register-sub
+  :mapped-resolved-ids
+  (fn [db]
+    (reaction (:mapped-resolved-ids @db))))

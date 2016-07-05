@@ -57,6 +57,15 @@
       {} search-results)
 )
 
+(defn lookup-original-input-identifier [identifier result]
+  (let [id-map (re-frame/subscribe [:mapped-resolved-ids])
+        input-identifier (get @id-map identifier)]
+  (if input-identifier
+    input-identifier
+    (utils/get-id result :original)
+    )
+))
+
 (defn resultset-to-map [results]
   "translate that silly vector of results into a map with meaninful keys"
   (map (fn [result]
@@ -77,7 +86,7 @@
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :display-ortholog-id (utils/get-id result :ortholog)
-      :display-original-id (utils/get-id result :original)
+      :display-original-id (lookup-original-input-identifier (get result 7) result)
      }
   ) results))
 
@@ -102,8 +111,8 @@
         :ontology-branch (get result 9)
         :data-set-name (get @original-datasource (get result 1) (str na " - original input gene"))
         :data-set-url na
-        :display-ortholog-id (utils/get-id result :original-gene-set)
-        :display-original-id (utils/get-id result :original-gene-set)
+        :display-ortholog-id (lookup-original-input-identifier (get result 7) result)
+        :display-original-id (lookup-original-input-identifier (get result 7) result)
        }
     ) results)))
 
@@ -164,7 +173,7 @@
 
 
 
-(defn search-token-fixer-upper "accept any separator, so long as it's newling, tab, space, or comma. Yeast will need special treatment."
+(defn search-token-fixer-upper "accept any separator, so long as it's newline, tab, space, or comma. Yeast will need special treatment."
   [term]
   (clojure.string/escape term
     {"\n" ","
@@ -194,17 +203,45 @@
   (assoc db :human-orthologs-of-other-input-organism orthologs)
   ))
 
+(defn resolve-id-map [resolved-ids]
+  (cond (some? (:unresolved resolved-ids))
+    (.debug js/console "%cUnresolved-ids" "background-color:#333;color:hotpink;font-weight:bold;" (clj->js (:unresolved resolved-ids))))
+
+  (reduce (fn [new-map entry]
+    (assoc new-map
+      (:primaryIdentifier (:summary entry))
+      (keyword (first (:input entry)))
+    )) {} (:MATCH (:matches resolved-ids))))
+
+(re-frame/register-handler
+  :save-mapped-resolved-ids
+  (fn [db [_ ids]]
+    (assoc db :mapped-resolved-ids ids)
+))
+
 (re-frame/register-handler
   ;;What do we do when a search button is pressed? This.
   :perform-search
   (fn [db [_ _]]
     ;;if the input genes aren't human, we'll need to resolve them to their human orthologues.
     (let [input-org (:selected-organism db)
-          search-terms (search-token-fixer-upper (:search-term db))]
+          search-terms (search-token-fixer-upper (:search-term db))
+          search-terms-vec (clojure.string/split search-terms ",")]
       (if (= input-org :human)
+
+        ;;;;;;;;;;EXPERIMENTAL ZONE
+        (go (let [resolved-ids (<! (comms/resolve-id :human search-terms-vec))
+                  mapped-resolved-ids (resolve-id-map resolved-ids)]
+
+              (re-frame/dispatch [:save-mapped-resolved-ids mapped-resolved-ids])
         ;if the input organism is human, go straight to the remote organism mines with the main query.
         ;asynchronously query all dem mines and add the results to the db
-        (go (comms/query-all-selected-organisms (:selected-organism db) search-terms))
+            (go (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (keys mapped-resolved-ids)))))
+
+        )
+
+        ;;;;;;;
+
         ; if the input organism is not human, first we have to resolve the
         ; identifiers to their human orthologues, then do the above query
         (go (let [response (<! (comms/get-human-orthologs search-terms input-org))

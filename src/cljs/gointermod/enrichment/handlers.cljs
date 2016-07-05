@@ -13,11 +13,10 @@
 
 
 (defn get-ids [organism]
-  (.log js/console "%corganism" "color:hotpink;font-weight:bold;" (clj->js organism) organism)
   (let [results (re-frame/subscribe [:multi-mine-results])
         active-filter (re-frame/subscribe [:active-filter])
         this-resultset (organism @results)]
-    (filter number? ;exludes n/a and blank string results
+    (filter number? ;excludes n/a and blank string results
       (distinct (reduce (fn [new-vec result]
         (conj new-vec (:ortho-db-id result)
           ;add original genes if this is a human query.
