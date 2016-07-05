@@ -11,8 +11,7 @@
 @sometextcolor: @ctatextcolor;
 @tablestripecolor: #eaeaea;
 @highlightcolor: #FFFDE7;
-@footercolor: #444;
-//Colours for the types:
+@footercolor: #444; //Colours for the types:
 @zebracolor: #FF5722;
 @yeastcolor: #FFC107;
 @humancolor: #8BC34A;
@@ -21,10 +20,10 @@
 @ratcolor: #E91E63;
 @flycolor: #9C27B0;
 body {
-  font-family: 'Roboto',sans-serif;
-  color: @maintextcolor;
-  background: #fafafa;
-  margin: 0;
+    font-family: 'Roboto',sans-serif;
+    color: @maintextcolor;
+    background: #fafafa;
+    margin: 0;
 }
 h1,
 h2,
@@ -32,922 +31,929 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Roboto Slab';
-  font-weight: normal;
-  .icon {
-    opacity: 0.4;
-  }
+    font-family: 'Roboto Slab';
+    font-weight: normal;
+    .icon {
+        opacity: 0.4;
+    }
 }
 footer {
-  background: @footercolor;
-  padding: 1em;
-  box-shadow: inset 0 3px 9px rgba(0,0,0,0.6);
-  a,
-  a:visited {
-    font-weight: normal;
-    color: @ctatextcolor;
-  }
-  a:hover {
-    color: @highlightcolor;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
-  }
-}
-a {
-  cursor: pointer;
-  color: @somecolor;
-  font-weight: bold;
-  &:visited {
-    color: #673AB7;
-  }
-  &:hover {
-    color: @ctabackgroundcolor;
-  }
-}
-.close {
-  cursor: pointer;
-  float: right;
-  background-color: @ctabackgroundcolor;
-  color: @ctatextcolor;
-  width: 1.5*@spacer;
-  box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-  height: 1.5*@spacer;
-  text-align: center;
-  line-height: 1.5*@spacer;
-  position: relative;
-  top: -25px;
-  border-radius: 1.5*@spacer;
-  font-weight: bold;
-  font-size: 1.5em;
-}
-.default {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  &> div {
-    margin-top: @spacer;
-    background: @ctatextcolor;
-    border-radius: 2px;
-    box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.3);
-    text-align: center;
-    p {
-      margin: @spacer 2*@spacer;
-      text-align: left;
-    }
-    img {
-      margin: 2*@spacer;
-    }
-  }
-  h2 {
-    text-align: center;
-  }
-}
-//pretty rainbow line, just cos
-.organism-line {
-  display: flex;
-  width: 100%;
-  padding: 0;
-  div {
-    width: 15%;
-    height: 0;
-    border-bottom: solid 5px @bordercolor;
-  }
-}
-//mixins for general state behaviour
-.hoverstate {
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-  transition: all 0.4s;
-}
-.activestate {
-  box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
-  transition: all 0.1s;
-}
-//oppan table style!
-.table-style {
-  td,
-  th {
-    text-align: center;
-  }
-  td {
-    padding: @spacer/5 @spacer;
-    &.dataset {
-      min-width: 10em;
-    }
-    &.organism {
-      min-width: 6em;
-    }
-    &:first-child {
-      border-left: solid 3px;
-      padding: @spacer/5;
-    }
-  }
-  .zebrafish td:first-child {
-    border-color: @zebracolor;
-  }
-  .yeast td:first-child {
-    border-color: @yeastcolor;
-  }
-  .human td:first-child {
-    border-color: @humancolor;
-  }
-  .worm td:first-child {
-    border-color: @wormcolor;
-  }
-  .mouse td:first-child {
-    border-color: @mousecolor;
-  }
-  .rat td:first-child {
-    border-color: @ratcolor;
-  }
-  .fly td:first-child {
-    border-color: @flycolor;
-  }
-  th {
-    background: @somecolor;
-    color: @ctatextcolor;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-    font-weight: 700;
-    padding: @spacer/2;
-  }
-  tr {
-    &:hover {
-      background: @highlightcolor;
-      td {
-        background: @highlightcolor;
-      }
-    }
-    &:nth-child(even) {
-      background: darken(@tablestripecolor, 2%);
-    }
-  }
-}
-.organism-border-color(@fadeby) {
-  &.zebrafish {
-    border-color: fadeout(@zebracolor, @fadeby);
-  }
-  &.yeast {
-    border-color: fadeout(@yeastcolor, @fadeby);
-  }
-  &.human {
-    border-color: fadeout(@humancolor, @fadeby);
-  }
-  &.worm {
-    border-color: fadeout(@wormcolor, @fadeby);
-  }
-  &.mouse {
-    border-color: fadeout(@mousecolor, @fadeby);
-  }
-  &.rat {
-    border-color: fadeout(@ratcolor, @fadeby);
-  }
-  &.fly {
-    border-color: fadeout(@flycolor, @fadeby);
-  }
-}
-//mixin to make a cute little bar beside mine coloured things.
-.mine-color-pseudo-elements {
-  &:before {
-    content: "";
-    opacity: 0.2;
-    display: block;
-    width: 3px;
-    height: 10px;
-    background: #ddd;
-    margin-top: 4px;
-    margin-right: 0;
-    float: left;
-    border-radius: 5px;
-  }
-  &:hover:before {
-    opacity: 1;
-  }
-  &.zebrafish:before {
-    background-color: @zebracolor;
-  }
-  &.yeast:before {
-    background-color: @yeastcolor;
-  }
-  &.human:before {
-    background-color: @humancolor;
-  }
-  &.worm:before {
-    background-color: @wormcolor;
-  }
-  &.mouse:before {
-    background-color: @mousecolor;
-  }
-  &.rat:before {
-    background-color: @ratcolor;
-  }
-  &.fly:before {
-    background-color: @flycolor;
-  }
-}
-//base stuff
-button {
-  cursor: pointer;
-  padding: @spacer;
-  color: @ctatextcolor;
-  background: @ctabackgroundcolor;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-  font-weight: 700;
-  font-size: 1em;
-  border: 0;
-  border-radius: @border-radius;
-  &:hover {
-    .hoverstate;
-    background: lighten(@ctabackgroundcolor, 15%);
-  }
-  &:active {
-    .activestate;
-    background: darken(@ctabackgroundcolor, 15%);
-  }
-}
-main {
-  display: flex;
-  align-items: flex-start;
-  h2,
-  h4 {
-    margin: 0;
-  }
-}
-nav {
-  margin: @spacer;
-  border-radius: @border-radius;
-  ul {
-    padding: 0;
-  }
-  li {
-    list-style-type: none;
+    background: @footercolor;
+    padding: 1em;
+    box-shadow: inset 0 3px 9px rgba(0,0,0,0.6);
     a,
     a:visited {
-      font-weight: 300;
-      display: block;
-      color: @maintextcolor;
-      text-decoration: none;
-      min-width: 12em;
-      background: @searchbackgroundcolor;
-      padding: @spacer;
-      border-left: solid 3px @searchbackgroundcolor;
-      &:hover {
-        .hoverstate;
-        background: lighten(@searchbackgroundcolor, 5%);
-        color: @maintextcolor;
-        border-left: solid 3px @ctabackgroundcolor;
-      }
-      &:active {
-        .activestate;
-        background: darken(@searchbackgroundcolor, 15%);
-        border-left: solid 3px darken(@ctabackgroundcolor,15%);
-      }
-      &.active {
-        transition: all 1s;
-        background-color: @somecolor;
-        color: @sometextcolor;
-        &:hover {
-          background-color: @somecolor;
-          color: @sometextcolor;
-        }
-        border-left: solid 3px darken(@somecolor,15%);
-        svg {
-          fill: @sometextcolor;
-        }
-      }
-      svg {
-        margin-right: @spacer;
-        color: rgba(0,0,0,0.4);
-      }
-    }
-  }
-}
-select,
-button,
-textarea {
-  box-sizing: border-box;
-  margin: @spacer/2;
-  border-radius: @border-radius;
-}
-select,
-textarea {
-  background-color: #fff;
-  border: solid 1px @bordercolor;
-  padding: @spacer/4;
-}
-.default-shadow {
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-}
-//for the inline svg icons
-.icon {
-  vertical-align: top;
-  margin-top: 1px;
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  fill: currentColor;
-}
-.contentbody {
-  &.startpage {
-    width: 100%;
-    h2 {
-      float: none;
-    }
-  }
-  header:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  margin: @spacer;
-  //  overflow: auto;
-  h2 {
-    margin-bottom: (@spacer/2 + 0.1em);
-    float: left;
-  }
-  .download {
-    float:right;
-    h3,
-    a {
-      float: left;
-      clear: right;
-      line-height: 1.8em;
-      margin: 0 0 0 @spacer*1.2;
-      svg {
-        margin-top: (@spacer/2 + 0em);
-        margin-right: 0.2em;
-      }
-    }
-    a {
-      line-height: 2.2em;
-    }
-  }
-}
-@keyframes pulse {
-  @fadeby: 0;
-  0% {
-    border-color: fadeout(@wormcolor, @fadeby);
-  }
-  15% {
-    border-color: fadeout(@flycolor, @fadeby);
-  }
-  30% {
-    border-color: fadeout(@ratcolor, @fadeby);
-  }
-  45% {
-    border-color: fadeout(@zebracolor, @fadeby);
-  }
-  60% {
-    border-color: fadeout(@yeastcolor, @fadeby);
-  }
-  75% {
-    border-color: fadeout(@humancolor, @fadeby);
-  }
-  90% {
-    border-color: fadeout(@mousecolor, @fadeby);
-  }
-  100% {
-    border-color: fadeout(@wormcolor, @fadeby);
-  }
-}
-//general styles from here on.
-.search {
-  .default-shadow;
-  display: flex;
-  background: @searchbackgroundcolor;
-  color: @searchtextcolor;
-  padding: @spacer;
-  transition: all 0.35s ease-out;
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 0;
-  }
-  &.shrunk {
-    min-height: 1em;
-    max-height: 15em;
-  }
-  &.expanded {
-    min-height: 35em;
-    max-height: 50em;
-    flex-grow: 2;
-    .geneinput {
-      max-width: 30%;
-      flex-direction: column;
-      .searchform,
-      .intro {
-        max-width: 100%;
-      }
-    }
-    .filter.output {
-      flex-grow: 1;
-      max-width: 30%;
-      form {
-        flex-grow: 1;
-        flex-direction: column;
-      }
-    }
-  }
-  .geneinput {
-    display: flex;
-    transition: all 0.35s ease-out;
-    max-width: 40%;
-    textarea {
-      animation-duration: 3s;
-      animation-name: pulse;
-      border: solid 1px @ctabackgroundcolor;
-      border-left: solid 5px @ctabackgroundcolor;
-    }
-  }
-  .intro {
-    max-width: 50%;
-    text-align: justify;
-  }
-  .searchform {
-    flex-grow: 1;
-    max-width: 50%;
-    padding: 0 @spacer;
-    select,
-    button,
-    textarea {
-      width: 100%;
-    }
-  }
-  .filters {
-    padding: 0 @spacer;
-    display: flex;
-    flex-grow: 2;
-    label {
-      display: block;
-      min-width: 9em;
-      flex-grow: 1;
-    }
-    .output {
-      label {
-        .mine-color-pseudo-elements;
-      }
-    }
-    .filter {
-      padding: 0 @spacer;
-      border-left: solid 1px @bordercolor;
-      flex-grow: 4;
-      max-width: 50%;
-      transition-timing-function: ease-out;
-      form {
-        display: flex;
-        flex-wrap: wrap;
-        &.evidence {
-          flex-direction: column;
-        }
-      }
-      a.change-codes {
         font-weight: normal;
-      }
+        color: @ctatextcolor;
     }
-    .evidence-mini {
-      flex-grow: 1;
-      display: flex;
-      flex-wrap: wrap;
-      max-width: 10em;
-      &:after {
-        content: "";
-        display: table;
-        clear: both;
-      }
-      .code {
-        margin: @spacer/10 @spacer/5;
-        &:after {
-          content: ",";
-        }
-        &:last-child:after {
-          content: "";
-        }
-      }
-      h5 {
-        width: 100%;
-        margin: @spacer/10;
-      }
-      a {
-        text-decoration: underline;
-      }
+    a:hover {
+        color: @highlightcolor;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     }
-  }
 }
-.ortholog-results {
-  width: 100%;
-  .count {
-    width: 6em;
-  }
-  .aggregate {
-    width: 100%;
-    .table-style;
-  }
-}
-.heatmap {
-  .download {float:left}
-  h3 {
-    line-height: 1.2em;
-    vertical-align: middle;
-  }
-  .table-style;
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  thead tr:hover {
-    background: inherit;
-  }
-  .axis {
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);
-    min-width: 16em;
-  }
-  th.goterm,
-  th {
-    background: transparent;
-    color: @maintextcolor;
-    text-shadow: none;
-    vertical-align: bottom;
-    font-weight: 300;
-  }
-  th.goterm {
-    white-space: nowrap;
-    height: 12em;
-    z-index: 4;
-    text-align: left;
-    div {
-      //these are magic numbers.
-      transform: translate(1.8em, 0em) rotate(315deg);
-      width: 2.2em;
-      span {
-        height: 100%;
-        display: block;
-        min-width: 18em;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        border-bottom: 1px solid #ccc;
-        padding: 5px 10px;
-        &:hover {
-          overflow: visible;
-          width: 100%;
-          border-bottom: solid 1px @somecolor;
-          background: #fff;
-        }
-      }
-    }
-  }
-  .expand {
+a {
     cursor: pointer;
-  }
-  .species,
-  .ortholog {
-    min-width: 7.5em;
-    float: left;
-  }
-  div.ortholog {
-    text-align: right;
+    color: @somecolor;
+    font-weight: bold;
+    &:visited {
+        color: #673AB7;
+    }
+    &:hover {
+        color: @ctabackgroundcolor;
+    }
+}
+.close {
+    cursor: pointer;
     float: right;
-    margin-right: 8px;
-  }
-  td:nth-child(2) {
-    text-align: right;
-  }
-  td {
-    border: 0;
-    border-right: solid 1px @bordercolor;
-    border-bottom: solid 1px @bordercolor;
-    text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
-    svg {
-      float: right;
-    }
-    &.ortholog {
-      min-width: 100px;
-    }
-  }
-  .no-orthologs {
-    border-right: 0;
-  }
-  //override default table style:
-  .rat,
-  .worm,
-  .human,
-  .zebrafish,
-  .mouse,
-  .yeast,
-  .fly {
-    td:nth-child(2) {
-      border-right: 0;
-    }
-    td:first-child {
-      min-width: 7.5em;
-      white-space: nowrap;
-      border-bottom: solid 1px @bordercolor;
-      border-right: 0;
-    }
-  }
-  tr:nth-child(even) {
-    background: transparent;
-  }
+    background-color: @ctabackgroundcolor;
+    color: @ctatextcolor;
+    width: 1.5*@spacer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    height: 1.5*@spacer;
+    text-align: center;
+    line-height: 1.5*@spacer;
+    position: relative;
+    top: -25px;
+    border-radius: 1.5*@spacer;
+    font-weight: bold;
+    font-size: 1.5em;
 }
-.enrichment {
-  .notsearched {
-    margin: 1em 0;
-    border-left: solid 3px @bordercolor;
-    padding: 1em;
-  }
-  .settings {
-    display: flex;
-    justify-content: space-between;
-    background-color: rgba(0,0,0,0.05);
-    &> div {
-      margin: 0 @spacer*2;
-      line-height: 2.5em;
-    }
-    select {
-      margin-left: @spacer/2;
-    }
-  }
-  h3 {
-    margin: 0 0 @spacer;
-    padding: 0;
-    line-height: 1em;
-  }
-  .organisms {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .organism {
-    .default-shadow;
-    @bg: rgba(255, 255, 255, 1);
-    transition: 2s all;
-    background: @bg;
-    min-width: 400px;
-    flex-grow: 2;
-    max-height: 300px;
-    overflow: auto;
-    padding: @spacer;
-    margin: @spacer/2;
-    &.success {
-      max-width: 100%;
-    }
-    &.loading {
-      max-width: 400px;
-      background: darken(@bg,4%);
-    }
-    &.error {
-      margin: @spacer/2;
-      background-color: darken(@bg,8%);
-      flex-grow: 1;
-      order: 7;
-      .error {
-        max-width: 400px;
-      }
-      pre {
-        display: inline;
-        white-space: pre-wrap;
-      }
-      .icon {
-        color: rgba(0,0,0,0.25);
-        margin-right: @spacer/2;
-      }
-      .organism-border-color(70%);
-    }
-    border-left: solid 3px;
-    .matches {
-      min-width: 3em;
-      text-align: right;
-      display: block;
-      float: left;
-      clear: both;
-    }
-    .description {
-      text-align: left;
-    }
-    @fadeby: 0;
-    &.zebrafish {
-      order: 2;
-      border-color: fadeout(@zebracolor, @fadeby);
-    }
-    &.yeast {
-      order: 3;
-      border-color: fadeout(@yeastcolor, @fadeby);
-    }
-    &.human {
-      order: 1;
-      border-color: fadeout(@humancolor, @fadeby);
-    }
-    &.worm {
-      border-color: fadeout(@wormcolor, @fadeby);
-      order: 7;
-    }
-    &.mouse {
-      order: 5;
-      border-color: fadeout(@mousecolor, @fadeby);
-    }
-    &.rat {
-      order: 4;
-      border-color: fadeout(@ratcolor, @fadeby);
-    }
-    &.fly {
-      order: 6;
-      border-color: fadeout(@flycolor, @fadeby);
-    }
-  }
-}
-.ontology {
-  @linecolor: #999;
-  position: relative;
-  #lineplacer {
-    stroke: @linecolor;
-    //    background: rgba(0,0,0,0.1);
+.default {
     width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 4;
-  }
-  div {
-    z-index: 5;
-  }
-  .goterm {
-    //width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .flexy {
-    margin: 0 0.4em;
-    display: flex;
-    margin-top: 1.55em;
-    border-radius: 2px;
-  }
-  .children {
-    margin-top: -4px;
-    display: flex;
-  }
-  .title {
-    color: black;
-    width: 150px;
-    font-size: 0.8em;
-    padding: 0.2em 0.6em;
-    border: solid 1px @linecolor;
-    background: #eee;
-    box-sizing: border-box;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    border-radius: 2px;
-    text-align: center;
-    .organism {
-      border-left: solid 3px;
-      margin-left: -0.6em;
-      .organism-border-color(0);
-      background: rgba(0,0,0,0.05);
-      width: 148px;
-      padding: 0.2em;
-      font-size: 0.9em;
-      position: relative;
-      left: -1px;
-      box-shadow: 1px 1px 0 0 rgba(0,0,0,0.05);
-      box-sizing: border-box;
+    & > div {
+        margin-top: @spacer;
+        background: @ctatextcolor;
+        border-radius: 2px;
+        box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.3);
+        text-align: center;
+        p {
+            margin: @spacer 2*@spacer;
+            text-align: left;
+        }
+        img {
+            margin: 2*@spacer;
+        }
     }
-  }
+    h2 {
+        text-align: center;
+    }
+}
+//pretty rainbow line, just cos
+.organism-line {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    div {
+        width: 15%;
+        height: 0;
+        border-bottom: solid 5px @bordercolor;
+    }
+}
+//mixins for general state behaviour
+.hoverstate {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    transition: all 0.4s;
+}
+.activestate {
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    transition: all 0.1s;
+}
+//oppan table style!
+.table-style {
+    td,
+    th {
+        text-align: center;
+    }
+    td {
+        padding: @spacer/5 @spacer;
+        &.dataset {
+            min-width: 10em;
+        }
+        &.organism {
+            min-width: 6em;
+        }
+        &:first-child {
+            border-left: solid 3px;
+            padding: @spacer/5;
+        }
+    }
+    .zebrafish td:first-child {
+        border-color: @zebracolor;
+    }
+    .yeast td:first-child {
+        border-color: @yeastcolor;
+    }
+    .human td:first-child {
+        border-color: @humancolor;
+    }
+    .worm td:first-child {
+        border-color: @wormcolor;
+    }
+    .mouse td:first-child {
+        border-color: @mousecolor;
+    }
+    .rat td:first-child {
+        border-color: @ratcolor;
+    }
+    .fly td:first-child {
+        border-color: @flycolor;
+    }
+    th {
+        background: @somecolor;
+        color: @ctatextcolor;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+        font-weight: 700;
+        padding: @spacer/2;
+    }
+    tr {
+        &:hover {
+            background: @highlightcolor;
+            td {
+                background: @highlightcolor;
+            }
+        }
+        &:nth-child(even) {
+            background: darken(@tablestripecolor, 2%);
+        }
+    }
+}
+.organism-border-color(@fadeby) {
+    &.zebrafish {
+        border-color: fadeout(@zebracolor, @fadeby);
+    }
+    &.yeast {
+        border-color: fadeout(@yeastcolor, @fadeby);
+    }
+    &.human {
+        border-color: fadeout(@humancolor, @fadeby);
+    }
+    &.worm {
+        border-color: fadeout(@wormcolor, @fadeby);
+    }
+    &.mouse {
+        border-color: fadeout(@mousecolor, @fadeby);
+    }
+    &.rat {
+        border-color: fadeout(@ratcolor, @fadeby);
+    }
+    &.fly {
+        border-color: fadeout(@flycolor, @fadeby);
+    }
+}
+//mixin to make a cute little bar beside mine coloured things.
+.mine-color-pseudo-elements {
+    &:before {
+        content: "";
+        opacity: 0.2;
+        display: block;
+        width: 3px;
+        height: 10px;
+        background: #ddd;
+        margin-top: 4px;
+        margin-right: 0;
+        float: left;
+        border-radius: 5px;
+    }
+    &:hover:before {
+        opacity: 1;
+    }
+    &.zebrafish:before {
+        background-color: @zebracolor;
+    }
+    &.yeast:before {
+        background-color: @yeastcolor;
+    }
+    &.human:before {
+        background-color: @humancolor;
+    }
+    &.worm:before {
+        background-color: @wormcolor;
+    }
+    &.mouse:before {
+        background-color: @mousecolor;
+    }
+    &.rat:before {
+        background-color: @ratcolor;
+    }
+    &.fly:before {
+        background-color: @flycolor;
+    }
+}
+//base stuff
+button {
+    cursor: pointer;
+    padding: @spacer;
+    color: @ctatextcolor;
+    background: @ctabackgroundcolor;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    font-weight: 700;
+    font-size: 1em;
+    border: 0;
+    border-radius: @border-radius;
+    &:hover {
+        .hoverstate;
+        background: lighten(@ctabackgroundcolor, 15%);
+    }
+    &:active {
+        .activestate;
+        background: darken(@ctabackgroundcolor, 15%);
+    }
+}
+main {
+    display: flex;
+    align-items: flex-start;
+    h2,
+    h4 {
+        margin: 0;
+    }
+}
+nav {
+    margin: @spacer;
+    border-radius: @border-radius;
+    ul {
+        padding: 0;
+    }
+    li {
+        list-style-type: none;
+        a,
+        a:visited {
+            font-weight: 300;
+            display: block;
+            color: @maintextcolor;
+            text-decoration: none;
+            min-width: 12em;
+            background: @searchbackgroundcolor;
+            padding: @spacer;
+            border-left: solid 3px @searchbackgroundcolor;
+            &:hover {
+                .hoverstate;
+                background: lighten(@searchbackgroundcolor, 5%);
+                color: @maintextcolor;
+                border-left: solid 3px @ctabackgroundcolor;
+            }
+            &:active {
+                .activestate;
+                background: darken(@searchbackgroundcolor, 15%);
+                border-left: solid 3px darken(@ctabackgroundcolor,15%);
+            }
+            &.active {
+                transition: all 1s;
+                background-color: @somecolor;
+                color: @sometextcolor;
+                &:hover {
+                    background-color: @somecolor;
+                    color: @sometextcolor;
+                }
+                border-left: solid 3px darken(@somecolor,15%);
+                svg {
+                    fill: @sometextcolor;
+                }
+            }
+            svg {
+                margin-right: @spacer;
+                color: rgba(0,0,0,0.4);
+            }
+        }
+    }
+}
+button,
+select,
+textarea {
+    box-sizing: border-box;
+    margin: @spacer/2;
+    border-radius: @border-radius;
+}
+select,
+textarea {
+    background-color: #fff;
+    border: solid 1px @bordercolor;
+    padding: @spacer/4;
+}
+.default-shadow {
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+}
+//for the inline svg icons
+.icon {
+    vertical-align: top;
+    margin-top: 1px;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+.contentbody {
+    &.startpage {
+        width: 100%;
+        h2 {
+            float: none;
+        }
+    }
+    header:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    margin: @spacer;
+    //  overflow: auto;
+    h2 {
+        margin-bottom: (@spacer/2 + 0.1em);
+        float: left;
+    }
+    .download {
+        float: right;
+        a,
+        h3 {
+            float: left;
+            clear: right;
+            line-height: 1.8em;
+            margin: 0 0 0 @spacer*1.2;
+            svg {
+                margin-top: (@spacer/2 + 0em);
+                margin-right: 0.2em;
+            }
+        }
+        a {
+            line-height: 2.2em;
+        }
+    }
+}
+@keyframes pulse {
+     @fadeby: 0;
+    0% {
+        border-color: fadeout(@wormcolor, @fadeby);
+    }
+    15% {
+        border-color: fadeout(@flycolor, @fadeby);
+    }
+    30% {
+        border-color: fadeout(@ratcolor, @fadeby);
+    }
+    45% {
+        border-color: fadeout(@zebracolor, @fadeby);
+    }
+    60% {
+        border-color: fadeout(@yeastcolor, @fadeby);
+    }
+    75% {
+        border-color: fadeout(@humancolor, @fadeby);
+    }
+    90% {
+        border-color: fadeout(@mousecolor, @fadeby);
+    }
+    100% {
+        border-color: fadeout(@wormcolor, @fadeby);
+    }
+}
+//general styles from here on.
+.search {
+    .default-shadow;
+    display: flex;
+    background: @searchbackgroundcolor;
+    color: @searchtextcolor;
+    padding: @spacer;
+    transition: all 0.35s ease-out;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 0;
+    }
+    &.shrunk {
+        min-height: 1em;
+        max-height: 15em;
+    }
+    &.expanded {
+        min-height: 35em;
+        max-height: 50em;
+        flex-grow: 2;
+        .geneinput {
+            max-width: 30%;
+            flex-direction: column;
+            .intro,
+            .searchform {
+                max-width: 100%;
+            }
+        }
+        .filter.output {
+            flex-grow: 1;
+            max-width: 30%;
+            form {
+                flex-grow: 1;
+                flex-direction: column;
+            }
+        }
+    }
+    .geneinput {
+        display: flex;
+        transition: all 0.35s ease-out;
+        max-width: 40%;
+        textarea {
+            animation-duration: 3s;
+            animation-name: pulse;
+            border: solid 1px @ctabackgroundcolor;
+            border-left: solid 5px @ctabackgroundcolor;
+        }
+    }
+    .intro {
+        max-width: 50%;
+        text-align: justify;
+    }
+    .searchform {
+        flex-grow: 1;
+        max-width: 50%;
+        padding: 0 @spacer;
+        button,
+        select,
+        textarea {
+            width: 100%;
+        }
+    }
+    .filters {
+        padding: 0 @spacer;
+        display: flex;
+        flex-grow: 2;
+        label {
+            display: block;
+            min-width: 9em;
+            flex-grow: 1;
+        }
+        .output {
+            label {
+                .mine-color-pseudo-elements;
+            }
+        }
+        .filter {
+            padding: 0 @spacer;
+            border-left: solid 1px @bordercolor;
+            flex-grow: 4;
+            max-width: 50%;
+            transition-timing-function: ease-out;
+            form {
+                display: flex;
+                flex-wrap: wrap;
+                &.evidence {
+                    flex-direction: column;
+                }
+            }
+            a.change-codes {
+                font-weight: normal;
+            }
+        }
+        .evidence-mini {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 10em;
+            &:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+            .code {
+                margin: @spacer/10 @spacer/5;
+                &:after {
+                    content: ",";
+                }
+                &:last-child:after {
+                    content: "";
+                }
+            }
+            h5 {
+                width: 100%;
+                margin: @spacer/10;
+            }
+            a {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+.ortholog-results {
+    width: 100%;
+    .count {
+        width: 6em;
+    }
+    .aggregate {
+        width: 100%;
+        .table-style;
+    }
+}
+.heatmap {
+    .download {
+        float: left;
+    }
+    h3 {
+        line-height: 1.2em;
+        vertical-align: middle;
+    }
+    .table-style;
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    thead tr:hover {
+        background: inherit;
+    }
+    .axis {
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 1%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.05) 80%,rgba(0,0,0,0.05) 99%,rgba(0,0,0,0.15) 100%);
+        min-width: 16em;
+    }
+    th,
+    th.goterm {
+        background: transparent;
+        color: @maintextcolor;
+        text-shadow: none;
+        vertical-align: bottom;
+        font-weight: 300;
+    }
+    th.goterm {
+        white-space: nowrap;
+        height: 12em;
+        z-index: 4;
+        text-align: left;
+        div {
+            //these are magic numbers.
+            transform: translate(1.8em, 0em) rotate(315deg);
+            width: 2.2em;
+            span {
+                height: 100%;
+                display: block;
+                min-width: 18em;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                border-bottom: 1px solid #ccc;
+                padding: 5px 10px;
+                &:hover {
+                    overflow: visible;
+                    width: 100%;
+                    border-bottom: solid 1px @somecolor;
+                    background: #fff;
+                }
+            }
+        }
+    }
+    .expand {
+        cursor: pointer;
+    }
+    .ortholog,
+    .species {
+        min-width: 7.5em;
+        float: left;
+    }
+    .summary {
+      @color: darken(@bordercolor, 20%);
+        border-bottom: solid 2px @color;
+        border-top: solid 2px @color;
+    }
+    div.ortholog {
+        text-align: right;
+        float: right;
+        margin-right: 8px;
+    }
+    .main td:nth-child(2) {
+        text-align: right;
+    }
+    td {
+        border: 0;
+        border-right: solid 1px @bordercolor;
+        border-bottom: solid 1px @bordercolor;
+        text-shadow: 0 0 1px #fff; //make sure there's good contrast even on dark cells
+        svg {
+            float: right;
+        }
+        &.ortholog {
+            min-width: 100px;
+        }
+    }
+    .no-orthologs {
+        border-right: 0;
+    }
+    //override default table style:
+    .fly,
+    .human,
+    .mouse,
+    .rat,
+    .worm,
+    .yeast,
+    .zebrafish {
+        td:nth-child(2) {
+            border-right: 0;
+        }
+        td:first-child {
+            min-width: 7.5em;
+            white-space: nowrap;
+            border-bottom: solid 1px @bordercolor;
+            border-right: 0;
+        }
+    }
+    tr:nth-child(even) {
+        background: transparent;
+    }
+}
+.enrichment {
+    .notsearched {
+        margin: 1em 0;
+        border-left: solid 3px @bordercolor;
+        padding: 1em;
+    }
+    .settings {
+        display: flex;
+        justify-content: space-between;
+        background-color: rgba(0,0,0,0.05);
+        & > div {
+            margin: 0 @spacer*2;
+            line-height: 2.5em;
+        }
+        select {
+            margin-left: @spacer/2;
+        }
+    }
+    h3 {
+        margin: 0 0 @spacer;
+        padding: 0;
+        line-height: 1em;
+    }
+    .organisms {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .organism {
+        .default-shadow;
+        @bg: rgba(255, 255, 255, 1);
+        transition: 2s all;
+        background: @bg;
+        min-width: 400px;
+        flex-grow: 2;
+        max-height: 300px;
+        overflow: auto;
+        padding: @spacer;
+        margin: @spacer/2;
+        &.success {
+            max-width: 100%;
+        }
+        &.loading {
+            max-width: 400px;
+            background: darken(@bg,4%);
+        }
+        &.error {
+            margin: @spacer/2;
+            background-color: darken(@bg,8%);
+            flex-grow: 1;
+            order: 7;
+            .error {
+                max-width: 400px;
+            }
+            pre {
+                display: inline;
+                white-space: pre-wrap;
+            }
+            .icon {
+                color: rgba(0,0,0,0.25);
+                margin-right: @spacer/2;
+            }
+            .organism-border-color(70%);
+        }
+        border-left: solid 3px;
+        .matches {
+            min-width: 3em;
+            text-align: right;
+            display: block;
+            float: left;
+            clear: both;
+        }
+        .description {
+            text-align: left;
+        }
+        @fadeby: 0;
+        &.zebrafish {
+            order: 2;
+            border-color: fadeout(@zebracolor, @fadeby);
+        }
+        &.yeast {
+            order: 3;
+            border-color: fadeout(@yeastcolor, @fadeby);
+        }
+        &.human {
+            order: 1;
+            border-color: fadeout(@humancolor, @fadeby);
+        }
+        &.worm {
+            border-color: fadeout(@wormcolor, @fadeby);
+            order: 7;
+        }
+        &.mouse {
+            order: 5;
+            border-color: fadeout(@mousecolor, @fadeby);
+        }
+        &.rat {
+            order: 4;
+            border-color: fadeout(@ratcolor, @fadeby);
+        }
+        &.fly {
+            order: 6;
+            border-color: fadeout(@flycolor, @fadeby);
+        }
+    }
+}
+.ontology {
+    @linecolor: #999;
+    position: relative;
+    #lineplacer {
+        stroke: @linecolor;
+        //    background: rgba(0,0,0,0.1);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 4;
+    }
+    div {
+        z-index: 5;
+    }
+    .goterm {
+        //width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .flexy {
+        margin: 0 0.4em;
+        display: flex;
+        margin-top: 1.55em;
+        border-radius: 2px;
+    }
+    .children {
+        margin-top: -4px;
+        display: flex;
+    }
+    .title {
+        color: black;
+        width: 150px;
+        font-size: 0.8em;
+        padding: 0.2em 0.6em;
+        border: solid 1px @linecolor;
+        background: #eee;
+        box-sizing: border-box;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        border-radius: 2px;
+        text-align: center;
+        .organism {
+            border-left: solid 3px;
+            margin-left: -0.6em;
+            .organism-border-color(0);
+            background: rgba(0,0,0,0.05);
+            width: 148px;
+            padding: 0.2em;
+            font-size: 0.9em;
+            position: relative;
+            left: -1px;
+            box-shadow: 1px 1px 0 0 rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+    }
 }
 ////////debug, kiddos:
 .status {
-  .success,
-  .error {
-    font-size: 75%;
-  }
-  &:hover {
-    cursor: pointer;
-  }
-  .success {
-    min-width: 35%;
-    margin: 0 0.5em 0 0;
-    display: block;
-    float: left;
-  }
-  .success:after,
-  .counts:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  .organism {
-    background: @searchbackgroundcolor;
-    border-left: solid 3px @bordercolor;
-    padding: @spacer/2 @spacer/2 @spacer/2 @spacer;
+    .error,
+    .success {
+        font-size: 75%;
+    }
     &:hover {
-      .hoverstate;
-      background: lighten(@searchbackgroundcolor, 5%);
-      border-left: solid 3px @ctabackgroundcolor;
+        cursor: pointer;
     }
-    &:active {
-      .activestate;
-      background: darken(@searchbackgroundcolor, 15%);
-      border-left: solid 3px darken(@ctabackgroundcolor,15%);
+    .success {
+        min-width: 35%;
+        margin: 0 0.5em 0 0;
+        display: block;
+        float: left;
     }
-    .organism-border-color(80%);
-  }
-  h5 {
-    margin: 0;
-    clear: both;
-  }
-  .icon {
-    float: right;
-    margin-top: -20px;
-    color: rgba(0,0,0,0.2);
-  }
-  .info {
-    max-width: 12em;
-  }
-  //for modal
-  .modal {
-    opacity: 1;
-    display: block;
-    z-index: 100;
-    position: fixed;
-    text-shadow: none;
-    background: #fff;
-    border-radius: 2px;
-    left: 10%;
-    top: 10%;
-    right: 10%;
-    bottom: 60%;
-    overflow: auto;
-    padding: 1em;
-    border-left: solid 3px;
+    .counts:after,
+    .success:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    .organism {
+        background: @searchbackgroundcolor;
+        border-left: solid 3px @bordercolor;
+        padding: @spacer/2 @spacer/2 @spacer/2 @spacer;
+        &:hover {
+            .hoverstate;
+            background: lighten(@searchbackgroundcolor, 5%);
+            border-left: solid 3px @ctabackgroundcolor;
+        }
+        &:active {
+            .activestate;
+            background: darken(@searchbackgroundcolor, 15%);
+            border-left: solid 3px darken(@ctabackgroundcolor,15%);
+        }
+        .organism-border-color(80%);
+    }
+    h5 {
+        margin: 0;
+        clear: both;
+    }
     .icon {
-      float: none;
-      display: inline;
-      margin: 0 @spacer/2 0 0;
+        float: right;
+        margin-top: -20px;
+        color: rgba(0,0,0,0.2);
     }
-    h4 {
-      margin-bottom: @spacer;
+    .info {
+        max-width: 12em;
     }
-    .organism-border-color(0);
-  }
-  //also for the modal
-  .fade {
-    display: block;
-    position: fixed;
-    background: rgba(0,0,0,0.6);
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-  }
+    //for modal
+    .modal {
+        opacity: 1;
+        display: block;
+        z-index: 100;
+        position: fixed;
+        text-shadow: none;
+        background: #fff;
+        border-radius: 2px;
+        left: 10%;
+        top: 10%;
+        right: 10%;
+        bottom: 60%;
+        overflow: auto;
+        padding: 1em;
+        border-left: solid 3px;
+        .icon {
+            float: none;
+            display: inline;
+            margin: 0 @spacer/2 0 0;
+        }
+        h4 {
+            margin-bottom: @spacer;
+        }
+        .organism-border-color(0);
+    }
+    //also for the modal
+    .fade {
+        display: block;
+        position: fixed;
+        background: rgba(0,0,0,0.6);
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
 }
 .loader {
-  @delay: 0.2s;
-  .loader-organism {
-    width: 40px;
-    height: 0;
-    display: block;
-    border: solid 5px #eee;
-    border-radius: 20px;
-    opacity: 0.75;
-    margin-right: -10px;
-    float: left;
-    animation-timing-function: ease-in;
-    position: relative;
-    animation-duration: @delay*14;
-    animation-name: pulse;
-    animation-iteration-count: infinite;
-  }
-  .worm {
-    animation-delay: @delay*1;
-  }
-  .zebra {
-    animation-delay: @delay*2;
-  }
-  .human {
-    animation-delay: @delay*3;
-  }
-  .yeast {
-    animation-delay: @delay*4;
-  }
-  .rat {
-    animation-delay: @delay*5;
-  }
-  .mouse {
-    animation-delay: @delay*6;
-  }
-  .fly {
-    animation-delay: @delay*7;
-  }
+    @delay: 0.2s;
+    .loader-organism {
+        width: 40px;
+        height: 0;
+        display: block;
+        border: solid 5px #eee;
+        border-radius: 20px;
+        opacity: 0.75;
+        margin-right: -10px;
+        float: left;
+        animation-timing-function: ease-in;
+        position: relative;
+        animation-duration: @delay*14;
+        animation-name: pulse;
+        animation-iteration-count: infinite;
+    }
+    .worm {
+        animation-delay: @delay*1;
+    }
+    .zebra {
+        animation-delay: @delay*2;
+    }
+    .human {
+        animation-delay: @delay*3;
+    }
+    .yeast {
+        animation-delay: @delay*4;
+    }
+    .rat {
+        animation-delay: @delay*5;
+    }
+    .mouse {
+        animation-delay: @delay*6;
+    }
+    .fly {
+        animation-delay: @delay*7;
+    }
 }
 .organism-line div {
-  .organism-border-color(0);
+    .organism-border-color(0);
 }
 .db {
-  tr:nth-child(even) {
-    background-color: rgba(50,150,200,0.1);
-  }
-  td {
-    margin: 0;
-  }
-  .jh-key {
-    text-align: right;
-  }
+    tr:nth-child(even) {
+        background-color: rgba(50,150,200,0.1);
+    }
+    td {
+        margin: 0;
+    }
+    .jh-key {
+        text-align: right;
+    }
 }

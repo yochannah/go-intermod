@@ -7,18 +7,15 @@
       [gointermod.utils.comms :as comms]
       [cljs.core.async :refer [put! chan <! >! timeout close!]]))
 
-(defn get-headers []
-  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])]
-    (:headers @heatmap)))
-
 (defn headers []
   ;;subscribe to aggregate results for a given branch
   ;;each term is in a th
-  (let [headers (get-headers)
+  (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
+        headers (:headers @heatmap)
+        total-counts (:summary-row @heatmap)
         active-filter (re-frame/subscribe [:active-filter])
         filters (re-frame/subscribe [:filters])
         filter-info (get @filters @active-filter)]
-;    (.log js/console "%c@expanded" "color:goldenrod;font-weight:bold;" (clj->js @expanded))
   [:thead
    [:tr
     [:th.axis {:col-span 2}
@@ -30,9 +27,9 @@
       [:div.faux-th.species "Species"]
       [:div.faux-th.ortholog "Ortholog"]
      ]]
-    (map (fn [header]
+    (map-indexed (fn [i header]
       ^{:key header}
-      [:th.goterm [:div [:span header]]]) headers)
+      [:th.goterm [:div [:span header " (" (nth total-counts i) ")"]]]) headers)
    ]]
   ))
 
@@ -50,6 +47,13 @@
           mid-color (int (/ (+ 255 bg-color) 2))]
     {:background (str "rgb(" bg-color "," mid-color "," "255)")}
 )))
+
+(defn expand-organism-control [is-expanded? organism-id]
+  [:span
+    (if is-expanded?
+      [:span.expand {:on-click #(re-frame/dispatch [:collapse-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-down"}]]]
+      [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]]
+  )])
 
 (defn organism-orthologue-tds
   "Visually outputs the first two tds in the heatmap, orthologue and organism.  They require some custom logic compared to the basic number cells"
@@ -72,21 +76,13 @@
         is-expanded? [:svg.icon [:use {:xlinkHref "#expanded-row"}]]
         true organism-name)
 
-      (if
-        ;;so if it's a number, it's a multi-result row. We want number rows to be expandable.
-      (number? ortholog)
-        [:span
-          (if is-expanded?
-            [:span.expand {:on-click #(re-frame/dispatch [:collapse-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-down"}]]]
-            [:span.expand {:on-click #(re-frame/dispatch [:expand-heatmap organism-id])} [:svg.icon [:use {:xlinkHref "#icon-circle-right"}]]]
-        )]
-     )
-
+      ;;so if it's a number, it's a multi-result row. We want number rows to be expandable.
+      (if (number? ortholog)
+        [expand-organism-control is-expanded? organism-id])
      ]
     (if (number? ortholog)
       ;;handle aggregate result counts
-      [:td
-        (if (= org-count 1)
+      [:td (if (= org-count 1)
           ;;don't say "1 gene", just output the gene itself.
           ortholog
           [:span org-count " genes " ])]
@@ -111,7 +107,7 @@
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate])
         go-terms (:headers @heatmap)]
   ;;output tr, one per organism,ortholog combo
-    (into [:tbody]
+    (into [:tbody.main]
       (map (fn [result]
         (into (organism-orthologue-tds result)
           (map-indexed (fn [index val]
@@ -139,10 +135,21 @@
   []
   (let [heatmap (re-frame/subscribe [:heatmap-aggregate-csv])
         go-terms (:headers @heatmap)
-        headers (str "Organism" exportcsv/export-token "Ortholog" exportcsv/export-token (clojure.string/join exportcsv/export-token go-terms) "\n")]
+        headers (str "Organism" exportcsv/export-token "Ortholog" exportcsv/export-token (clojure.string/join exportcsv/export-token go-terms) "\n")
+        summary (into ["CROSS-ORGANISM TOTAL" "N/A"] (:summary-row @heatmap))
+        all-terms (cons summary (:rows @heatmap))]
     (reduce (fn [csv-str result]
-      (str csv-str (clojure.string/join exportcsv/export-token result) "\n" )
-) headers (:rows @heatmap))))
+      (str csv-str
+           (clojure.string/join exportcsv/export-token result) "\n" )
+) headers all-terms)))
+
+(defn summary-row []
+  (let [summary (:summary-row @(re-frame/subscribe [:heatmap-aggregate]))]
+    [:tbody.summary
+      (into [:tr [:td {:col-span 2} "Cross-organism total:"]]
+        (map (fn [val]
+          [:td {:style (calc-color val)} val]) summary))]
+))
 
 (defn heatmap []
   (re-frame/dispatch [:trigger-data-handler-for-active-view])
@@ -153,5 +160,6 @@
       [:table
         [headers]
         [counts]
+        [summary-row]
         [empty-rows]
 ]]))

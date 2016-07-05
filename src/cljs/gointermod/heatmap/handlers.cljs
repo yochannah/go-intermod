@@ -94,6 +94,15 @@ organism) results)))))
         (clojure.set/difference all-organism-names shown-organism-names)
   ))
 
+  (defn column-summary [matrix column-index]
+    (apply + (map (fn [row] (nth row column-index)) matrix)))
+
+  (defn summary-row [results]
+    ;;first two of each result are the organism/orthologue. nothing to summarise.
+    (into [] (map (partial column-summary results)) (range 2 (count (first results))))
+    )
+
+
 (defn extract-results
   "Formats results in aggregated way"
   ([search-results aggregate-orthologs?]
@@ -102,15 +111,18 @@ organism) results)))))
         go-terms (extract-go-terms merged-results)
         counts (aggregate-orthologs merged-results aggregate-orthologs?)
         final-heatmap-matrix (build-result-matrix go-terms counts)
+        summary (summary-row final-heatmap-matrix)
         max-count (get-ortholog-count-max counts)
         organisms-present (keys counts)
         missing-organisms (find-missing-organisms counts)]
      {:rows final-heatmap-matrix
       :headers go-terms
+      :summary-row summary
       :max-count max-count
       :aggregate-results counts
       :missing-organisms missing-organisms
       :all-results merged-results}
+    ;(.log js/console "%c(conj final-heatmap-matrix summary)" "color:hotpink;font-weight:bold;" (clj->js (conj final-heatmap-matrix summary)))
     ))
   ([search-results] (extract-results search-results true))
   )
@@ -137,7 +149,6 @@ organism) results)))))
           new-aggregate (:aggregate-results (:heatmap new-db))
           go-terms (:headers (:heatmap db))
           max-count (get-ortholog-count-max new-aggregate)]
-;      (.log js/console "%chi" "color:hotpink;font-weight:bold;" (clj->js org-count))
     (->
       (assoc-in db [:heatmap :rows] (build-result-matrix go-terms new-aggregate))
       (assoc-in [:heatmap :max-count] max-count)
