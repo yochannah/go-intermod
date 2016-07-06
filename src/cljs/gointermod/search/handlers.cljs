@@ -111,8 +111,8 @@
         :ontology-branch (get result 9)
         :data-set-name (get @original-datasource (get result 1) (str na " - original input gene"))
         :data-set-url na
-        :display-ortholog-id (lookup-original-input-identifier (get result 7) result)
-        :display-original-id (lookup-original-input-identifier (get result 7) result)
+        :display-ortholog-id (utils/get-id result :original-gene-set)
+        :display-original-id (utils/get-id result :original-gene-set)
        }
     ) results)))
 
