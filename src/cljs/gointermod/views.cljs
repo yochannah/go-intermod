@@ -87,8 +87,10 @@
               (do (aset js/window "location" "href" "#")
                  [default-content]
         ))]]
-        (cond @are-there-results?[:footer
-           [:a {:href "#/about"} "About"]
+        (cond @are-there-results?
+          [:footer
+            [:a {:href "#/about"} "About this tool"]
+            [:a {:href "https://www.surveymonkey.com/r/7KSDN2S"} "Feedback (1 minute survey)"]
             ; (when config/debug?
             ;     [:div.db  (edn->hiccup  @(re-frame/subscribe [:db]) )]
             ; )
