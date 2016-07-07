@@ -9,7 +9,7 @@
       (get-id (get resultvec 3) (get resultvec 2) (get resultvec 1)  (get resultvec 4))
      (= :original original-or-ortholog)
       (get-id (get resultvec 7) (get resultvec 8) (get resultvec 9)  (get resultvec 10))
-     (= :original-gene-set)
+     (= :original-gene-set original-or-ortholog)
       (get-id (get resultvec 3) (get resultvec 2) (get resultvec 1)  (get resultvec 4)))
   )
   ([primary secondary symbol organism]
@@ -22,7 +22,13 @@
       ;)
     ;;else we want the symbol
     (first (remove nil? [symbol secondary primary]))
-  )))
+  ))
+  ([identifier-map]
+   "expects an identifier map with input, secondary, & symbol values. Returns the first which has a value."
+   ;(.log js/console "%cStuff:" "color:goldenrod;font-weight:bold;" (clj->js identifier-map) (first (remove nil? [(:input identifier-map) (:symbol identifier-map) (:secondary identifier-map)])))
+    (first (remove nil? [(:input identifier-map) (:symbol identifier-map) (:secondary identifier-map)]))
+   )
+  )
 
 (defn get-organism-details-by-name [organism-name]
   (let [organisms (re-frame/subscribe [:organisms])]

@@ -59,12 +59,13 @@
 
 (defn lookup-original-input-identifier [identifier result]
   (let [id-map (re-frame/subscribe [:mapped-resolved-ids])
-        input-identifier (get @id-map identifier)]
+  input-identifier (utils/get-id (get @id-map identifier)) ]
+;  input-identifier nil ]
+  ;  (.log js/console "%cid-map" "color:hotpink;font-weight:bold;" (clj->js @id-map))
   (if input-identifier
     input-identifier
     (utils/get-id result :original)
-    )
-))
+)))
 
 (defn resultset-to-map [results]
   "translate that silly vector of results into a map with meaninful keys"
@@ -153,12 +154,30 @@
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results mapped-results)
          aggregate (aggregate-by-orthologue mapped-results)]
-  ;   (.log js/console "%caggregate %s" "color:firebrick;font-weight:bold;" (clj->js source)(clj->js aggregate))
+         (cond (= source :human)
+           (re-frame/dispatch [:add-human-gene-map]))
+           ;;use this to update the input gene map YYYYYYYYYYYYY
    (->
     (update-in db [:multi-mine-results source] concat mapped-results)
     (assoc-in     [:organisms source :status] status)
-    (update-in    [:multi-mine-aggregate source] concat aggregate)))
+    (update-in    [:multi-mine-aggregate source] concat aggregate)
+    ))
 ))
+
+
+(re-frame/register-handler
+ :add-human-gene-map
+ (fn [db [_ _]]
+   (let [results (:human (:multi-mine-results db))
+         mapped-ids
+    (reduce (fn [new-map result]
+      (->
+        (assoc-in new-map [(:original-primary-id result) :symbol] (:symbol result))
+        (assoc-in [(:original-primary-id result) :secondary] (:secondary result)))
+
+    ) (:mapped-resolved-ids db) results)]
+     (assoc db :mapped-resolved-ids mapped-ids)
+)))
 
 (re-frame/register-handler
  :concat-original-genes
@@ -184,10 +203,10 @@
 
 (defn handle-human-orthologues-for-nonhuman-query [results db]
   (if results
-    (let [results-map (reduce (fn [new-map [k v]] (assoc new-map k v)) {} results)]
+    (let [results-map (reduce (fn [new-map [symbol secondary primary dataset]] (assoc new-map primary {:symbol symbol :secondary secondary :dataset dataset})) {} results)]
     ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
-      (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results-map))
-      (re-frame/dispatch [:human-orthologs-of-other-input-organism results-map])
+      (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results))
+      (re-frame/dispatch [:save-mapped-resolved-ids results-map])
       (comms/query-all-selected-organisms (:selected-organism db)
           ;;every even result is an ID, every odd is the data type
          (clojure.string/join "," (keys results-map)))
@@ -195,22 +214,16 @@
     ;;so this is what happens when we had an error trying to retrieve orthologues.
     (re-frame/dispatch [:error-loading-human-orthologs])))
 
-    (re-frame/register-handler
-      ;;What do we do when a search button is pressed? This.
-      :human-orthologs-of-other-input-organism
-(fn [db [_ orthologs]]
-  (.log js/console "%corthologs" "color:hotpink;font-weight:bold;" (clj->js orthologs))
-  (assoc db :human-orthologs-of-other-input-organism orthologs)
-  ))
-
 (defn resolve-id-map [resolved-ids]
+  ;;could handle these better XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   (cond (some? (:unresolved resolved-ids))
     (.debug js/console "%cUnresolved-ids" "background-color:#333;color:hotpink;font-weight:bold;" (clj->js (:unresolved resolved-ids))))
-
   (reduce (fn [new-map entry]
     (assoc new-map
       (:primaryIdentifier (:summary entry))
-      (keyword (first (:input entry)))
+      {:input (keyword (first (:input entry)))
+       :second (:secondaryIdentifier (:summary entry))
+       :symbol (:symbol (:summary entry))}
     )) {} (:MATCH (:matches resolved-ids))))
 
 (re-frame/register-handler
@@ -228,19 +241,14 @@
           search-terms (search-token-fixer-upper (:search-term db))
           search-terms-vec (clojure.string/split search-terms ",")]
       (if (= input-org :human)
-
-        ;;;;;;;;;;EXPERIMENTAL ZONE
         (go (let [resolved-ids (<! (comms/resolve-id :human search-terms-vec))
                   mapped-resolved-ids (resolve-id-map resolved-ids)]
-
-              (re-frame/dispatch [:save-mapped-resolved-ids mapped-resolved-ids])
+          (re-frame/dispatch [:save-mapped-resolved-ids mapped-resolved-ids])
         ;if the input organism is human, go straight to the remote organism mines with the main query.
         ;asynchronously query all dem mines and add the results to the db
-            (go (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (keys mapped-resolved-ids)))))
+          (go (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (keys mapped-resolved-ids)))))
 
         )
-
-        ;;;;;;;
 
         ; if the input organism is not human, first we have to resolve the
         ; identifiers to their human orthologues, then do the above query
@@ -249,8 +257,16 @@
           (handle-human-orthologues-for-nonhuman-query results db)
          ))
         )
+      ;;set state of app to no longer show home page
     (re-frame/dispatch [:initialised])
-    (dissoc db :multi-mine-results :enrichment :multi-mine-aggregate :go-terms :go-ontology :human-orthologs-of-other-input-organism))))
+      ;;remove stuff from the previous search. we leave the resolved IDs though because the don't change.
+    (dissoc db
+            :multi-mine-results
+            :enrichment
+            :multi-mine-aggregate
+            :go-terms
+            :go-ontology
+            :human-orthologs-of-other-input-organism))))
 
 (re-frame/register-handler
  ;;saves the most recent query xml to be associated with a given organism
