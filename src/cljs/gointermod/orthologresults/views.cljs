@@ -25,6 +25,7 @@
 (defn aggregate-results []
   "output aggregated search results into table rows"
   (let [results (re-frame/subscribe [:aggregate-results])]
+    (fn []
     (into [:tbody]
      (map (fn [[organism organism-details] organisms]
        (cond (seq organism-details)
@@ -36,15 +37,16 @@
                   {:type "checkbox"
                   :checked (:is-selected? ortholog-details)
                   :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
+
               [:td.organism (utils/get-abbrev organism)]
-              [:td (:original-id ortholog-details)]
+              [:td @(re-frame/subscribe [:input-gene-friendly-id (:original-id ortholog-details)]) ]
               [:td (clj->js ortholog)]
               [:td.bio (get ortholog-details "biological_process" 0)]
               [:td.molecular (get ortholog-details "molecular_function" 0)]
               [:td.cellular (get ortholog-details "cellular_component" 0)]
               [:td.dataset (clojure.string/join exportcsv/export-token (:dataset ortholog-details))]
             ]) organism-details)))
-) @results))))
+) @results)))))
 
 (defn no-results []
   (let [results (re-frame/subscribe [:aggregate-results])]

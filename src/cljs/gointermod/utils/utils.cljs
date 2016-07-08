@@ -24,8 +24,8 @@
     (first (remove nil? [symbol secondary primary]))
   ))
   ([identifier-map]
-   "expects an identifier map with input, secondary, & symbol values. Returns the first which has a value."
-   ;(.log js/console "%cStuff:" "color:goldenrod;font-weight:bold;" (clj->js identifier-map) (first (remove nil? [(:input identifier-map) (:symbol identifier-map) (:secondary identifier-map)])))
+   "expects an identifier map with input, secondary, & symbol values. Returns the first which has a value. Only designed to work on :human data since :human is hte hub"
+;   (.log js/console "%cStuff:" "color:goldenrod;font-weight:bold;" (clj->js identifier-map) (first (remove nil? [(:input identifier-map) (:symbol identifier-map) (:secondary identifier-map)])))
     (first (remove nil? [(:input identifier-map) (:symbol identifier-map) (:secondary identifier-map)]))
    )
   )

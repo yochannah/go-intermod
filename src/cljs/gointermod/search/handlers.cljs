@@ -1,6 +1,6 @@
 (ns gointermod.search.handlers
     (:require-macros [cljs.core.async.macros :refer [go]])
-    (:require [re-frame.core :as re-frame]
+    (:require [re-frame.core :as re-frame :refer [after enrich]]
               [gointermod.db :as db]
               [gointermod.utils.utils :as utils]
               [cljs.core.async :refer [<!]]
@@ -148,36 +148,56 @@
     ) {} (:organisms db))
 )))
 
+(def extract-gene-map [
+  (enrich (fn [db [handler-name unmapped-results organism]]
+    (if (= :human organism)
+      (let [multi-mine-results (:human (:multi-mine-results db))
+        mapped-results
+        (reduce (fn [new-map result]
+          (->
+            (assoc-in new-map [(:original-primary-id result) :symbol] (:original-symbol result))
+            (assoc-in [(:original-primary-id result) :secondary] (:original-secondary result)))
+
+        ) (:mapped-resolved-ids db) multi-mine-results)]
+;          (.log js/console "%cmultimineresults" "color:goldenrod;font-weight:bold;" (clj->js multi-mine-results))
+;        (.log js/console "%cmapped-results" "color:limegreen;font-weight:bold;" (clj->js mapped-results))
+        (assoc db :mapped-resolved-ids mapped-results))
+      db)
+))])
+
 (re-frame/register-handler
  :concat-results
+ extract-gene-map
  (fn [db [_ search-results source]]
    (let [mapped-results (resultset-to-map (:results search-results))
          status (result-status search-results mapped-results)
-         aggregate (aggregate-by-orthologue mapped-results)]
-         (cond (= source :human)
-           (re-frame/dispatch [:add-human-gene-map]))
+         aggregate (aggregate-by-orthologue mapped-results)
+         results (->
+          (update-in db [:multi-mine-results source] concat mapped-results)
+          (assoc-in     [:organisms source :status] status)
+          (update-in    [:multi-mine-aggregate source] concat aggregate)
+          )]
+    ; (.log js/console "%cCONCAT-RESULTS" "color:cornflowerblue;font-weight:bold;" (clj->js mapped-results))
+         ;(cond (= source :human)
+          ; (re-frame/dispatch [:add-human-gene-map mapped-results]))
            ;;use this to update the input gene map YYYYYYYYYYYYY
-   (->
-    (update-in db [:multi-mine-results source] concat mapped-results)
-    (assoc-in     [:organisms source :status] status)
-    (update-in    [:multi-mine-aggregate source] concat aggregate)
-    ))
+   results)
 ))
 
 
-(re-frame/register-handler
- :add-human-gene-map
- (fn [db [_ _]]
-   (let [results (:human (:multi-mine-results db))
-         mapped-ids
-    (reduce (fn [new-map result]
-      (->
-        (assoc-in new-map [(:original-primary-id result) :symbol] (:symbol result))
-        (assoc-in [(:original-primary-id result) :secondary] (:secondary result)))
-
-    ) (:mapped-resolved-ids db) results)]
-     (assoc db :mapped-resolved-ids mapped-ids)
-)))
+; (re-frame/register-handler
+;  :add-human-gene-map
+;  (fn [db [_ results]]
+;    (let [mapped-ids
+;     (reduce (fn [new-map result]
+;       (->
+;         (assoc-in new-map [(:original-primary-id result) :symbol] (:symbol result))
+;         (assoc-in [(:original-primary-id result) :secondary] (:secondary result)))
+;
+;     ) (:mapped-resolved-ids db) results)]
+;      (.log js/console "%cmapped-ids" "color:green;font-weight:bold;" (clj->js mapped-ids))
+;      (assoc db :mapped-resolved-ids mapped-ids)
+; )))
 
 (re-frame/register-handler
  :concat-original-genes
@@ -205,7 +225,7 @@
   (if results
     (let [results-map (reduce (fn [new-map [symbol secondary primary dataset]] (assoc new-map primary {:symbol symbol :secondary secondary :dataset dataset})) {} results)]
     ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
-      (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results))
+    ;  (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results))
       (re-frame/dispatch [:save-mapped-resolved-ids results-map])
       (comms/query-all-selected-organisms (:selected-organism db)
           ;;every even result is an ID, every odd is the data type
