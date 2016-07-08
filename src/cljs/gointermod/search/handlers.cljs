@@ -94,9 +94,10 @@
   (defn original-resultset-to-map [results]
     "translate that silly vector of results into a map with meaninful keys"
     (let [na "N/A" ;;hey jude
-          original-datasource (re-frame/subscribe [:human-orthologs-of-other-input-organism])]
+          original-datasource (re-frame/subscribe [:mapped-resolved-ids])]
     (map (fn [result]
-      {;:results result
+           (let [original-primary-id (get result 3)]
+                 {;:results result
         :ortho-db-id na
         :ortho-symbol na
         :ortho-secondary-id na
@@ -105,17 +106,17 @@
         :original-db-id (get result 0)
         :original-symbol (get result 1)
         :original-secondary-id (get result 2)
-        :original-primary-id (get result 3)
+        :original-primary-id original-primary-id
         :original-organism (get result 4)
         :go-id (get result 7)
         :go-term (get result 8)
         :ontology-branch (get result 9)
-        :data-set-name (get @original-datasource (get result 1) (str na " - original input gene"))
+        :data-set-name (:dataset (get @original-datasource (get result 3) (str na " - original input gene")))
         :data-set-url na
         :display-ortholog-id (utils/get-id result :original-gene-set)
         :display-original-id (utils/get-id result :original-gene-set)
        }
-    ) results)))
+    )) results)))
 
 (defn result-status [search-results mapped-results]
   (if (seq search-results)
@@ -149,6 +150,8 @@
 )))
 
 (def extract-gene-map [
+;;Middleware to ensure that the gene map is attached the the DB straight after the result is retrieved.
+                       ;;the purpose of the gene map is to ensure that organisms which don't have a human symbol (e.g. fly at this moment in time) are able to find out what the original "input" gene was.
   (enrich (fn [db [handler-name unmapped-results organism]]
     (if (= :human organism)
       (let [multi-mine-results (:human (:multi-mine-results db))
@@ -159,8 +162,6 @@
             (assoc-in [(:original-primary-id result) :secondary] (:original-secondary result)))
 
         ) (:mapped-resolved-ids db) multi-mine-results)]
-;          (.log js/console "%cmultimineresults" "color:goldenrod;font-weight:bold;" (clj->js multi-mine-results))
-;        (.log js/console "%cmapped-results" "color:limegreen;font-weight:bold;" (clj->js mapped-results))
         (assoc db :mapped-resolved-ids mapped-results))
       db)
 ))])
@@ -177,27 +178,9 @@
           (assoc-in     [:organisms source :status] status)
           (update-in    [:multi-mine-aggregate source] concat aggregate)
           )]
-    ; (.log js/console "%cCONCAT-RESULTS" "color:cornflowerblue;font-weight:bold;" (clj->js mapped-results))
-         ;(cond (= source :human)
-          ; (re-frame/dispatch [:add-human-gene-map mapped-results]))
-           ;;use this to update the input gene map YYYYYYYYYYYYY
    results)
 ))
 
-
-; (re-frame/register-handler
-;  :add-human-gene-map
-;  (fn [db [_ results]]
-;    (let [mapped-ids
-;     (reduce (fn [new-map result]
-;       (->
-;         (assoc-in new-map [(:original-primary-id result) :symbol] (:symbol result))
-;         (assoc-in [(:original-primary-id result) :secondary] (:secondary result)))
-;
-;     ) (:mapped-resolved-ids db) results)]
-;      (.log js/console "%cmapped-ids" "color:green;font-weight:bold;" (clj->js mapped-ids))
-;      (assoc db :mapped-resolved-ids mapped-ids)
-; )))
 
 (re-frame/register-handler
  :concat-original-genes

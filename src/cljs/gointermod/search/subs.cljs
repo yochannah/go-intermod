@@ -34,7 +34,6 @@
   (fn [db]
     (reaction (:initialised @db))))
 
-
 (re-frame/register-sub
   :active-modal
   (fn [db]
@@ -49,11 +48,6 @@
   :search-term
   (fn [db]
     (reaction (:search-term @db))))
-
-(re-frame/register-sub
- :human-orthologs-of-other-input-organism
- (fn [db]
-   (reaction (:human-orthologs-of-other-input-organism @db))))
 
 (re-frame/register-sub
   :mapped-resolved-ids

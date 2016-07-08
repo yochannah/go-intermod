@@ -26,8 +26,6 @@
       identifier
   )))
 
-
-
   (re-frame/register-sub
     :input-gene-friendly-id
     (fn [db [_ identifier]]
