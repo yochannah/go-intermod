@@ -47,7 +47,7 @@
   "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
   (reduce (fn [new-map result]
      (->
-         (update-in new-map [(:display-ortholog-id result) (:ontology-branch result)] inc)
+         (update-in new-map [(:display-ortholog-id result) (:ontology-branch result)] conj (:go-term result))
          (assoc-in [(:display-ortholog-id result) :is-selected?] true)
          (update-in [(:display-ortholog-id result) :dataset]
             (fn [dataset new-val]
@@ -178,6 +178,7 @@
           (assoc-in     [:organisms source :status] status)
           (update-in    [:multi-mine-aggregate source] concat aggregate)
           )]
+     (.log js/console "%cmulti-mine-aggregate" "color:mediumorchid;font-weight:bold;" (clj->js aggregate))
    results)
 ))
 
@@ -239,7 +240,6 @@
   ;;What do we do when a search button is pressed? This.
   :perform-search
   (fn [db [_ _]]
-    ;;if the input genes aren't human, we'll need to resolve them to their human orthologues.
     (let [input-org (:selected-organism db)
           search-terms (search-token-fixer-upper (:search-term db))
           search-terms-vec (clojure.string/split search-terms ",")]
@@ -250,7 +250,6 @@
         ;if the input organism is human, go straight to the remote organism mines with the main query.
         ;asynchronously query all dem mines and add the results to the db
           (go (comms/query-all-selected-organisms (:selected-organism db) (clojure.string/join "," (keys mapped-resolved-ids)))))
-
         )
 
         ; if the input organism is not human, first we have to resolve the
@@ -262,7 +261,7 @@
         )
       ;;set state of app to no longer show home page
     (re-frame/dispatch [:initialised])
-      ;;remove stuff from the previous search. we leave the resolved IDs though because the don't change.
+      ;;remove stuff from the previous search. we leave the resolved IDs though because they don't change. wait, the datasets might. todo, cleanse datasets.
     (dissoc db
             :multi-mine-results
             :enrichment

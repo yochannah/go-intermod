@@ -22,6 +22,9 @@
   [:th "Source"]
   ]])
 
+(defn count-annotations [ortholog-details ontology-branch]
+  (count (distinct (get ortholog-details ontology-branch))))
+
 (defn aggregate-results []
   "output aggregated search results into table rows"
   (let [results (re-frame/subscribe [:aggregate-results])]
@@ -41,9 +44,9 @@
               [:td.organism (utils/get-abbrev organism)]
               [:td @(re-frame/subscribe [:input-gene-friendly-id (:original-id ortholog-details)]) ]
               [:td (clj->js ortholog)]
-              [:td.bio (get ortholog-details "biological_process" 0)]
-              [:td.molecular (get ortholog-details "molecular_function" 0)]
-              [:td.cellular (get ortholog-details "cellular_component" 0)]
+              [:td.bio (count-annotations ortholog-details "biological_process")]
+              [:td.molecular (count-annotations ortholog-details "molecular_function")]
+              [:td.cellular (count-annotations ortholog-details "cellular_component")]
               [:td.dataset (clojure.string/join exportcsv/export-token (:dataset ortholog-details))]
             ]) organism-details)))
 ) @results)))))

@@ -51,9 +51,9 @@
 (defn count-annotations [resultvec]
   (reduce (fn [annotation-count [gene details]]
     (+ annotation-count
-      (get details "biological_process")
-      (get details "molecular_function")
-      (get details "cellular_component"))
+      (count (distinct (get details "biological_process")))
+      (count (distinct (get details "molecular_function")))
+      (count (distinct (get details "cellular_component"))))
     ) 0 resultvec)
   )
 
