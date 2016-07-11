@@ -185,13 +185,13 @@
 
 (re-frame/register-handler
  :concat-original-genes
- (fn [db [_ search-results]]
+ (fn [db [_ search-results organism]]
     (let [mapped-results (original-resultset-to-map (:results search-results))
           status (result-status search-results mapped-results)
           aggregate (aggregate-by-orthologue mapped-results)]
     (->
-      (update-in db [:multi-mine-results :human] concat mapped-results)
-      (update-in  [:multi-mine-aggregate :human] concat aggregate))
+      (update-in db [:multi-mine-results organism] concat mapped-results)
+      (update-in  [:multi-mine-aggregate organism] concat aggregate))
 )))
 
 
@@ -206,7 +206,7 @@
 }))
 
 (defn handle-human-orthologues-for-nonhuman-query
-  "creates a data map such that any non-human organisms may use this for a lookup table if they're missing data."
+  "creates a data map such that any non-human organisms may use this for a lookup table if they're missing data. Also dispatches teh standard query using the human orthologues as the lookup values"
   [results db]
   (if results
     (let [results-map (reduce (fn [new-map [symbol secondary primary dataset]]    (assoc new-map primary {:symbol symbol :secondary secondary :dataset dataset})) {} results)]

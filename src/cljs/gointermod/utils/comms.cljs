@@ -80,24 +80,24 @@
 ))))
 
 
-(defn original-gene-query-text [identifiers evidence-codes]
+(defn original-gene-query-text [identifiers organism evidence-codes]
   ;;ok so I can't for the life of me find a neat way to return all of the annotations for the input gene in the orginal query without adding an ugly constraint and getting all of the orthologues back again. So we query it separately.
   (str "<query model=\"genomic\" view=\"Gene.id Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.organism.shortName Gene.organism.taxonId Gene.goAnnotation.evidence.code.code Gene.goAnnotation.ontologyTerm.identifier Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.namespace\" sortOrder=\"Gene.symbol ASC\" constraintLogic=\"B and C and D and E and F and A\" name=\"intermod_go\" >
   <join path=\"Gene.goAnnotation\" style=\"OUTER\"/>
   <constraint path=\"Gene.goAnnotation.qualifier\" op=\"IS NULL\" code=\"B\" />
   <constraint path=\"Gene.goAnnotation.ontologyTerm.obsolete\" op=\"=\" value=\"false\" code=\"C\" />
-  <constraint path=\"Gene\" code=\"A\" op=\"LOOKUP\" value=\"" identifiers "\" extraValue=\"H. sapiens\"/>
+  <constraint path=\"Gene\" code=\"A\" op=\"LOOKUP\" value=\"" identifiers "\" extraValue=\""(utils/get-abbrev organism)"\"/>
   <constraint path=\"Gene.goAnnotation.evidence.code.code\" op=\"ONE OF\" code=\"E\">" evidence-codes "</constraint>
 </query>"))
 
 (defn original-gene-query
   "Get the results of GO term query for specified symbol/identifier"
-  [identifiers]
-  (let [service (get-service :human)
+  [identifiers organism]
+  (let [service (get-service organism)
         evidence-codes (re-frame/subscribe [:active-evidence-codes])
         evidence-code-constraint-values (create-constraint-values @evidence-codes)
-        query (original-gene-query-text identifiers evidence-code-constraint-values)]
-    (re-frame/dispatch [:save-query query :human]);;todo this line will overwrite the other human query.
+        query (original-gene-query-text identifiers organism evidence-code-constraint-values)]
+    (re-frame/dispatch [:save-query query organism]);;todo this line will overwrite the other human query.
     (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
@@ -129,11 +129,17 @@
   (let [output-organisms (re-frame/subscribe [:checked-organisms])]
     (doall (map (fn [[output-organism vals] stuff]
       ;;query for it
-      (go (let [res (<! (go-query input-organism identifiers output-organism))]
-      (cond (= output-organism :human)
+      (go
+        (if (and (= input-organism output-organism) (not= output-organism :human))
+          (re-frame/dispatch [:concat-original-genes (<! (original-gene-query identifiers input-organism)) output-organism])
+          (let [res (<! (go-query input-organism identifiers output-organism))]
 
-         (re-frame/dispatch [:concat-original-genes (<! (original-gene-query  identifiers ))]))
-        (re-frame/dispatch [:concat-results res output-organism])
+            ;;for humans we include the original input genes AND all homologues.
+            (cond (= output-organism :human)
+              (re-frame/dispatch [:concat-original-genes (<! (original-gene-query identifiers :human)) :human]))
+
+            (re-frame/dispatch [:concat-results res output-organism])
+          )
 ))) @output-organisms))))
 
 (defn resolve-ids

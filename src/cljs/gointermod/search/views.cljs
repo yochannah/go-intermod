@@ -4,7 +4,7 @@
 (defn organism-dropdown []
   "returns a dropdown containing all of the organism names"
   (let [organisms (re-frame/subscribe [:organisms])]
-    [:select {:disabled true :on-change (fn [e] (re-frame/dispatch [:select-input-organism (aget e "target" "value")]))}
+    [:select {:on-change (fn [e] (re-frame/dispatch [:select-input-organism (aget e "target" "value")]))}
      (map (fn [[id details]]
         ^{:key id}
         [:option {:value (js->clj id)}
