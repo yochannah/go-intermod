@@ -31,7 +31,6 @@
     (fn [db [_ identifier]]
       (reaction (lookup-original-input-identifier (:mapped-resolved-ids @db) identifier))))
 
-
   (re-frame/register-sub
     :are-all-orthologs-selected?
     (fn [db]

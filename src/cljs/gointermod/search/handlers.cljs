@@ -204,21 +204,21 @@
      "\t" ","
 }))
 
-(defn handle-human-orthologues-for-nonhuman-query [results db]
+(defn handle-human-orthologues-for-nonhuman-query
+  "creates a data map such that any non-human organisms may use this for a lookup table if they're missing data."
+  [results db]
   (if results
-    (let [results-map (reduce (fn [new-map [symbol secondary primary dataset]] (assoc new-map primary {:symbol symbol :secondary secondary :dataset dataset})) {} results)]
+    (let [results-map (reduce (fn [new-map [symbol secondary primary dataset]]    (assoc new-map primary {:symbol symbol :secondary secondary :dataset dataset})) {} results)]
     ;;if we successfully retrieved 0 or more human orthologues for the non human identifiers, proceed with the standard query.
-    ;  (.log js/console "%cresults" "color:cornflowerblue;font-weight:bold;" (clj->js results))
-      (re-frame/dispatch [:save-mapped-resolved-ids results-map])
+          (re-frame/dispatch [:save-mapped-resolved-ids results-map])
       (comms/query-all-selected-organisms (:selected-organism db)
-          ;;every even result is an ID, every odd is the data type
          (clojure.string/join "," (keys results-map)))
       )
     ;;so this is what happens when we had an error trying to retrieve orthologues.
     (re-frame/dispatch [:error-loading-human-orthologs])))
 
 (defn resolve-id-map [resolved-ids]
-  ;;could handle these better XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  ;;could handle these better
   (cond (some? (:unresolved resolved-ids))
     (.debug js/console "%cUnresolved-ids" "background-color:#333;color:hotpink;font-weight:bold;" (clj->js (:unresolved resolved-ids))))
   (reduce (fn [new-map entry]
