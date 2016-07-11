@@ -74,9 +74,9 @@
                (utils/get-abbrev organism) exportcsv/export-token
                (:original-id ortholog-details) exportcsv/export-token
                (clj->js ortholog) exportcsv/export-token
-               (get ortholog-details "biological_process" 0) exportcsv/export-token
-               (get ortholog-details "molecular_function" 0) exportcsv/export-token
-               (get ortholog-details "cellular_component" 0) exportcsv/export-token
+               (count-annotations ortholog-details "biological_process") exportcsv/export-token
+               (count-annotations ortholog-details "molecular_function") exportcsv/export-token
+               (count-annotations ortholog-details "cellular_component") exportcsv/export-token
                "\""
                (clojure.string/join " | " (:dataset ortholog-details))
                "\"" "\n")
