@@ -114,7 +114,7 @@
         :data-set-name (:dataset (get @original-datasource (get result 3) (str na " - original input gene")))
         :data-set-url na
         :display-ortholog-id (utils/get-id result :original-gene-set)
-        :display-original-id (utils/get-id result :original-gene-set)
+        :display-original-id (lookup-original-input-identifier original-primary-id result)
        }
     )) results)))
 

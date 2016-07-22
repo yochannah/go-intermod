@@ -69,7 +69,6 @@
   [identifiers input-organism]
   (let [service (get-service input-organism)
         query (human-ortholog-query identifiers input-organism)]
-    ;(re-frame/dispatch [:save-query query output-organism])
     (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
