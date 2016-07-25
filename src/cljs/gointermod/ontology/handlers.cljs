@@ -22,7 +22,6 @@
 
   (let [unfiltered-results (re-frame/subscribe [:multi-mine-results])]
     (filterv (fn [result]
-      (cond (= (:go-term result) go-term) (.log js/console "%c" "color:goldenrod;font-weight:bold;" (clj->js go-term)))
         (= (:go-term result) go-term)
 ) (organism @unfiltered-results))))
 
@@ -58,7 +57,6 @@
  :go-ontology-tree
  (fn [db [_ _]]
    (let [tree (make-tree (:flat (:go-ontology db)))]
-     (.log js/console "%ctree" "color:hotpink;font-weight:bold;" (clj->js tree))
 (assoc-in db [:go-ontology :tree] tree))))
 
 (defn get-go-terms
