@@ -59,7 +59,7 @@
 </query>"))
 
 (defn human-ortholog-query [identifier organism]
-  (str "<query model=\"genomic\" view=\"Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.homologues.dataSets.name\" sortOrder=\"Gene.id ASC\" constraintLogic=\"A and B\" name=\"intermod_go\" >
+  (str "<query model=\"genomic\" view=\"Gene.symbol Gene.secondaryIdentifier Gene.primaryIdentifier Gene.homologues.dataSets.name Gene.homologues.homologue.primaryIdentifier\" sortOrder=\"Gene.id ASC\" constraintLogic=\"A and B\" name=\"intermod_go\" >
   <constraint path=\"Gene.homologues.homologue\" code=\"A\" op=\"LOOKUP\" value=\"" identifier "\" extraValue=\"" (utils/get-abbrev organism) "\"/>
   <constraint path=\"Gene.organism.shortName\" code=\"B\" op=\"=\" value=\"H. sapiens\"/>
 </query>"))

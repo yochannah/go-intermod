@@ -53,3 +53,8 @@
   :mapped-resolved-ids
   (fn [db]
     (reaction (:mapped-resolved-ids @db))))
+
+(re-frame/register-sub
+  :input-map
+  (fn [db]
+    (reaction (:input-map @db))))

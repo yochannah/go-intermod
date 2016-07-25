@@ -15,6 +15,7 @@
       :on-change #(re-frame/dispatch [:toggle-select-all])}]]
   [:th "Species"]
   [:th "Input Gene"]
+  [:th "Human Ortholog"]
   [:th "Orthologs"]
   [:th.count.bio "Biological Process"]
   [:th.count.molecular "Molecular Function"]
@@ -33,6 +34,7 @@
      (map (fn [[organism organism-details] organisms]
        (cond (seq organism-details)
           (doall (map (fn [[ortholog ortholog-details] organism-details]
+            ;(.log js/console "%cortholog-details" "color:hotpink;font-weight:bold;" (clj->js ortholog-details))
             ^{:key (str organism ortholog (gensym))}
             [:tr {:class (clj->js organism)}
               [:td
@@ -42,7 +44,9 @@
                   :on-change #(re-frame/dispatch [:select-ortholog-result organism ortholog])}]]
 
               [:td.organism (utils/get-abbrev organism)]
-              [:td @(re-frame/subscribe [:input-gene-friendly-id (:original-id ortholog-details)]) ]
+              [:td (:original-input-gene ortholog-details) ]
+              ;[:td @(re-frame/subscribe [:input-gene-friendly-id (:original-id ortholog-details)]) ]
+              [:td (:human-ortholog ortholog-details)]
               [:td (clj->js ortholog)]
               [:td.bio (count-annotations ortholog-details "biological_process")]
               [:td.molecular (count-annotations ortholog-details "molecular_function")]

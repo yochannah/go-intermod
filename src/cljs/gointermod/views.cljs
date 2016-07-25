@@ -95,7 +95,7 @@
             ;     [:div.db  (edn->hiccup  @(re-frame/subscribe [:db]) )]
             ; )
 
-            ;[:div.db ":)" (edn->hiccup @(re-frame/subscribe [:go-ontology-tree]))]
+            [:div.db ":)" (edn->hiccup (select-keys @(re-frame/subscribe [:db]) [:input-map :mapped-resolved-ids]))]
          ])
       ])
     ]))
