@@ -46,7 +46,6 @@
 (defn aggregate-by-orthologue [search-results]
   "helper to get the counts of aggregate go terms per organism / go term / ontology branch "
   (reduce (fn [new-map result]
-          ;  (.log js/console "%cresult" "color:hotpink;font-weight:bold;" (clj->js result))
      (->
          (update-in new-map [(:display-ortholog-id result) (:ontology-branch result)] conj (:go-term result))
          (assoc-in [(:display-ortholog-id result) :is-selected?] true)
@@ -63,8 +62,6 @@
 (defn lookup-original-input-identifier [identifier result]
   (let [id-map (re-frame/subscribe [:mapped-resolved-ids])
   input-identifier (utils/get-id (get @id-map identifier)) ]
-;  input-identifier nil ]
-  ;  (.log js/console "%cid-map" "color:hotpink;font-weight:bold;" (clj->js @id-map))
   (if input-identifier
     input-identifier
     (utils/get-id result :original)
@@ -90,7 +87,7 @@
           ortho-primary-id (get result 3)
           human-ortholog (re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])]
 
-    { :human-ortholog human-ortholog
+    { :human-ortholog @human-ortholog
       :original-input-gene (nonhuman-ortholog-to-input-gene original-primary-id)
       :ortho-db-id (get result 0)
       :ortho-symbol (get result 1)
