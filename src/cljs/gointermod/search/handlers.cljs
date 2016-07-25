@@ -77,6 +77,7 @@
         mapped-ids (re-frame/subscribe [:mapped-resolved-ids])
         original (:original (get @mapped-ids primary-id))
         input-vals (get @input-map original)]
+    (.log js/console "%cPrimary" "color:cornflowerblue;font-weight:bold;" (clj->js primary-id))
     (.log js/console "%coriginal" "color:hotpink;font-weight:bold;" (clj->js original))
     (if (nil? (:input input-vals))
       (:input (get @input-map primary-id))
@@ -315,6 +316,7 @@
             :enrichment
             :multi-mine-aggregate
             :go-terms
+            :mapped-resolved-ids
             :input-map
             :go-ontology
             :human-orthologs-of-other-input-organism))))
