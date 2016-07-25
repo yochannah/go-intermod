@@ -124,7 +124,7 @@
         :ortho-symbol na
         :ortho-secondary-id na
         :ortho-primary-id na
-        :ortho-organism na
+        :ortho-organism (get result 4)
         :original-db-id (get result 0)
         :original-symbol (get result 1)
         :original-secondary-id (get result 2)
@@ -135,8 +135,8 @@
         :ontology-branch (get result 9)
         :data-set-name (:dataset (get @original-datasource original-primary-id (str na " - original input gene")))
         :data-set-url na
-  ;      :display-ortholog-id (utils/get-id result :original-gene-set)
-  ;      :display-original-id (lookup-original-input-identifier original-primary-id result)
+        :display-ortholog-id (utils/get-id result :original-gene-set)
+        :display-original-id (lookup-original-input-identifier original-primary-id result :original-gene-set)
        }
     )) results)))
 
