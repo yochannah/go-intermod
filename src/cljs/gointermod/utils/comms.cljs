@@ -17,9 +17,10 @@
   (str "<query model=\"genomic\" view=\"GOTerm.identifier GOTerm.name GOTerm.parents.identifier GOTerm.parents.name  GOTerm.parents.parents.identifier GOTerm.parents.parents.name\" sortOrder=\"GOTerm.parents.parents.name ASC\"  constraintLogic=\"A and B\"><constraint path=\"GOTerm.identifier\" op=\"ONE OF\" code=\"A\">" ids "</constraint><constraint path=\"GOTerm.namespace\" code=\"B\" op=\"=\" value=\"" @namespace "\"/></query>")))
 
 (defn create-constraint-values [values]
+  (let [nonempty (remove clojure.string/blank? values)]
   (reduce (fn [new-str value]
     (str new-str "<value>" value "</value>")
-) "" values))
+) "" nonempty)))
 
 (defn ontology-query
   "Get the results of GO term query for specified symbol/identifier"
