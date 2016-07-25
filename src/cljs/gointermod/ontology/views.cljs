@@ -93,13 +93,16 @@
 (defn organism-node
   "outputs the go term, organism, and orthologue for nodes with these types of results"
   [term vals parent]
-
-  (into [:div.title {:id (organism-id term)} term ]
-    (map (fn [[organism results]]
-      [:div.organism {:class (clj->js organism)}
-        (utils/get-abbrev organism) " "
-        (reduce (fn [_ result] (:display-ortholog-id result)) [] results)]
-) vals)))
+    (into [:div.title {:id (organism-id term)} term ]
+      (map (fn [[organism results]]
+        (if (seq results) ;;apparently sometimes empty results get through here. arg.
+        [:div.organism {:class (clj->js organism)}
+          (utils/get-abbrev organism) " "
+            (reduce (fn [_ result]
+             (:display-ortholog-id result)
+             ) [] results)]
+          "") ;;this returns blank for when there's an empty result. sigh.
+  ) vals)))
 
 
 (defn graph

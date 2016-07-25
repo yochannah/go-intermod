@@ -22,6 +22,7 @@
 
   (let [unfiltered-results (re-frame/subscribe [:multi-mine-results])]
     (filterv (fn [result]
+      (cond (= (:go-term result) go-term) (.log js/console "%c" "color:goldenrod;font-weight:bold;" (clj->js go-term)))
         (= (:go-term result) go-term)
 ) (organism @unfiltered-results))))
 
@@ -57,6 +58,7 @@
  :go-ontology-tree
  (fn [db [_ _]]
    (let [tree (make-tree (:flat (:go-ontology db)))]
+     (.log js/console "%ctree" "color:hotpink;font-weight:bold;" (clj->js tree))
 (assoc-in db [:go-ontology :tree] tree))))
 
 (defn get-go-terms
@@ -104,7 +106,7 @@
 
 (defn query-for-go-tree
   "Grabs all the GO terms from the search and queries for their parents.
-  As each result is returned, it dispatches concat-ontology-results. It laso handles resetting statuses of the organisms / page to loading."
+  As each result is returned, it dispatches concat-ontology-results. It also handles resetting statuses of the organisms / page to loading."
   [db]
   (comms/ontology-query-all-organisms (:go-terms db))
   (->
