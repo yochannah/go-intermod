@@ -59,12 +59,12 @@
       {} search-results)
 )
 
-(defn lookup-original-input-identifier [identifier result]
+(defn lookup-original-input-identifier [identifier result result-type]
   (let [id-map (re-frame/subscribe [:mapped-resolved-ids])
   input-identifier (utils/get-id (get @id-map identifier)) ]
   (if input-identifier
     input-identifier
-    (utils/get-id result :original)
+    (utils/get-id result result-type)
 )))
 
 (defn nonhuman-ortholog-to-input-gene
@@ -85,7 +85,7 @@
   (map (fn [result]
     (let [original-primary-id (get result 7)
           ortho-primary-id (get result 3)
-          human-ortholog (re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])]
+          human-ortholog (re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result :original)])]
 
     { :human-ortholog @human-ortholog
       :original-input-gene (nonhuman-ortholog-to-input-gene original-primary-id)
@@ -105,7 +105,7 @@
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :display-ortholog-id (utils/get-id result :ortholog)
-      :display-original-id (lookup-original-input-identifier original-primary-id result)
+      :display-original-id (lookup-original-input-identifier original-primary-id result :original)
      }
   )) results))
 
@@ -117,7 +117,7 @@
     (map (fn [result]
       (let [original-primary-id (get result 3)
             input (:input (get @input-map original-primary-id))
-            human-ortholog @(re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])]
+            human-ortholog @(re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result :original-gene-set)])]
         {:human-ortholog human-ortholog
         :original-input-gene input
         :ortho-db-id na
@@ -135,8 +135,8 @@
         :ontology-branch (get result 9)
         :data-set-name (:dataset (get @original-datasource original-primary-id (str na " - original input gene")))
         :data-set-url na
-        :display-ortholog-id (utils/get-id result :original-gene-set)
-        :display-original-id (lookup-original-input-identifier original-primary-id result)
+  ;      :display-ortholog-id (utils/get-id result :original-gene-set)
+  ;      :display-original-id (lookup-original-input-identifier original-primary-id result)
        }
     )) results)))
 
