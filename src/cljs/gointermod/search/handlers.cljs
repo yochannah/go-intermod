@@ -76,25 +76,22 @@
   (let [input-map (re-frame/subscribe [:input-map])
         mapped-ids (re-frame/subscribe [:mapped-resolved-ids])
         original (:original (get @mapped-ids primary-id))
-        input-vals (get @input-map original)]
-    (.log js/console "%cPrimary" "color:cornflowerblue;font-weight:bold;" (clj->js primary-id))
-    (.log js/console "%coriginal" "color:hotpink;font-weight:bold;" (clj->js original))
-    (if (nil? (:input input-vals))
-      (:input (get @input-map primary-id))
-      (:input input-vals)
+        input-vals (get @input-map original)
+        nonhuman-result (:input input-vals)
+        human-result (:input (get @input-map primary-id))]
+    (if (nil? nonhuman-result) ;;only one of these two will be non-null
+      human-result nonhuman-result
   )))
 
 (defn resultset-to-map [results]
-  "translate that silly vector of results into a map with meaninful keys"
+  "translate that silly vector of results into a map with meaningful keys. This is for the main query."
   (map (fn [result]
     (let [original-primary-id (get result 7)
-          input-map (re-frame/subscribe [:input-map])
-          original-datasource (re-frame/subscribe [:mapped-resolved-ids])
-          ortho-primary-id (get result 3)]
-    {;:results result
-      :human-ortholog @(re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier (get result 7) result)])
+          ortho-primary-id (get result 3)
+          human-ortholog (re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])]
+
+    { :human-ortholog human-ortholog
       :original-input-gene (nonhuman-ortholog-to-input-gene original-primary-id)
-;      :original-input-gene original-primary-id
       :ortho-db-id (get result 0)
       :ortho-symbol (get result 1)
       :ortho-secondary-id (get result 2)
@@ -111,25 +108,26 @@
       :data-set-name (get result 12)
       :data-set-url (get result 13)
       :display-ortholog-id (utils/get-id result :ortholog)
-      :display-original-id (lookup-original-input-identifier (get result 7) result)
+      :display-original-id (lookup-original-input-identifier original-primary-id result)
      }
   )) results))
 
   (defn original-resultset-to-map [results]
-    "translate that silly vector of results into a map with meaningful keys"
+    "translate that silly vector of results into a map with meaningful keys. This is only used for the supplementary query that is used for the original input (e.g. fetch the input gene itself as well as the homologues"
     (let [na "N/A" ;;hey jude
           original-datasource (re-frame/subscribe [:mapped-resolved-ids])
           input-map (re-frame/subscribe [:input-map])]
     (map (fn [result]
       (let [original-primary-id (get result 3)
-            input (:input (get @input-map original-primary-id))]
-        {:human-ortholog  @(re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])
+            input (:input (get @input-map original-primary-id))
+            human-ortholog @(re-frame/subscribe [:input-gene-friendly-id (lookup-original-input-identifier original-primary-id result)])]
+        {:human-ortholog human-ortholog
         :original-input-gene input
         :ortho-db-id na
         :ortho-symbol na
         :ortho-secondary-id na
         :ortho-primary-id na
-        :ortho-organism "H. sapiens" ;;;;TODO FIX THIS FIX IT FIX IT not always human
+        :ortho-organism na
         :original-db-id (get result 0)
         :original-symbol (get result 1)
         :original-secondary-id (get result 2)

@@ -62,7 +62,7 @@
         (cond (empty? organism-details)
           [:tr {:class (clj->js organism)}
             [:td][:td (utils/get-abbrev organism)]
-            [:td {:col-span 6} "No known orthologs for the provided gene(s)."]]
+            [:td {:col-span 7} "No known orthologs for the provided gene(s)."]]
 )) @results))))
 
 (defn csv-body
