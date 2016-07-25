@@ -125,12 +125,14 @@
 
 (defn query-all-selected-organisms [input-organism identifiers]
   "query all organisms that are selected as an output species in the search bar"
-  (let [output-organisms (re-frame/subscribe [:checked-organisms])]
+  (let [output-organisms (re-frame/subscribe [:checked-organisms])
+        original-input-ids (re-frame/subscribe [:sanitised-search-term])]
     (doall (map (fn [[output-organism vals] stuff]
       ;;query for it
+
       (go
         (if (and (= input-organism output-organism) (not= output-organism :human))
-          (re-frame/dispatch [:concat-original-genes (<! (original-gene-query identifiers input-organism)) output-organism])
+          (re-frame/dispatch [:concat-original-genes (<! (original-gene-query @original-input-ids input-organism)) output-organism])
           (let [res (<! (go-query input-organism identifiers output-organism))]
 
             ;;for humans we include the original input genes AND all homologues.

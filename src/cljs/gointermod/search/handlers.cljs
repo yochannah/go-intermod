@@ -219,17 +219,6 @@
       (update-in    [:multi-mine-aggregate organism] concat aggregate))
 )))
 
-
-
-(defn search-token-fixer-upper "accept any separator, so long as it's newline, tab, space, or comma. Yeast will need special treatment."
-  [term]
-  (clojure.string/escape term
-    {"\n" ","
-     ";"  ","
-     " "  ","
-     "\t" ","
-}))
-
 (defn handle-human-orthologues-for-nonhuman-query
   "creates a data map such that any non-human organisms may use this for a lookup table if they're missing data. Also dispatches teh standard query using the human orthologues as the lookup values"
   [results db]
@@ -285,7 +274,7 @@
   :perform-search
   (fn [db [_ _]]
     (let [input-org (:selected-organism db)
-          search-terms (search-token-fixer-upper (:search-term db))
+          search-terms (utils/search-token-fixer-upper (:search-term db))
           search-terms-vec (clojure.string/split search-terms ",")]
       (go (let [resolved-ids (<! (comms/resolve-id input-org search-terms-vec))
                 mapped-resolved-ids (resolve-id-map resolved-ids)]

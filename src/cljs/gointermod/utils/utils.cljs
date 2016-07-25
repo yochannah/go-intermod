@@ -1,6 +1,17 @@
 (ns gointermod.utils.utils
 (:require [re-frame.core :as re-frame]))
 
+
+
+(defn search-token-fixer-upper "accept any separator, so long as it's newline, tab, space, or comma. Yeast will need special treatment."
+  [term]
+  (clojure.string/escape term
+    {"\n" ","
+     ";"  ","
+     " "  ","
+     "\t" ","
+}))
+
 (defn get-id
   ;;this one saves time if we have a result row handy
   ([resultvec original-or-ortholog]

@@ -1,6 +1,8 @@
 (ns gointermod.search.subs
     (:require-macros [reagent.ratom :refer [reaction]])
-    (:require [re-frame.core :as re-frame]))
+    (:require [re-frame.core :as re-frame]
+      [gointermod.utils.utils :as utils]
+))
 
 (re-frame/register-sub
  :evidence-codes
@@ -48,6 +50,12 @@
   :search-term
   (fn [db]
     (reaction (:search-term @db))))
+
+(re-frame/register-sub
+ :sanitised-search-term
+ (fn [db]
+   (reaction (utils/search-token-fixer-upper (:search-term @db)))))
+
 
 (re-frame/register-sub
   :mapped-resolved-ids
