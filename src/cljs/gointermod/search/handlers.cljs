@@ -124,7 +124,7 @@
         :ortho-symbol na
         :ortho-secondary-id na
         :ortho-primary-id na
-        :ortho-organism na
+        :ortho-organism (get result 4)
         :original-db-id (get result 0)
         :original-symbol (get result 1)
         :original-secondary-id (get result 2)
