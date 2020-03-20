@@ -4,7 +4,7 @@
 (defn build-url
   "generate a deep link for a given mine go query - e.g. link straight to humanmine query results page"
   [organism]
-  (str "http://"
+  (str "https://"
       (:url (:mine organism))
       "/loadQuery.do?skipBuilder=true&query="
       (.encodeURIComponent js/window (:query organism))

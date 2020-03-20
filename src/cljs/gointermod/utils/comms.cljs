@@ -27,7 +27,7 @@
   (let [service (get-service organism)
         ids (create-constraint-values identifiers)
         query (make-ontology-query ids)]
-    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+    (go (let [response (<! (http/post (str "https://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
         :form-params
@@ -70,7 +70,7 @@
   (let [service (get-service input-organism)
         query (human-ortholog-query identifiers input-organism)]
     ;(re-frame/dispatch [:save-query query output-organism])
-    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+    (go (let [response (<! (http/post (str "https://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
         :form-params
@@ -98,7 +98,7 @@
         evidence-code-constraint-values (create-constraint-values @evidence-codes)
         query (original-gene-query-text identifiers evidence-code-constraint-values)]
     (re-frame/dispatch [:save-query query :human]);;todo this line will overwrite the other human query.
-    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+    (go (let [response (<! (http/post (str "https://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
         :form-params
@@ -115,7 +115,7 @@
         evidence-code-constraint-values (create-constraint-values @evidence-codes)
         query (make-base-query identifiers output-organism evidence-code-constraint-values)]
     (re-frame/dispatch [:save-query query output-organism])
-    (go (let [response (<! (http/post (str "http://" (.-root service) "/service/query/results")
+    (go (let [response (<! (http/post (str "https://" (.-root service) "/service/query/results")
        {:with-credentials? false
         :keywordize-keys? true
         :form-params
@@ -145,17 +145,17 @@
   [source input]
   ;(.log js/console (clj->js source) (clj->js input))
   (go (let [root (.-root (get-service source))
-            response (<! (http/post (str "http://" root "/service/ids")
+            response (<! (http/post (str "https://" root "/service/ids")
                             {:with-credentials? false
                               :json-params (clj->js input)}))]
         (if-let [uid (-> response :body :uid)]
           (loop []
-            (let [status-response (<! (http/get (str "http://" root "/service/ids/" uid "/status")
+            (let [status-response (<! (http/get (str "https://" root "/service/ids/" uid "/status")
                                                 {:with-credentials? false}))]
               (if (= "SUCCESS" (:status (:body status-response)))
-                (let [final-response (<! (http/get (str "http://" root "/service/ids/" uid "/results")
+                (let [final-response (<! (http/get (str "https://" root "/service/ids/" uid "/results")
                                                    {:with-credentials? false}))]
-                  (http/delete (str "http://" root "/service/ids/" uid)
+                  (http/delete (str "https://" root "/service/ids/" uid)
                                {:with-credentials? false})
                   final-response)
                 (do
@@ -178,7 +178,7 @@
 (defn enrichment
   "Get the results of using a list enrichment widget to calculate statistics for a set of objects."
   [ {{:keys [root token]} :service} {:keys [ids widget maxp correction filter]}]
-  (go (let [response (<! (http/post (str "http://" root "/service/list/enrichment")
+  (go (let [response (<! (http/post (str "https://" root "/service/list/enrichment")
    {:with-credentials? false
     :keywordize-keys? true
     :form-params (merge
