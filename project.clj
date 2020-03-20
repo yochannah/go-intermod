@@ -1,22 +1,19 @@
 (defproject gointermod "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [json-html "0.3.6"]
-                 [org.clojure/clojurescript "1.7.170"]
-                 [reagent "0.6.0-alpha2"]
-                 [org.clojure/core.async "0.2.374"]
-                 [cljs-http "0.1.39"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [json-html "0.4.7"]
+                 [org.clojure/clojurescript "1.10.520"]
+                 [reagent "0.10.0"]
+                 [org.clojure/core.async "1.0.567"]
+                 [cljs-http "0.1.46"]
                  [secretary "1.2.3"]
-                 [re-frame "0.7.0"]
-                 [javax.xml.bind/jaxb-api "2.3.0"]
-                 [cider/cider-nrepl "0.12.0"]
-                 [org.clojure/tools.namespace "0.2.11"]]
+                 [re-frame "0.12.0"]]
 
   :min-lein-version "2.5.3"
 
   :source-paths ["src/clj"]
 
-  :plugins [[lein-cljsbuild "1.1.3"]
-            [lein-figwheel "0.5.0-6"]
+  :plugins [[lein-cljsbuild "1.1.7"]
+            [lein-figwheel "0.5.19"]
             [lein-less "1.7.5"]]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
