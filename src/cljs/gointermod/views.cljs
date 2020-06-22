@@ -57,7 +57,7 @@
       [:h2 "InterMOD GO Tool"]
       [:p "Type a Gene identifier or symbol into the searchbar up the top and press search."]
       [:p "If you're not sure what genes to choose, check out the results for "
-     [sample-query "BMP4"] ", " [sample-query "SOX18"] " or " [sample-query "GATA1"]]
+     [sample-query "BMP4"] ", " [sample-query "SOX18"] " or " [sample-query "HGNC:4170"]]
      [organism-line]
      ]])
 

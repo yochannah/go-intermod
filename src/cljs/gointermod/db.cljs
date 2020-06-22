@@ -27,10 +27,8 @@
        :status {:status :na}
        :mine
        {:name "HumanMine"
-       :url "www.humanmine.org/humanmine"
-       :service {:root "www.humanmine.org/humanmine"}}}
-      ;  :url "beta.humanmine.org/beta"
-      ;  :service {:root "beta.humanmine.org/beta"}}}
+       :url "https://www.humanmine.org/humanmine"
+       :service {:root "https://www.humanmine.org/humanmine"}}}
     :fly
      {:id     :fly
       :common "Fly"
@@ -39,10 +37,8 @@
       :abbrev "D. melanogaster"
       :mine
        {:name "FlyMine"
-      ;  :url "beta.flymine.org/beta"
-      ;  :service {:root "beta.flymine.org/beta"}}}
-       :url "www.flymine.org/flymine"
-       :service {:root "www.flymine.org/flymine"}}}
+       :url "https://www.flymine.org/flymine"
+       :service {:root "https://www.flymine.org/flymine"}}}
     :mouse
      {:id     :mouse
       :common "Mouse"
@@ -51,10 +47,8 @@
       :status {:status :na}
       :mine
        {:name "MouseMine"
-        :url "www.mousemine.org/mousemine"
-        :service {:root "www.mousemine.org/mousemine"}}}
-      ; :url "beta.mousemine.org/mousemine"
-      ; :service {:root "beta.mousemine.org/mousemine"}}}
+        :url "http://www.mousemine.org/mousemine"
+        :service {:root "http://www.mousemine.org/mousemine"}}}
     :rat
      {:id     :rat
       :common "Rat"
@@ -63,10 +57,8 @@
       :status {:status :na}
       :mine
        {:name "RatMine"
-      ; :url "dev.ratmine.mcw.edu/ratmine"
-      ; :service {:root "dev.ratmine.mcw.edu/ratmine"}}}
-        :url "ratmine.mcw.edu/ratmine"
-        :service {:root "stearman.hmgc.mcw.edu/ratmine"}}}
+        :url "http://ratmine.mcw.edu/ratmine"
+        :service {:root "http://ratmine.rgd.mcw.edu/ratmine"}}}
     :zebrafish
      {:id     :zebrafish
       :common "Zebrafish"
@@ -75,8 +67,8 @@
       :abbrev "D. rerio"
       :mine
        {:name "ZebraFishMine"
-        :url "www.zebrafishmine.org"
-        :service {:root "www.zebrafishmine.org"}}}
+        :url "http://www.zebrafishmine.org"
+        :service {:root "http://www.zebrafishmine.org"}}}
     :worm
      {:id     :worm
       :common "Worm"
@@ -85,10 +77,8 @@
       :status {:status :na}
       :mine
        {:name "WormMine"
-  ;     :url "im-251.wormbase.org/tools/wormmine"
-  ;     :service {:root "im-251.wormbase.org/tools/wormmine"}}}
-       :url "intermine.wormbase.org/tools/wormmine"
-       :service {:root "intermine.wormbase.org/tools/wormmine"}}}
+       :url "http://intermine.wormbase.org/tools/wormmine"
+       :service {:root "http://intermine.wormbase.org/tools/wormmine"}}}
     :yeast
      {:id     :yeast
       :output? true
@@ -97,10 +87,8 @@
       :status {:status :na}
       :mine
        {:name "YeastMine"
-       :url "yeastmine.yeastgenome.org/yeastmine"
-       :service {:root "yeastmine.yeastgenome.org/yeastmine"}}}
-;       :url "yeastmine-test.yeastgenome.org/yeastmine-dev"
-;       :service {:root "yeastmine-test.yeastgenome.org/yeastmine-dev"}}}
+       :url "https://yeastmine.yeastgenome.org/yeastmine"
+       :service {:root "https://yeastmine.yeastgenome.org/yeastmine"}}}
     }
    :go-ontology {:nodes 0
                  :loading true}

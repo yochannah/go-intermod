@@ -40,3 +40,5 @@ Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
 lein clean
 lein cljsbuild once min
 ```
+
+To deploy to dokku visit [https://github.com/intermine/go-intermod-webapp](https://github.com/intermine/go-intermod-webapp) for more info
